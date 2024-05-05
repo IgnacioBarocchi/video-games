@@ -31,7 +31,7 @@ const useMusic = false;
 // const runSpeed = 30; //
 // const walkSpeed = 20; //100km
 
-const runSpeed = 100;
+const runSpeed = 30;
 const walkSpeed = 20;
 // const runSpeed = 500;
 // const walkSpeed = 100;

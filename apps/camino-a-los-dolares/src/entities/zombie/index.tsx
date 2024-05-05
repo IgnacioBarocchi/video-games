@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import {
   CapsuleCollider,
+  CollisionPayload,
   CylinderCollider,
   RapierRigidBody,
   RigidBody,
@@ -21,6 +22,15 @@ import zombieDeathSound3 from "../../assets/audio/in-game-sfx/zombie/zombie-deat
 import useGameStore from "../../store/store";
 import { throttle } from "../../lib/throttle";
 import { ZOMBIE_IMPACT_COST } from "../../constants";
+import { useMachine } from "@xstate/react";
+import {
+  ATTACK_EVENT,
+  CHASE_EVENT,
+  HIT_EVENT,
+  HIT_STATE,
+  INACTIVE_STATE,
+  enemyMachine,
+} from "./machine/zombie-machine";
 
 type Props = {
   position?: Vector3Tuple;
@@ -28,190 +38,173 @@ type Props = {
   cameraTheta?: number;
   orientation?: Vector3Tuple;
 };
+
 const h = 1.7;
 const deathR = 0.05;
-export const Zombie = memo(
-  ({ position = [0, h + 1, -300], orientation = [0, 0, 1] }: Props) => {
-    const rigidbody = useRef<RapierRigidBody>(null);
-    // const modelRef = useRef<Object3D>(null);
-    const [state, setState] = useState("Running");
-    const [isActive, setIsActive] = useState(true);
-    const carRigidBody = useRef<RapierRigidBody | null>(null);
-    const { setCarNotification, subMoney } = useGameStore((state) => ({
-      setCarNotification: state.setCarNotification,
-      subMoney: state.subMoney,
-    }));
 
-    useFrame((_, delta) => {
-      if (
-        !isActive ||
-        !rigidbody.current ||
-        !carRigidBody.current ||
-        ["Hit", "Attacking"].includes(state)
-      ) {
-        return;
-      }
-      const params = {
-        sourcePosition: getVector3From(rigidbody.current.translation()),
-        targetPosition: getVector3From(carRigidBody.current.translation()),
-        speed: 10,
-        sourceRigidBody: rigidbody.current,
-        style: "LINEAR VELOCITY",
-      };
-      goToTarget(params);
-    });
+export const Zombie = memo(({ position = [0, h + 1, -300] }: Props) => {
+  const [state, send] = useMachine(enemyMachine);
+  const rigidbody = useRef<RapierRigidBody>(null);
+  // const [isActive, setIsActive] = useState(true);
+  const carRigidBody = useRef<RapierRigidBody | null>(null);
+  const { setCarNotification, subMoney } = useGameStore((gameState) => ({
+    setCarNotification: gameState.setCarNotification,
+    subMoney: gameState.subMoney,
+  }));
 
-    const handleCollision = throttle((payload) => {
-      if (!payloadIsThePlayer(payload)) {
-        return;
-      }
-
-      if (Math.abs(payload.rigidBody?.linvel().z) > 10) {
-        setState("Hit");
-        setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
-        subMoney(ZOMBIE_IMPACT_COST);
-      }
-    }, 0);
-
-    const triggerNPCOnEnter = throttle((payload) => {
-      if (state === "Hit") {
-        return;
-      }
-
-      if (payloadIsThePlayer(payload)) {
-        setState("Attacking");
-      }
-    }, 0);
-
-    const triggerNPCOnExit = throttle((payload) => {
-      if (state === "Hit") {
-        return;
-      }
-      if (payloadIsThePlayer(payload)) {
-        setState("Running");
-      }
-    }, 0);
-
-    const onNPCRegionEnter = throttle((payload) => {
-      if (state === "Hit") {
-        return;
-      }
-      if (payloadIsThePlayer(payload)) {
-        carRigidBody.current = payload.other.rigidBody;
-      }
-    }, 0);
-
-    const onNPCRegionExit = throttle((payload) => {
-      if (state === "Hit") {
-        return;
-      }
-      if (payloadIsThePlayer(payload)) {
-        carRigidBody.current = null;
-      }
-    }, 1000);
-
-    if (!isActive) {
-      return null;
+  useFrame(() => {
+    if (
+      !state.matches(INACTIVE_STATE) ||
+      !rigidbody.current ||
+      !carRigidBody.current ||
+      !state.matches(HIT_STATE)
+    ) {
+      return;
     }
 
-    return (
-      <group>
-        <RigidBody
-          mass={67.9}
-          friction={2}
-          restitution={0.5}
-          ref={rigidbody}
-          position={position}
-          lockRotations
-          colliders={false}
-          onCollisionEnter={handleCollision}
-        >
-          <CapsuleCollider
-            name="Zombie body"
-            position={[0, state === "Hit" ? deathR : h, 0]}
-            args={[
-              state === "Hit" ? deathR : h,
-              state === "Hit" ? deathR : 0.5,
-            ]}
-          />
-          <CylinderCollider
-            name="Near"
-            sensor
-            position={[0, h, 0]}
-            args={[h, 3]}
-            onIntersectionEnter={triggerNPCOnEnter}
-            onIntersectionExit={triggerNPCOnExit}
-          />
-          <CylinderCollider
-            name="Region"
-            sensor
-            position={[0, h, 0]}
-            args={[h, 200]}
-            onIntersectionEnter={onNPCRegionEnter}
-            onIntersectionExit={onNPCRegionExit}
-          />
-          {state === "Hit" && (
-            <>
-              <PositionalAudio
-                distance={10}
-                url={
-                  [zombieDeathSound1, zombieDeathSound2, zombieDeathSound3][
-                    Math.floor(Math.random() * 3)
-                  ]
-                }
-                autoplay
-                loop={false}
-              />
-              <PositionalAudio
-                distance={20}
-                url={hitByCar}
-                autoplay
-                loop={false}
-                onEnded={() => {
-                  setTimeout(() => {
-                    setIsActive(false);
-                  }, 1000);
-                }}
-              />
-            </>
-          )}
-          <ZombieModel state={state} />
-        </RigidBody>
-      </group>
-    );
+    const params = {
+      sourcePosition: getVector3From(rigidbody.current.translation()),
+      targetPosition: getVector3From(carRigidBody.current.translation()),
+      sourceRigidBody: rigidbody.current,
+      style: "LINEAR VELOCITY",
+      speed: 200,
+    };
+
+    goToTarget(params);
+  });
+
+  const triggerIsValid = (payload) =>
+    payloadIsThePlayer(payload) && !state.matches(HIT_STATE);
+  // const triggerIsValid = (payload: CollisionPayload) => {
+  //   const m = payloadIsThePlayer(payload);
+  //   const f = !state.matches(HIT_STATE);
+  //   if (m) {
+  //     console.log(f);
+  //   }
+
+  //   return m && f;
+  // };
+
+  const handleCollision = throttle((payload: CollisionPayload) => {
+    if (!triggerIsValid(payload)) {
+      return;
+    }
+
+    if (Math.abs(payload.rigidBody?.linvel().z!) > 2) {
+      send({ type: HIT_EVENT });
+      setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
+      subMoney(ZOMBIE_IMPACT_COST);
+    }
+  }, 0);
+
+  const triggerNPCOnEnter = throttle((payload: CollisionPayload) => {
+    if (!triggerIsValid(payload)) {
+      return;
+    }
+
+    if (payloadIsThePlayer(payload)) {
+      send({ type: ATTACK_EVENT });
+    }
+  }, 0);
+
+  const triggerNPCOnExit = throttle((payload: CollisionPayload) => {
+    if (!triggerIsValid(payload)) {
+      return;
+    }
+
+    if (payloadIsThePlayer(payload)) {
+      send({ type: CHASE_EVENT });
+    }
+  }, 0);
+
+  const onNPCRegionEnter = throttle((payload: CollisionPayload) => {
+    if (!triggerIsValid(payload)) {
+      return;
+    }
+
+    if (payloadIsThePlayer(payload)) {
+      carRigidBody.current = payload.other.rigidBody;
+    }
+  }, 0);
+
+  const onNPCRegionExit = throttle((payload: CollisionPayload) => {
+    if (!triggerIsValid(payload)) {
+      return;
+    }
+
+    if (payloadIsThePlayer(payload)) {
+      carRigidBody.current = null;
+    }
+  }, 1000);
+
+  if (state.matches(INACTIVE_STATE)) {
+    return null;
   }
-);
 
-// mass={174}
-// friction={5}
-// restitution={0.1}
-
-/* <CylinderCollider
-    name='Region'
-    sensor
-    position={[0, h, 0]}
-    args={[h, 200]}
-    onIntersectionEnter={(payload) => {
-      if (payloadIsCar(payload)) {
-        setCarRigidBody(payload.other.rigidBody);
-      }
-    }}
-    onIntersectionExit={(payload) => {
-      if (payloadIsCar(payload)) {
-        setCarRigidBody(null);
-      }
-    }}
-  /> 
-*/
-
-// onContactForce={(payload) => {
-//   if (!payloadIsCar(payload)) {
-//     return;
-//   }
-//   console.log(payload.maxForceMagnitude);
-//   // a veces es un vector y otras veces es un
-//   // valor
-//   if (payload.maxForceMagnitude > 1) {
-//     setState('Hit');
-//   }
-// }}
+  return (
+    <group>
+      <RigidBody
+        mass={44}
+        density={1}
+        friction={1}
+        restitution={0.5}
+        ref={rigidbody}
+        position={position}
+        lockRotations
+        colliders={false}
+      >
+        <CapsuleCollider
+          name="Zombie body"
+          position={[0, state.matches(HIT_STATE) ? deathR : h, 0]}
+          args={[
+            state.matches(HIT_STATE) ? deathR : h,
+            state.matches(HIT_STATE) ? deathR : 0.5,
+          ]}
+          onCollisionEnter={handleCollision}
+        />
+        <CylinderCollider
+          name="Near"
+          sensor
+          position={[0, h, 0]}
+          args={[h, 3]}
+          onIntersectionEnter={triggerNPCOnEnter}
+          onIntersectionExit={triggerNPCOnExit}
+        />
+        <CylinderCollider
+          name="Region"
+          sensor
+          position={[0, h, 0]}
+          args={[h, 200]}
+          onIntersectionEnter={onNPCRegionEnter}
+          onIntersectionExit={onNPCRegionExit}
+        />
+        {state.matches(HIT_STATE) && (
+          <>
+            <PositionalAudio
+              distance={10}
+              url={
+                [zombieDeathSound1, zombieDeathSound2, zombieDeathSound3][
+                  Math.floor(Math.random() * 3)
+                ]
+              }
+              autoplay
+              loop={false}
+            />
+            <PositionalAudio
+              distance={20}
+              url={hitByCar}
+              autoplay
+              loop={false}
+              // onEnded={() => {
+              //   setTimeout(() => {
+              //     setIsActive(false);
+              //   }, 1000);
+              // }}
+            />
+          </>
+        )}
+        <ZombieModel state={state.value} />
+      </RigidBody>
+    </group>
+  );
+});

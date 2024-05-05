@@ -19,7 +19,7 @@ export const ModelsSample = () => {
       <TreeModel />
       <ShopModel state={"DOOR OPEN"} />
       <GroundModel />
-      <ZombieModel state={"Running"} />
+      {/* <ZombieModel state={"Running"} /> */}
       <BurntCarModel1 />
       <BurntCarModel2 />
       <BurntCarModel3 />

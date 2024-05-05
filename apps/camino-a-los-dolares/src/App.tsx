@@ -14,7 +14,6 @@ export default function App() {
       <World3D>
         <Perf />
         <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
-          {/* */}
           <fog attach="fog" args={[BROWN, 1, CAMERA_FAR]} />
           {gameStarted ? <LVL1 /> : <LobbyTurnTable />}
         </Physics>

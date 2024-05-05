@@ -4,14 +4,17 @@ import useGameStore from "./store/store";
 import { EntitiesRegion } from "./EntitiesRegion";
 
 // : FC<{ isOldVersion?: boolean }>
-export const Zombies = memo<{ isOldVersion?: boolean }>(({ isOldVersion }) => {
+export const Zombies = memo<{
+  isOldVersion?: boolean;
+  numberOfZombies: number;
+}>(({ isOldVersion, numberOfZombies }) => {
   const haveZombies = useGameStore((state) => state.haveZombies);
 
   if (!haveZombies) return null;
   if (isOldVersion) {
     return (
       <>
-        {[...Array(50)].map((_, i) => (
+        {[...Array(numberOfZombies)].map((_, i) => (
           <Zombie key={i} position={[Math.random() * 21 - 10, 1, i * -50]} />
         ))}
       </>
@@ -24,7 +27,7 @@ export const Zombies = memo<{ isOldVersion?: boolean }>(({ isOldVersion }) => {
         name="Zombie Horde"
         depth={400}
         ZOffset={400}
-        numberOfEntities={[25, 25]}
+        numberOfEntities={[numberOfZombies / 2, numberOfZombies / 2]}
         Entity={Zombie}
         spaceBetween={{ x: [10, 21], y: 1 }}
       />

@@ -9,6 +9,11 @@ import { useGLTF, useAnimations, Detailed } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useGraph } from "@react-three/fiber";
 import zombieModelFile from "../../assets/models/Zombie/Zombie.gltf";
+import {
+  ATTACKING_STATE,
+  CHASING_STATE,
+  HIT_STATE,
+} from "./machine/zombie-machine";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -29,9 +34,9 @@ type GLTFResult = GLTF & {
 type ActionName = "Attack" | "Hit By Car" | "Run";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
-export const ZombieModel: FC<{ state: "Hit" | "Running" | "Attacking" }> = ({
-  state,
-}) => {
+export const ZombieModel: FC<{
+  state: typeof CHASING_STATE | typeof ATTACKING_STATE | typeof HIT_STATE;
+}> = ({ state }) => {
   const group = useRef<THREE.Group>();
   const { scene, materials, animations } = useGLTF(
     zombieModelFile
@@ -43,17 +48,19 @@ export const ZombieModel: FC<{ state: "Hit" | "Running" | "Attacking" }> = ({
 
   useEffect(() => {
     const action = {
-      Running: actions.Run,
-      Attacking: actions.Attack,
-      Hit: actions["Hit By Car"],
+      [CHASING_STATE]: actions.Run,
+      [ATTACKING_STATE]: actions.Attack,
+      [HIT_STATE]: actions["Hit By Car"],
     }[state];
 
-    if (state === "Attacking") {
+    if (!action) return;
+
+    if (state === ATTACKING_STATE) {
       actions.Run?.stop();
       actions.Attacking?.stop();
     }
 
-    if (state === "Hit") {
+    if (state === HIT_STATE) {
       action.setLoop(THREE.LoopOnce, 1);
       action.clampWhenFinished = true;
       action.enabled = true;
