@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "ui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.2.0",
+    "styled-components": "^6.1.8",
+    "react-countup": "^6.5.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
