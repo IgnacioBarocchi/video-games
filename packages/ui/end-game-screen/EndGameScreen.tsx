@@ -3,10 +3,14 @@ import { Timeout } from "./screens/timeout";
 import { Winning } from "./screens/winning";
 
 export const EndGameScreen: React.FC<{
-  gameOverPayload: { reason: "TIME OUT" | "WON" };
+  gameOverPayload?: { reason: "TIME OUT" | "WON" };
   ARS: number;
   USD: number;
 }> = ({ gameOverPayload, ARS, USD }) => {
+  if (!gameOverPayload) {
+    return null;
+  }
+
   const { reason } = gameOverPayload;
 
   if (reason === "WON") {

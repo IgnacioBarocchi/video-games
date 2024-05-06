@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { css, keyframes, styled } from "styled-components";
-import { Panel } from "./elements/Panel";
+import { Panel, panelPadding } from "./elements/Panel";
+import { Text } from "./elements/Text";
 
 const move = keyframes`
   from {
     top: 0;
-    left: 10%;
+    left: 0%;
     font-size: 3em; 
     color: white;
   }
   to {
     top: 20%;
-    left: 50%;
+    left: 100%;
     font-size: 6em;
     color: red;
-
   }
 `;
 
@@ -23,17 +23,25 @@ const animationRule = css(
   move
 );
 
-const Container = styled.div<{ lastSeconds: boolean }>`
+const RelativeWrapper = styled.div`
+  position: relative;
+`;
+
+// transform: ${({ lastSeconds }) =>
+//     lastSeconds ? "translateX(calc(" + panelPadding + " - 50%))" : "none"};
+// top: ${({ lastSeconds }) => (lastSeconds ? "20%" : "0")};
+// left: ${({ lastSeconds }) => (lastSeconds ? "50%" : "0")};
+const Container = styled(Text)<{ lastSeconds: boolean }>`
   position: absolute;
-  top: ${({ lastSeconds }) => (lastSeconds ? "20%" : "0")};
-  left: ${({ lastSeconds }) => (lastSeconds ? "50%" : "1%")};
-  transform: ${({ lastSeconds }) =>
-    lastSeconds ? "translateX(-50%)" : "none"};
+  width: 100vw;
+  height: 100vh;
   color: ${({ lastSeconds }) => (lastSeconds ? "red" : "white")};
   font-size: ${({ lastSeconds }) => (lastSeconds ? "6em" : "3em")};
   animation: ${({ lastSeconds }) => (lastSeconds ? animationRule : "none")};
   font-family: "Technor";
   -webkit-text-stroke: 3px black;
+  background: blue;
+  opacity: 0.5;
 `;
 
 export const CountDown = ({
@@ -75,11 +83,19 @@ export const CountDown = ({
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;
 
+  // !new
   return (
-    <Panel fadeIn={true}>
+    <RelativeWrapper>
       <Container lastSeconds={lastSeconds}>
-        <div>{`0${minutes}:${seconds < 10 ? "0" : ""}${seconds}`}</div>
+        {`0${minutes}:${seconds < 10 ? "0" : ""}${seconds}`}
       </Container>
-    </Panel>
+    </RelativeWrapper>
   );
+  // return (
+  //   <Panel fadeIn={true}>
+  //     <Container lastSeconds={lastSeconds}>
+  //       <div>{`0${minutes}:${seconds < 10 ? "0" : ""}${seconds}`}</div>
+  //     </Container>
+  //   </Panel>
+  // );
 };

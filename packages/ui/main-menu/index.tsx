@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { css, keyframes, styled } from "styled-components";
 import { Panel } from "../elements/Panel";
 import { Title } from "../elements/Text";
+import { Button } from "../elements/Button";
 
 const fadeToBlack = keyframes`
   from {
@@ -39,22 +40,6 @@ const Buttons = styled.div`
   -webkit-text-stroke: 2px black;
 `;
 
-const Button = styled.button`
-  font-size: 3em;
-  background: #1e63d5;
-  border: none;
-  /*clip-path: polygon(
-    1% 0,
-    99% 0,
-    100% 20%,
-    100% 80%,
-    99% 100%,
-    1% 100%,
-    0% 80%,
-    0% 20%
-  );*/
-`;
-
 export const MainMenu = ({
   onStartClick,
   onQuitClick,
@@ -82,9 +67,15 @@ export const MainMenu = ({
         <Title>LA LUZ DEL TÚNEL</Title>
         {!shouldFade && (
           <Buttons>
-            <Button onClick={onQuitClick}>Salir</Button>
-            <Button onClick={handleStart}>Empezar</Button>
-            <Button onClick={onAboutClick}>Créditos</Button>
+            <Button detailed={true} onClick={onQuitClick}>
+              Salir
+            </Button>
+            <Button detailed={true} onClick={handleStart}>
+              Empezar
+            </Button>
+            <Button detailed={true} onClick={onAboutClick}>
+              Créditos
+            </Button>
           </Buttons>
         )}
       </Background>

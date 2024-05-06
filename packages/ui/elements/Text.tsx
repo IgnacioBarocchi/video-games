@@ -9,7 +9,9 @@ export const Text = styled.div`
 
 export const Title = styled.h1`
   margin: 0;
-  padding-top: 0;
+  padding: 0;
+  color: white;
   font-size: 5em;
   -webkit-text-stroke: 3px black;
+  text-transform: uppercase;
 `;

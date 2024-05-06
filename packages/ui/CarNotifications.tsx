@@ -26,12 +26,13 @@ export const CarNotifications = ({ notification }) => {
   if (!notification) {
     return null;
   }
-
-  return (
-    <Panel>
-      <Content>
-        <Text>$ -{notification.cost}</Text>
-      </Content>
-    </Panel>
-  );
+  // !new!
+  return <Text>$ -{notification.cost}</Text>;
+  // return (
+  //   <Panel>
+  //     <Content>
+  //       <Text>$ -{notification.cost}</Text>
+  //     </Content>
+  //   </Panel>
+  // );
 };
