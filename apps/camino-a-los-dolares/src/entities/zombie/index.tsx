@@ -6,7 +6,7 @@ import {
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
-import { memo, useRef, useState } from "react";
+import { memo, useRef } from "react";
 import { Vector3Tuple } from "three";
 import { ZombieModel } from "./model";
 import {
@@ -54,10 +54,10 @@ export const Zombie = memo(({ position = [0, h + 1, -300] }: Props) => {
 
   useFrame(() => {
     if (
-      !state.matches(INACTIVE_STATE) ||
+      state.matches(INACTIVE_STATE) ||
+      state.matches(HIT_STATE) ||
       !rigidbody.current ||
-      !carRigidBody.current ||
-      !state.matches(HIT_STATE)
+      !carRigidBody.current
     ) {
       return;
     }
@@ -75,15 +75,6 @@ export const Zombie = memo(({ position = [0, h + 1, -300] }: Props) => {
 
   const triggerIsValid = (payload) =>
     payloadIsThePlayer(payload) && !state.matches(HIT_STATE);
-  // const triggerIsValid = (payload: CollisionPayload) => {
-  //   const m = payloadIsThePlayer(payload);
-  //   const f = !state.matches(HIT_STATE);
-  //   if (m) {
-  //     console.log(f);
-  //   }
-
-  //   return m && f;
-  // };
 
   const handleCollision = throttle((payload: CollisionPayload) => {
     if (!triggerIsValid(payload)) {
@@ -195,11 +186,6 @@ export const Zombie = memo(({ position = [0, h + 1, -300] }: Props) => {
               url={hitByCar}
               autoplay
               loop={false}
-              // onEnded={() => {
-              //   setTimeout(() => {
-              //     setIsActive(false);
-              //   }, 1000);
-              // }}
             />
           </>
         )}

@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Zombie } from "./entities/zombie";
 import useGameStore from "./store/store";
 import { EntitiesRegion } from "./EntitiesRegion";
+import { ZombieDriver } from "./entities/zombie/driver";
 
 // : FC<{ isOldVersion?: boolean }>
 export const Zombies = memo<{
@@ -15,7 +16,10 @@ export const Zombies = memo<{
     return (
       <>
         {[...Array(numberOfZombies)].map((_, i) => (
-          <Zombie key={i} position={[Math.random() * 21 - 10, 1, i * -50]} />
+          <ZombieDriver
+            key={i}
+            position={[Math.random() * 21 - 10, 1, i * -50]}
+          />
         ))}
       </>
     );
@@ -28,7 +32,7 @@ export const Zombies = memo<{
         depth={400}
         ZOffset={400}
         numberOfEntities={[numberOfZombies / 2, numberOfZombies / 2]}
-        Entity={Zombie}
+        Entity={ZombieDriver}
         spaceBetween={{ x: [10, 21], y: 1 }}
       />
     </>

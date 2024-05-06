@@ -34,7 +34,8 @@ body {
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
-  background: #453b2e;
+  /* background: #453b2e; */
+  background: black;
 }
 
 html,

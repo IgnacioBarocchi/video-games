@@ -13,7 +13,7 @@ export const LobbyTurnTable = () => {
   useFrame((_, delta) => {
     if (!playerObjectReferences.current) return;
 
-    const rotationSpeed = 0.5;
+    const rotationSpeed = 0.05;
     if (playerObjectReferences.current.modelRef.current) {
       const { rotation } = playerObjectReferences.current.modelRef.current;
       rotation.y += rotationSpeed * delta;

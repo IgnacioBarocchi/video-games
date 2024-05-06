@@ -43,7 +43,7 @@ const Button = styled.button`
   font-size: 3em;
   background: #1e63d5;
   border: none;
-  clip-path: polygon(
+  /*clip-path: polygon(
     1% 0,
     99% 0,
     100% 20%,
@@ -52,7 +52,7 @@ const Button = styled.button`
     1% 100%,
     0% 80%,
     0% 20%
-  );
+  );*/
 `;
 
 export const MainMenu = ({

@@ -14,7 +14,7 @@ const Scenario = memo(() => {
     <>
       <Ground />
       <Barriers isOldVersion={isOldVersion} />
-      <Zombies numberOfZombies={50} isOldVersion={isOldVersion} />
+      <Zombies numberOfZombies={50} isOldVersion={false} />
       <BurntCars isOldVersion={isOldVersion} />
       <Signs isOldVersion={isOldVersion} />
       <Trees isOldVersion={isOldVersion} />
