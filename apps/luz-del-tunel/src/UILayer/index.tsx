@@ -63,8 +63,18 @@ export const UILayer = () => {
   );
 
   const MemoizedA = useMemo(
-    () => <StopWatch onEnd={() => setGameOver({ reason: "TIME OUT" })} />,
-    []
+    () => (
+      <StopWatch
+        onEnd={() => {
+          if (gameOver) {
+            return;
+          }
+
+          setGameOver({ reason: "TIME OUT" });
+        }}
+      />
+    ),
+    [gameOver]
   );
 
   const MemoizedB = useMemo(
@@ -72,40 +82,23 @@ export const UILayer = () => {
     [carNotification]
   );
 
-  // if (renderInGameUI) {
-  //   if (loading) {
-  //     return <LoadingScreen />;
-  //   }
+  if (renderInGameUI) {
+    if (loading) {
+      return <LoadingScreen />;
+    }
 
-  return (
-    <InGameScreen
-      displayClock={!gameOver}
-      ClockSlot={MemoizedA}
-      displayNotification={carNotification}
-      NotificationSlot={MemoizedB}
-      displayEndGameSlot={gameOver}
-      EndGameSlot={MemoizedC}
-      title={title}
-    />
-  );
-  // }
-  //   return (
-  //     <>
-  //       {title && <TitleScreen text={title} />}
-  //       {gameOver && !title && (
-  //         <EndGameScreen
-  //           gameOverPayload={gameOver}
-  //           ARS={money}
-  //           USD={Math.floor(money / DOLLAR_RATE)}
-  //         />
-  //       )}
-  //       {!gameOver && (
-  //         <StopWatch onEnd={() => setGameOver({ reason: "TIME OUT" })} />
-  //       )}
-  //       <CarNotificationImp carNotification={carNotification} />
-  //     </>
-  //   );
-  // }
+    return (
+      <InGameScreen
+        displayClock={!gameOver}
+        ClockSlot={MemoizedA}
+        displayNotification={carNotification}
+        NotificationSlot={MemoizedB}
+        displayEndGameSlot={gameOver}
+        EndGameSlot={MemoizedC}
+        title={title}
+      />
+    );
+  }
 
   return (
     <>

@@ -1,5 +1,7 @@
 import { styled } from "styled-components";
 
+//todo: extend Text as button
+
 export const Button = styled.button<{ detailed?: boolean }>`
   font-size: 3em;
   background: #1e63d5;

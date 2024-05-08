@@ -1,6 +1,6 @@
 import React from "react";
 import { Box } from "../elements/Box";
-import { Panel, CenteredPanel } from "../elements/Panel";
+import { Panel } from "../elements/Panel";
 import { Title } from "../elements/Text";
 
 export interface GUIProps {
@@ -64,10 +64,16 @@ export const InGameScreen = React.memo<GUIProps>(
   }) => {
     return (
       <>
-        <CenteredPanel x>
+        <Panel
+          backgroundValueCSSText="rgba(255,0,0,0.5)"
+          left="50%"
+          cssText="transform: translateX(-50%)"
+          padBox={false}
+          width="fit-content"
+        >
           <TopArea displayTitle={displayTitle} title={title} />
-        </CenteredPanel>
-        <Panel>
+        </Panel>
+        <Panel backgroundValueCSSText="rgba(0,0,255,0.5)">
           <Box visible fullHeight fullWidth>
             <LeftArea
               displayClock={displayClock}
@@ -77,12 +83,19 @@ export const InGameScreen = React.memo<GUIProps>(
             />
           </Box>
         </Panel>
-        <CenteredPanel x y>
+        <Panel
+          width="fit-content"
+          backgroundValueCSSText="rgba(0,255,0,0.5)"
+          top="50%"
+          left="50%"
+          cssText="transform: translateX(-50%)"
+          padBox={false}
+        >
           <MidArea
             EndGameSlot={EndGameSlot}
             displayEndGameSlot={displayEndGameSlot}
           />
-        </CenteredPanel>
+        </Panel>
       </>
     );
   }

@@ -6,7 +6,8 @@ export interface BoxProps {
   direction?: "vertical" | "horizontal";
   fullWidth?: boolean;
   fullHeight?: boolean;
-  justification?: "space-between";
+  justification?: "space-between" | "space-evenly" | "center";
+  alignment?: "center" | "flex-start";
 }
 
 const Container = styled.div<BoxProps>`
@@ -18,6 +19,7 @@ const Container = styled.div<BoxProps>`
   visibility: ${({ visible }) => (visible ? "auto" : "hidden")};
   justify-content: ${({ justification }) =>
     justification ? justification : "auto"};
+  align-items: ${({ alignment }) => (alignment ? alignment : "flex-start")};
 `;
 
 export const Box: React.FC<BoxProps> = ({
@@ -27,6 +29,7 @@ export const Box: React.FC<BoxProps> = ({
   fullWidth,
   fullHeight,
   justification,
+  alignment,
 }) => {
   return (
     <Container
@@ -35,6 +38,7 @@ export const Box: React.FC<BoxProps> = ({
       fullWidth={fullWidth}
       fullHeight={fullHeight}
       justification={justification}
+      alignment={alignment}
     >
       {children}
     </Container>

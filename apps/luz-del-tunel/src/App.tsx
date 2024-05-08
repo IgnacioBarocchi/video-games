@@ -22,7 +22,7 @@ export default function App() {
   return (
     <>
       <World3D>
-        <Perf />
+        {/* <Perf /> */}
         <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
           <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
           <Experience gameStarted={gameStarted} />

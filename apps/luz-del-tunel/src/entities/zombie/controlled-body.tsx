@@ -5,7 +5,7 @@ import {
   CylinderCollider,
   RigidBody,
 } from "@react-three/rapier";
-import { memo, useRef } from "react";
+import { forwardRef, memo, useRef } from "react";
 import { PositionalAudio } from "@react-three/drei";
 
 import {
@@ -26,90 +26,99 @@ const getZombieHitAudio = () =>
   ];
 
 export const ControlledZombieBody = memo(
-  ({
-    children,
-    position,
-    isHit,
-    handleChasePlayer,
-    handleAttackPlayer,
-    handleHitByPlayer,
-  }) => {
-    const rigidBody = useRef<RapierRigidBody>(null);
-    const carRigidBody = useRef<RapierRigidBody | null>(null);
+  forwardRef(
+    (
+      {
+        children,
+        position,
+        isHit,
+        handleChasePlayer,
+        handleAttackPlayer,
+        handleHitByPlayer,
+        handleRegisterPlayer,
+        handleUnregisterPlayer,
+      },
+      references
+    ) => {
+      // const rigidBody = useRef<RapierRigidBody>(null);
+      // const references.current?.carRigidBody = useRef<RapierRigidBody | null>(null);
 
-    useFrame(() => {
-      if (isHit || !rigidBody.current || !carRigidBody.current) {
-        return;
-      }
+      useFrame(() => {
+        if (
+          isHit ||
+          !references?.current?.zombieRigidBody.current ||
+          !references.current?.carRigidBody.current
+        ) {
+          return;
+        }
 
-      const params = {
-        sourcePosition: getVector3From(rigidBody.current.translation()),
-        targetPosition: getVector3From(carRigidBody?.current.translation()),
-        sourceRigidBody: rigidBody.current,
-        style: "LINEAR VELOCITY",
-        speed: 200,
-      };
+        const params = {
+          sourcePosition: getVector3From(
+            references.current.zombieRigidBody.current.translation()
+          ),
+          targetPosition: getVector3From(
+            references.current?.carRigidBody?.current.translation()
+          ),
+          sourceRigidBody: references.current.zombieRigidBody.current,
+          style: "LINEAR VELOCITY",
+          speed: 200,
+        };
 
-      goToTarget(params);
-    });
+        goToTarget(params);
+      });
 
-    return (
-      <RigidBody
-        mass={44}
-        density={1}
-        friction={1}
-        restitution={0.5}
-        ref={rigidBody}
-        position={position}
-        lockRotations
-        colliders={false}
-      >
-        <CapsuleCollider
-          name="Zombie body"
-          position={[0, isHit ? deathR : h, 0]}
-          args={[isHit ? deathR : h, isHit ? deathR : 0.5]}
-          onCollisionEnter={handleHitByPlayer}
-        />
-        <CylinderCollider
-          name="Near"
-          sensor
-          position={[0, h, 0]}
-          args={[h, 3]}
-          onIntersectionEnter={handleAttackPlayer}
-          onIntersectionExit={handleChasePlayer}
-        />
-        <CylinderCollider
-          name="Region"
-          sensor
-          position={[0, h, 0]}
-          args={[h, 200]}
-          onIntersectionEnter={(payload) => {
-            if (payloadIsThePlayer(payload)) {
-              carRigidBody.current = payload.other.rigidBody!;
-            }
-          }}
-          onIntersectionExit={() => {
-            carRigidBody.current = null;
-          }}
-        />
-        {isHit && (
-          <>
-            <PositionalAudio
-              distance={10}
-              url={getZombieHitAudio()}
-              autoplay={true}
-              loop={false}
-            />
-            <PositionalAudio
-              distance={20}
-              url={hitByCar}
-              autoplay={true}
-              loop={false}
-            />
-          </>
-        )}
-        {children}
-      </RigidBody>
-    );
-  }
+      return (
+        <RigidBody
+          mass={44}
+          density={1}
+          friction={1}
+          restitution={0.5}
+          ref={references.current.zombieRigidBody}
+          position={position}
+          lockRotations
+          colliders={false}
+        >
+          <CapsuleCollider
+            name="Zombie body"
+            position={[0, isHit ? deathR : h, 0]}
+            args={[isHit ? deathR : h, isHit ? deathR : 0.5]}
+            onCollisionEnter={handleHitByPlayer}
+          />
+          <CylinderCollider
+            name="Near"
+            sensor
+            position={[0, h, 0]}
+            args={[h, 3]}
+            onIntersectionEnter={handleAttackPlayer}
+            onIntersectionExit={handleChasePlayer}
+          />
+          <CylinderCollider
+            name="Region"
+            sensor
+            position={[0, h, 0]}
+            args={[h, 200]}
+            onIntersectionEnter={handleRegisterPlayer}
+            onIntersectionExit={handleUnregisterPlayer}
+          />
+          {isHit && (
+            <>
+              <PositionalAudio
+                distance={10}
+                url={getZombieHitAudio()}
+                autoplay={true}
+                loop={false}
+              />
+              <PositionalAudio
+                distance={20}
+                url={hitByCar}
+                autoplay={true}
+                loop={false}
+              />
+            </>
+          )}
+          {children}
+        </RigidBody>
+      );
+    }
+  )
 );

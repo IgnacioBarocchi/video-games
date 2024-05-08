@@ -11,7 +11,7 @@ export const ENTITY = {
   ZOMBIE: "ZOMBIE",
   CONCRETE_BARRIER: "CONCRETE_BARRIER",
 };
-export const TIME_LIMIT = 10;
+export const TIME_LIMIT = 80;
 export const LAST_SECONDS = 5;
 export const DOLLAR_RATE = 609283.0142;
 export const STARTING_ARS = DOLLAR_RATE * 100;

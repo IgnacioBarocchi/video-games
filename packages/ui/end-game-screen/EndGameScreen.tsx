@@ -1,5 +1,6 @@
-import { Panel } from "../elements/Panel";
-import { Timeout } from "./screens/timeout";
+import { Box } from "../elements/Box";
+import { Panel, CenteredPanel } from "../elements/Panel";
+import { Text } from "../elements/Text";
 import { Winning } from "./screens/winning";
 
 export const EndGameScreen: React.FC<{
@@ -19,15 +20,15 @@ export const EndGameScreen: React.FC<{
 
   if (reason === "TIME OUT") {
     return (
-      <Panel>
-        <Timeout />
-      </Panel>
+      <Box direction="vertical" fullWidth fullHeight visible={true}>
+        <Text>Misión fracasada</Text>
+        <Text>Se acabó el tiempo</Text>
+      </Box>
     );
   }
 
   return (
-    <Panel>
-      <div>se rompió el auto</div>
-    </Panel>
+    // <Panel>
+    <div>se rompió el auto</div>
   );
 };

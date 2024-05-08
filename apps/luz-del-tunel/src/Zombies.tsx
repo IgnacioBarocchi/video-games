@@ -18,7 +18,7 @@ export const Zombies = memo<{
         {[...Array(numberOfZombies)].map((_, i) => (
           <ZombieDriver
             key={i}
-            position={[Math.random() * 21 - 10, 1, i * -50]}
+            position={[Math.random() * 21 - 10, 1, i * -50 - 400]}
           />
         ))}
       </>

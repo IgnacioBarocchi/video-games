@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Text } from "../../elements/Text";
 
 const Box = styled.div`
   width: 100vw;
@@ -22,11 +23,17 @@ const Item = styled.div`
 
 export const Timeout = () => {
   return (
-    <Box>
-      <Report>
-        <Item>Misión fracasada</Item>
-        <Item>Se acabó el tiempo</Item>
-      </Report>
-    </Box>
+    <>
+      <Text>Misión fracasada</Text>
+      <Text>Se acabó el tiempo</Text>
+    </>
   );
+  // return (
+  //   <Box>
+  //     <Report>
+  //       <Item>Misión fracasada</Item>
+  //       <Item>Se acabó el tiempo</Item>
+  //     </Report>
+  //   </Box>
+  // );
 };
