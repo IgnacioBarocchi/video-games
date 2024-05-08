@@ -14,7 +14,12 @@ const Scenario = memo(() => {
     <>
       <Ground />
       <Barriers isOldVersion={isOldVersion} />
-      <Zombies numberOfZombies={50} isOldVersion={isOldVersion} />
+      <Zombies
+        startZOffset={900}
+        Zend={1900}
+        numberOfZombies={50}
+        isOldVersion={isOldVersion}
+      />
       <BurntCars isOldVersion={isOldVersion} />
       <Signs isOldVersion={isOldVersion} />
       <Trees isOldVersion={isOldVersion} />
@@ -31,7 +36,6 @@ export const LVL1 = () => {
 
   useEffect(() => {
     setLoading(false);
-    console.log("!");
   }, [loading]);
 
   if (!gameStarted) return null;

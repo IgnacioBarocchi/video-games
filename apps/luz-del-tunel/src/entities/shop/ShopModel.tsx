@@ -6,31 +6,83 @@ import shopModelFile from "../../assets/models/Shop/Shop.gltf";
 
 type GLTFResult = GLTF & {
   nodes: {
+    Seller_Cube001mesh: THREE.SkinnedMesh;
+    Seller_Cube001mesh_1: THREE.SkinnedMesh;
+    Seller_Cube001mesh_2: THREE.SkinnedMesh;
+    Seller_Cube001mesh_3: THREE.SkinnedMesh;
+    Seller_Cube001mesh_4: THREE.SkinnedMesh;
+    Seller_Cube001mesh_5: THREE.SkinnedMesh;
     Ground: THREE.Mesh;
-    Plane: THREE.Mesh;
     Plane_1: THREE.Mesh;
     Plane_2: THREE.Mesh;
     Plane_3: THREE.Mesh;
     Plane_4: THREE.Mesh;
-    Cube003: THREE.Mesh;
+    Plane_5: THREE.Mesh;
     Cube003_1: THREE.Mesh;
     Cube003_2: THREE.Mesh;
     Cube003_3: THREE.Mesh;
     Cube003_4: THREE.Mesh;
-    Cube006: THREE.Mesh;
+    Cube003_5: THREE.Mesh;
     Cube006_1: THREE.Mesh;
     Cube006_2: THREE.Mesh;
     Cube006_3: THREE.Mesh;
     Cube006_4: THREE.Mesh;
-    Cube007: THREE.Mesh;
+    Cube006_5: THREE.Mesh;
     Cube007_1: THREE.Mesh;
     Cube007_2: THREE.Mesh;
-    Cube009: THREE.Mesh;
+    Cube007_3: THREE.Mesh;
     Cube009_1: THREE.Mesh;
     Cube009_2: THREE.Mesh;
     Cube009_3: THREE.Mesh;
+    Cube009_4: THREE.Mesh;
+    Cube004_1: THREE.Mesh;
+    Cube004_2: THREE.Mesh;
+    Cube004_3: THREE.Mesh;
+    Cube004_4: THREE.Mesh;
+    Cube010: THREE.Mesh;
+    Cube010_1: THREE.Mesh;
+    Cube010_2: THREE.Mesh;
+    Cube010_3: THREE.Mesh;
+    Cube011: THREE.Mesh;
+    Cube011_1: THREE.Mesh;
+    Cube011_2: THREE.Mesh;
+    Cube011_3: THREE.Mesh;
+    Cube012: THREE.Mesh;
+    Cube012_1: THREE.Mesh;
+    Cube012_2: THREE.Mesh;
+    Cube012_3: THREE.Mesh;
+    Cube013: THREE.Mesh;
+    Cube013_1: THREE.Mesh;
+    Cube013_2: THREE.Mesh;
+    Cube013_3: THREE.Mesh;
+    Cube014: THREE.Mesh;
+    Cube014_1: THREE.Mesh;
+    Cube014_2: THREE.Mesh;
+    Cube014_3: THREE.Mesh;
+    Cube015: THREE.Mesh;
+    Cube015_1: THREE.Mesh;
+    Cube015_2: THREE.Mesh;
+    Cube015_3: THREE.Mesh;
+    Cube016: THREE.Mesh;
+    Cube016_1: THREE.Mesh;
+    Cube016_2: THREE.Mesh;
+    Cube016_3: THREE.Mesh;
+    Plane: THREE.Mesh;
+    Cube005_1: THREE.Mesh;
+    Cube005_2: THREE.Mesh;
+    Cube005_3: THREE.Mesh;
+    Cube008_1: THREE.Mesh;
+    Cube008_2: THREE.Mesh;
+    Cube008_3: THREE.Mesh;
+    mixamorigHips: THREE.Bone;
   };
   materials: {
+    Skin: THREE.MeshBasicMaterial;
+    Jumper: THREE.MeshBasicMaterial;
+    Hair: THREE.MeshBasicMaterial;
+    Skin_Shade: THREE.MeshBasicMaterial;
+    Pants: THREE.MeshBasicMaterial;
+    Jumper_Shade: THREE.MeshBasicMaterial;
     Terrain: THREE.MeshBasicMaterial;
     Red: THREE.MeshStandardMaterial;
     White_Paint: THREE.MeshBasicMaterial;
@@ -43,10 +95,14 @@ type GLTFResult = GLTF & {
     Concrete_High: THREE.MeshBasicMaterial;
     Window: THREE.MeshBasicMaterial;
     Building: THREE.MeshBasicMaterial;
+    Table: THREE.MeshBasicMaterial;
+    Dollar: THREE.MeshBasicMaterial;
+    Dollar_Shade: THREE.MeshBasicMaterial;
+    Paper: THREE.MeshBasicMaterial;
   };
 };
 
-type ActionName = "Open_Gate";
+type ActionName = "Open_Gate" | "Selling";
 type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 export function ShopModel({ state }) {
@@ -57,6 +113,7 @@ export function ShopModel({ state }) {
 
   useEffect(() => {
     // actions['Seller_Idle'].play();
+    actions.Selling.play();
     if (state === "DOOR OPEN") {
       actions["Open_Gate"].setLoop(THREE.LoopOnce, 1);
       actions["Open_Gate"].clampWhenFinished = true;
@@ -69,6 +126,51 @@ export function ShopModel({ state }) {
   return (
     <group ref={group} dispose={null}>
       <group name="Scene">
+        <group
+          name="Armature"
+          position={[21.73, 1.84, -10.75]}
+          rotation={[Math.PI / 2, 0, Math.PI / 2]}
+        >
+          <primitive object={nodes.mixamorigHips} />
+          <group name="Seller_Cube001">
+            <skinnedMesh
+              name="Seller_Cube001mesh"
+              geometry={nodes.Seller_Cube001mesh.geometry}
+              material={materials.Skin}
+              skeleton={nodes.Seller_Cube001mesh.skeleton}
+            />
+            <skinnedMesh
+              name="Seller_Cube001mesh_1"
+              geometry={nodes.Seller_Cube001mesh_1.geometry}
+              material={materials.Jumper}
+              skeleton={nodes.Seller_Cube001mesh_1.skeleton}
+            />
+            <skinnedMesh
+              name="Seller_Cube001mesh_2"
+              geometry={nodes.Seller_Cube001mesh_2.geometry}
+              material={materials.Hair}
+              skeleton={nodes.Seller_Cube001mesh_2.skeleton}
+            />
+            <skinnedMesh
+              name="Seller_Cube001mesh_3"
+              geometry={nodes.Seller_Cube001mesh_3.geometry}
+              material={materials.Skin_Shade}
+              skeleton={nodes.Seller_Cube001mesh_3.skeleton}
+            />
+            <skinnedMesh
+              name="Seller_Cube001mesh_4"
+              geometry={nodes.Seller_Cube001mesh_4.geometry}
+              material={materials.Pants}
+              skeleton={nodes.Seller_Cube001mesh_4.skeleton}
+            />
+            <skinnedMesh
+              name="Seller_Cube001mesh_5"
+              geometry={nodes.Seller_Cube001mesh_5.geometry}
+              material={materials.Jumper_Shade}
+              skeleton={nodes.Seller_Cube001mesh_5.skeleton}
+            />
+          </group>
+        </group>
         <mesh
           name="Ground"
           geometry={nodes.Ground.geometry}
@@ -82,28 +184,28 @@ export function ShopModel({ state }) {
           scale={[-31.05, -2.02, -58.59]}
         >
           <mesh
-            name="Plane"
-            geometry={nodes.Plane.geometry}
-            material={materials.Red}
-          />
-          <mesh
             name="Plane_1"
             geometry={nodes.Plane_1.geometry}
-            material={materials.White_Paint}
+            material={materials.Red}
           />
           <mesh
             name="Plane_2"
             geometry={nodes.Plane_2.geometry}
-            material={materials["Asphalt.001"]}
+            material={materials.White_Paint}
           />
           <mesh
             name="Plane_3"
             geometry={nodes.Plane_3.geometry}
-            material={materials.Alert}
+            material={materials["Asphalt.001"]}
           />
           <mesh
             name="Plane_4"
             geometry={nodes.Plane_4.geometry}
+            material={materials.Alert}
+          />
+          <mesh
+            name="Plane_5"
+            geometry={nodes.Plane_5.geometry}
             material={materials["Black.001"]}
           />
         </group>
@@ -195,23 +297,23 @@ export function ShopModel({ state }) {
           scale={-1}
         >
           <mesh
-            name="Cube009"
-            geometry={nodes.Cube009.geometry}
-            material={materials.Building}
-          />
-          <mesh
             name="Cube009_1"
             geometry={nodes.Cube009_1.geometry}
-            material={materials.Concrete_Shade}
+            material={materials.Building}
           />
           <mesh
             name="Cube009_2"
             geometry={nodes.Cube009_2.geometry}
-            material={materials.Concrete_Dark}
+            material={materials.Concrete_Shade}
           />
           <mesh
             name="Cube009_3"
             geometry={nodes.Cube009_3.geometry}
+            material={materials.Concrete_Dark}
+          />
+          <mesh
+            name="Cube009_4"
+            geometry={nodes.Cube009_4.geometry}
             material={materials.Concrete_High}
           />
         </group>
@@ -423,6 +525,64 @@ export function ShopModel({ state }) {
             material={materials.Concrete_Building}
           />
         </group>
+        <mesh
+          name="Plane"
+          geometry={nodes.Plane.geometry}
+          material={materials.Table}
+          position={[21.14, 3.49, -10.66]}
+          scale={[0.38, 1, 1]}
+        />
+        <group
+          name="Cube"
+          position={[20.93, 3.53, -11.18]}
+          scale={[0.05, 0.06, 0.06]}
+        >
+          <mesh
+            name="Cube005_1"
+            geometry={nodes.Cube005_1.geometry}
+            material={materials.Dollar}
+          />
+          <mesh
+            name="Cube005_2"
+            geometry={nodes.Cube005_2.geometry}
+            material={materials.Dollar_Shade}
+          />
+          <mesh
+            name="Cube005_3"
+            geometry={nodes.Cube005_3.geometry}
+            material={materials.Paper}
+          />
+        </group>
+        <group
+          name="Cube009"
+          position={[21.12, 3.53, -10.89]}
+          rotation={[0, 0.59, 0]}
+          scale={[0.05, 0.06, 0.06]}
+        >
+          <mesh
+            name="Cube008_1"
+            geometry={nodes.Cube008_1.geometry}
+            material={materials.Dollar}
+          />
+          <mesh
+            name="Cube008_2"
+            geometry={nodes.Cube008_2.geometry}
+            material={materials.Dollar_Shade}
+          />
+          <mesh
+            name="Cube008_3"
+            geometry={nodes.Cube008_3.geometry}
+            material={materials.Paper}
+          />
+        </group>
+        <mesh
+          name="Plane001"
+          geometry={nodes.Plane001.geometry}
+          material={materials.Arrow}
+          position={[16.49, 7.71, -13.51]}
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={[0.37, 1, 1]}
+        />
       </group>
     </group>
   );

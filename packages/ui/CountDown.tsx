@@ -17,8 +17,7 @@ const finalValues = `
   font-size: 6em;
   color: red;
   transform: translateX(-50%);
-  `;
-//
+`;
 
 const move = keyframes`
   from {

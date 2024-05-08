@@ -1,7 +1,6 @@
 import CountUp from "react-countup";
 import styled from "styled-components";
 import { useState } from "react";
-import { Panel } from "../../elements/Panel";
 import { Box } from "../../elements/Box";
 import { Text } from "../../elements/Text";
 
@@ -18,11 +17,13 @@ export const Winning = ({ ARS, USD }) => {
         <CountUp
           prefix="ARS "
           separator="."
+          decimal=","
           start={ARS}
           end={0}
           duration={5}
           delay={1}
           onEnd={() => setDisplayDollars(true)}
+          decimals={2}
         ></CountUp>{" "}
       </Text>
       <Text>
@@ -30,10 +31,13 @@ export const Winning = ({ ARS, USD }) => {
           <Money>
             <CountUp
               prefix="USD "
+              separator="."
+              decimal=","
               start={0}
               end={USD}
               duration={1}
               delay={0}
+              decimals={2}
             ></CountUp>
           </Money>
         ) : (

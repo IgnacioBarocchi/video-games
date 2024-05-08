@@ -56,7 +56,7 @@ export const UILayer = () => {
       <EndGameScreen
         gameOverPayload={gameOver}
         ARS={money}
-        USD={Math.floor(money / DOLLAR_RATE)}
+        USD={Number((money / DOLLAR_RATE).toFixed(2))}
       />
     ),
     [gameOver, money]

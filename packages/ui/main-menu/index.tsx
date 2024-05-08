@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { css, keyframes, styled } from "styled-components";
+import { styled } from "styled-components";
 import { Panel, panelPadding } from "../elements/Panel";
 import { Title } from "../elements/Text";
 import { Button } from "../elements/Button";
@@ -43,6 +43,7 @@ export const MainMenu = ({
           direction="horizontal"
           fullWidth
           justification="space-evenly"
+          clickable={true}
         >
           <Button detailed={true} onClick={onQuitClick}>
             Salir

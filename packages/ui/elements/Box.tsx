@@ -8,6 +8,7 @@ export interface BoxProps {
   fullHeight?: boolean;
   justification?: "space-between" | "space-evenly" | "center";
   alignment?: "center" | "flex-start";
+  clickable?: boolean;
 }
 
 const Container = styled.div<BoxProps>`
@@ -20,6 +21,7 @@ const Container = styled.div<BoxProps>`
   justify-content: ${({ justification }) =>
     justification ? justification : "auto"};
   align-items: ${({ alignment }) => (alignment ? alignment : "flex-start")};
+  pointer-events: ${({ clickable }) => (clickable ? "all" : "none")};
 `;
 
 export const Box: React.FC<BoxProps> = ({
@@ -30,6 +32,7 @@ export const Box: React.FC<BoxProps> = ({
   fullHeight,
   justification,
   alignment,
+  clickable = false,
 }) => {
   return (
     <Container
@@ -39,6 +42,7 @@ export const Box: React.FC<BoxProps> = ({
       fullHeight={fullHeight}
       justification={justification}
       alignment={alignment}
+      clickable={clickable}
     >
       {children}
     </Container>

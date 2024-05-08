@@ -7,6 +7,8 @@ import { PositionalAudio } from "@react-three/drei";
 import hitSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-hit.mp3";
 import scrapeSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-scrape.mp3";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
+import { CAR_IMPACT_COST } from "../../constants";
+import useGameStore from "../../store/store";
 
 export const BurntCar: FC<{ position: [number, number, number] }> = ({
   position,
@@ -14,6 +16,10 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
   const [playHitSound, setPlayHitSound] = useState(false);
   const [playScrapeSound, setPlayScrapeSound] = useState(false);
   const burntCarModelID = Math.floor(Math.random() * (3 - 1) + 1);
+  const { setCarNotification, subMoney } = useGameStore((gameState) => ({
+    subMoney: gameState.subMoney,
+    setCarNotification: gameState.setCarNotification,
+  }));
 
   return (
     <RigidBody
@@ -41,6 +47,8 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
         onCollisionEnter={(payload) => {
           if (payloadIsThePlayer(payload)) {
             setPlayHitSound(true);
+            setCarNotification({ type: "HIT CAR", cost: CAR_IMPACT_COST });
+            subMoney(CAR_IMPACT_COST);
           }
         }}
       />
