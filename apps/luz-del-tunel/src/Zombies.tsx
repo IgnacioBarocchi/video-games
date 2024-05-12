@@ -21,18 +21,12 @@ export const Zombies = memo<{
   if (isOldVersion) {
     return (
       <>
-        <Text fontSize={20} position={[0, 2, -startZOffset]}>
-          START
-        </Text>
         {[...Array(numberOfZombies)].map((_, i) => {
           const xPos = Math.random() * 21 - 10;
           const zPos = -Math.min(i * distributionFactor, Zend) - startZOffset;
 
           return <ZombieDriver key={i} position={[xPos, 1, zPos]} />;
         })}
-        <Text fontSize={20} position={[0, 2, -Zend]}>
-          END
-        </Text>
       </>
     );
   }

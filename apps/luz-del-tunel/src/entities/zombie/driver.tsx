@@ -86,7 +86,7 @@ export const ZombieDriver = memo<{ position: [number, number, number] }>(
 
       if (
         payloadIsThePlayer(payload) &&
-        Math.abs(payload.rigidBody?.linvel().z!) > 2
+        Math.abs(payload.rigidBody?.linvel().z!) > 10
       ) {
         send({ type: HIT_EVENT });
         setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
