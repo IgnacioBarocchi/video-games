@@ -1,107 +1,115 @@
 import { useActor } from "@xstate/react";
-import { useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, useMemo } from "react";
 import { Context } from "../providers/player-context-provider";
 import {
-  CapsuleCollider,
-  CollisionPayload,
-  CylinderCollider,
-  RapierRigidBody,
-  RigidBody,
-} from "@react-three/rapier";
-import { MaleCharacter3DModel } from "./MaleCharacter3DModel";
+  GLTFActions,
+  GLTFResult,
+  MaleCharacter3DModel,
+} from "./MaleCharacter3DModel";
+import { usePlayerLogic } from "../hooks/usePlayerLogic";
+import { CharacterRigidBody } from "./CharacterRigidBody";
+import { GroupProps, useGraph } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import {
+  IDLE_STATE,
+  MOVE_STATE,
+  USING_SKILL_1_STATE,
+  USING_SKILL_2_STATE,
+  USING_SKILL_3_STATE,
+  REACTING_TO_SKILL_1_STATE,
+  REACTING_TO_SKILL_2_STATE,
+  DEATH_STATE,
+} from "../machines/fsmbeta";
+import character3DModelFile from "../assets/models/Male_Character.glb";
+import { Attachments } from "./Attachments";
 
-// import {
-//   CapsuleCollider as Bounding,
-//   RigidBody,
-//   CylinderCollider as Sensor,
-// } from "@react-three/rapier";
-
-// import { Context } from "../../../providers/PlayerProvider";
-// import { FC, Suspense, useEffect, useRef } from "react";
-// import { BaseFSM, FSMStates } from "../../../lib/getBaseMachineInput";
-// import { usePlayerLogic } from "../../../hooks/usePlayerLogic";
-// import { rigidBodyColliderHandler } from "../../../lib/rigidBodyColliderHandler";
-// import { PlayerID } from "../../../constants/entities";
-// import { useGameStore } from "../../../hooks/useGameStore";
-// import { Team } from "../../../data/types";
-
-// export type PlayerProps = {
-//   useOrbitControls: boolean;
-//   Model: FC<{
-//     machine: BaseFSM;
-//   }>;
-//   teamMembers: Team[];
-//   position: [number, number, number];
-// };
-
-// export const Player: FC<PlayerProps> = ({
-//     useOrbitControls,
-//     teamMembers,
-//     Model,
-//     position,
-//   })
 export const Player = () => {
   const [state, send] = useActor(Context.useActorRef().logic);
-  //   const { setEntityLoaded } = useGameStore((state) => ({
-  //     setEntityLoaded: state.setEntityLoaded,
-  //   }));
-
-  //   const stateValue = state.value as FSMStates;
-  //   const userData = useRef({
-  //     id: PlayerID,
-  //     stateValue,
-  //     send,
-  //     // todo: pass record
-  //     team: "Archangel",
-  //   });
-
-  //   const { playerRigidBodyReference } = usePlayerLogic({
-  //     useOrbitControls,
-  //     machine: [state, send],
-  //   });
-
-  //   const { onCollisionEnter } = rigidBodyColliderHandler({
-  //     send,
-  //     teamMembers,
-  //   });
-  const playerRigidBodyReference = useRef(null);
+  const group = useRef<GroupProps>();
+  const { scene, materials, animations } = useGLTF(
+    character3DModelFile
+  ) as GLTFResult;
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+  const { actions } = useAnimations<GLTFActions>(animations, group);
+  const { playerRigidBodyReference } = usePlayerLogic({
+    useOrbitControls: false,
+    machine: [state, send],
+  });
 
   useEffect(() => {
-    if (playerRigidBodyReference?.current) {
+    if (group?.current) {
+      // updateMaulPosition(false);
+
+      const milliseconds = 1000;
+      const animationNameByFSMState = new Map([
+        [IDLE_STATE, "IDLE"],
+        [MOVE_STATE, "RUN"],
+        [USING_SKILL_1_STATE, "SHOOTING"],
+        [USING_SKILL_2_STATE, "MAUL"],
+        [USING_SKILL_3_STATE, "ROLL"],
+        [REACTING_TO_SKILL_1_STATE, "DEATH"],
+        [REACTING_TO_SKILL_2_STATE, "DEATH"],
+        [DEATH_STATE, "DEATH"],
+      ]);
+
+      const characterFSMDurations = new Map([
+        [IDLE_STATE, actions.IDLE?.getClip().duration! * milliseconds],
+        [MOVE_STATE, actions.RUN?.getClip().duration! * milliseconds],
+        [
+          USING_SKILL_1_STATE,
+          actions.SHOOTING?.getClip().duration! * milliseconds,
+        ],
+        [USING_SKILL_2_STATE, actions.MAUL?.getClip().duration! * milliseconds],
+        [USING_SKILL_3_STATE, actions.ROLL?.getClip().duration! * milliseconds],
+        [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
+      ]);
+
       send({
         type: "SET_CONTEXT",
+        actions,
+        mesh: group.current,
         rigidBody: playerRigidBodyReference.current,
+        animationNameByFSMState,
+        characterFSMDurations,
       });
     }
-
-    console.log("RB");
   }, []);
 
   return (
-    <RigidBody
-      lockRotations={true}
-      colliders={false}
-      ref={playerRigidBodyReference}
-      name={"Player"}
-      //   userData={userData.current}
-      //   position={position}
-    >
-      <MaleCharacter3DModel />
-      {/* <Bounding
-        args={[0.2, 0.6]}
-        position={[0, 0.8, 0.2]}
-        onCollisionEnter={onCollisionEnter}
+    <CharacterRigidBody ref={playerRigidBodyReference} position={[-7, 0, -4]}>
+      <MaleCharacter3DModel
+        ref={group}
+        nodes={nodes}
+        materials={materials}
+        actions={actions}
       />
-      <Sensor args={[0.2, 2]} position={[0, 0.5, 0]} sensor />
-      <Suspense fallback={null}>
-        <Model
-          machine={[
-            // @ts-ignore // Todo type this
-            state,
-            send,
-          ]}
-        />
-      </Suspense> */}
-    </RigidBody>
+      <Attachments nodes={nodes} stateValue={state.value} />
+    </CharacterRigidBody>
   );
 };
+
+// const updateMaulPosition = useCallback((isHanded: boolean) => {
+//   const {
+//     HANDED_MAUL_MESH,
+//     HANDED_MAUL_MESH_1,
+//     HANDED_MAUL_MESH_2,
+//     PACKED_MAUL_MESH,
+//     PACKED_MAUL_MESH_1,
+//     PACKED_MAUL_MESH_2,
+//     PACKED_MAUL_MESH_3,
+//     RIFLE,
+//   } = nodes;
+
+//   HANDED_MAUL_MESH.visible = isHanded;
+//   HANDED_MAUL_MESH_1.visible = isHanded;
+//   HANDED_MAUL_MESH_2.visible = isHanded;
+//   PACKED_MAUL_MESH.visible = !isHanded;
+//   PACKED_MAUL_MESH_1.visible = !isHanded;
+//   PACKED_MAUL_MESH_2.visible = !isHanded;
+//   PACKED_MAUL_MESH_3.visible = !isHanded;
+//   RIFLE.visible = !isHanded;
+
+//   console.log("AAAAA");
+// }, []);

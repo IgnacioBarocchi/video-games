@@ -14,7 +14,7 @@ export type CarNotification = {
 const useGameStore = create((set) => ({
   loading: true,
   setLoading: (value: boolean) => set({ loading: value }),
-  gameStarted: false,
+  gameStarted: true,
   setGameStarted: () => {
     const ambience = new Audio(wind);
     ambience.volume = 0.3;

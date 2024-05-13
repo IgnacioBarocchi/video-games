@@ -164,6 +164,9 @@ importers:
       three-stdlib:
         specifier: ^2.29.6
         version: 2.29.6(three@0.163.0)
+      ui:
+        specifier: workspace:*
+        version: link:../ui
     devDependencies:
       typescript:
         specifier: ^5.2.2

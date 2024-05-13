@@ -1,6 +1,7 @@
 import { AnimationAction, LoopOnce } from "three";
 import {
   DEATH_STATE,
+  FSMContext,
   FSMStates,
   IDLE_STATE,
   MOVE_STATE,
@@ -8,21 +9,26 @@ import {
 
 export const blendAnimationTransition = (action: AnimationAction | null) => {
   if (!action) return;
+  action.clampWhenFinished = true;
   action.reset()?.fadeIn(0.2)?.play();
 };
 
 export const playOneShotAnimation = (action: AnimationAction | null) => {
   if (!action) return;
+  // action.clampWhenF
+  // inished = true;
   action?.reset()?.play();
 };
 
 export const easeOutAnimation = (action: AnimationAction | null) => {
   if (!action) return;
+  // action.clampWhenFinished = true;
   action?.fadeOut(0.2);
 };
 
 export const stopAnimation = (action: AnimationAction | null) => {
   if (!action) return;
+  action.clampWhenFinished = true;
   action.fadeOut(0.2);
   action?.stop();
 };
@@ -37,17 +43,13 @@ export const stopAll = (actions: AnimationAction[] | null) => {
 
 export const playFinalAnimation = (action: AnimationAction | null) => {
   if (!action) return;
-  action.setLoop(LoopOnce, 1);
   action.clampWhenFinished = true;
+  action.setLoop(LoopOnce, 1);
   action.enabled = true;
   action.reset().play();
 };
 
-export const getFSMOneShotPlayerFrom = (
-  state: FSMStates,
-  animationNameByFSMState,
-  animationDurationByFSMState
-) => {
+export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
   return {
     with: (context: FSMContext) => {
       if (state === DEATH_STATE) {
@@ -56,21 +58,36 @@ export const getFSMOneShotPlayerFrom = (
       }
 
       if (context.actions) {
+        // context.actions[
+        //   context.animationNameByFSMState.get(IDLE_STATE)!
+        // ]?.stop();
+        // context.actions[
+        //   context.animationNameByFSMState.get(MOVE_STATE)!
+        // ]?.stop();
+
         const action =
-          context.actions[animationNameByFSMState.get(state)!] ??
-          context.actions[animationNameByFSMState.get(IDLE_STATE)!];
+          context.actions[context.animationNameByFSMState.get(state)!] ??
+          context.actions[context.animationNameByFSMState.get(IDLE_STATE)!];
 
         easeOutAnimation(
-          context.actions[animationNameByFSMState.get(IDLE_STATE)!]
+          context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
         );
         easeOutAnimation(
-          context.actions[animationNameByFSMState.get(MOVE_STATE)!]
+          context.actions[context.animationNameByFSMState.get(MOVE_STATE)!]
         );
         playOneShotAnimation(action);
 
         setTimeout(() => {
-          easeOutAnimation(action);
-        }, animationDurationByFSMState.get(state));
+          action?.fadeOut(1).stop();
+          context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
+            .fadeIn(0.5)
+            .reset()
+            .play();
+          // easeOutAnimation(action);
+          // context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
+          //   ?.fadeIn(0.2)
+          //   .play();
+        }, context.characterFSMDurations.get(state));
       }
     },
   };

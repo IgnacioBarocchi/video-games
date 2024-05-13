@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ui": "workspace:*",
     "@react-three/drei": "^9.105.3",
     "@react-three/fiber": "^8.16.1",
     "@react-three/postprocessing": "^2.16.2",

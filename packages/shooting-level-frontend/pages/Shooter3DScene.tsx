@@ -5,11 +5,13 @@ import { Canvas } from "@react-three/fiber";
 import { PlayerContextProvider } from "../providers/player-context-provider";
 import { Player } from "../player";
 import { Physics } from "@react-three/rapier";
+import { GroundModel } from "../components/Ground";
+import { OrbitControls, Preload } from "@react-three/drei";
 
 const Effects = () => {
   return (
     <>
-      <fog attach="fog" args={["black", 1, 8.5]} />
+      {/* <fog attach="fog" args={["black", 1, 8.5]} /> */}
       <EffectComposer>
         <Vignette
           offset={0.5} // vignette offset
@@ -22,7 +24,7 @@ const Effects = () => {
   );
 };
 
-export const Shooter3DScene = () => {
+export const Shooter3DScene = ({ onMissionPicked }) => {
   return (
     <PlayerContextProvider>
       <Canvas
@@ -39,15 +41,19 @@ export const Shooter3DScene = () => {
           powerPreference: "high-performance",
         }}
         camera={{
-          fov: 45,
+          fov: 50,
           near: 0.1,
-          far: 9,
+          // far: 9,
+          far: 3000,
           position: [0.2, 2, 5],
           rotation: [0, 0, 0],
         }}
       >
+        <OrbitControls makeDefault={true} enableDamping={true} />
+        <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics>
+          <Physics debug>
+            <GroundModel onMissionPicked={onMissionPicked} />
             <Player />
           </Physics>
           <Effects />

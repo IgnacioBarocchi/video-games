@@ -30,7 +30,6 @@ const CarNotificationImp = memo(({ carNotification }) => {
 });
 
 export const UILayer = () => {
-  const [renderInGameUI, setRenderInGameUI] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
 
   const {
@@ -82,52 +81,49 @@ export const UILayer = () => {
     [carNotification]
   );
 
-  if (renderInGameUI) {
-    if (loading) {
-      return <LoadingScreen />;
-    }
-
-    return (
-      <InGameScreen
-        displayClock={!gameOver}
-        ClockSlot={MemoizedA}
-        displayNotification={carNotification}
-        NotificationSlot={MemoizedB}
-        displayEndGameSlot={gameOver}
-        EndGameSlot={MemoizedC}
-        title={title}
-      />
-    );
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   return (
-    <>
-      <MainMenu
-        onStartClick={() => {
-          setTimeout(() => {
-            setGameStarted();
-            setRenderInGameUI(true);
-          }, 500);
-        }}
-        onAboutClick={() => {
-          setShowCredits(true);
-        }}
-        onQuitClick={() => {}}
-        lobbyMusic={lobbyMusic}
-      />
-      {showCredits && (
-        <EndCredits
-          credits={[
-            { title: "Programado por", items: ["Ignacio Barocchi"] },
-            { title: "Modelado 3D por", items: ["Ignacio Barocchi"] },
-            { title: "Sonido por", items: ["Varios artistas xd"] },
-            {
-              title: "Música por",
-              items: ["Music_Unlimited - (For Elevator Jazz Music)"],
-            },
-          ]}
-        />
-      )}
-    </>
+    <InGameScreen
+      displayClock={!gameOver}
+      ClockSlot={MemoizedA}
+      displayNotification={carNotification}
+      NotificationSlot={MemoizedB}
+      displayEndGameSlot={gameOver}
+      EndGameSlot={MemoizedC}
+      title={title}
+    />
   );
 };
+
+// return (
+//   <>
+//     <MainMenu
+//       onStartClick={() => {
+//         setTimeout(() => {
+//           setGameStarted();
+//           setRenderInGameUI(true);
+//         }, 500);
+//       }}
+//       onAboutClick={() => {
+//         setShowCredits(true);
+//       }}
+//       onQuitClick={() => {}}
+//       lobbyMusic={lobbyMusic}
+//     />
+//     {showCredits && (
+//       <EndCredits
+//         credits={[
+//           { title: "Programado por", items: ["Ignacio Barocchi"] },
+//           { title: "Modelado 3D por", items: ["Ignacio Barocchi"] },
+//           { title: "Sonido por", items: ["Varios artistas xd"] },
+//           {
+//             title: "Música por",
+//             items: ["Music_Unlimited - (For Elevator Jazz Music)"],
+//           },
+//         ]}
+//       />
+//     )}
+//   </>

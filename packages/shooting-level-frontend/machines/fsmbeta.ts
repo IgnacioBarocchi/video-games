@@ -1,7 +1,7 @@
-//! EN CONTEXT TIENEN QUE TENER LOS MAPAS DE DURACION Y DE NOMBRES POR ESTADO
 import { createMachine, assign } from "xstate";
 import { nanoid } from "nanoid";
 import { getFSMOneShotPlayerFrom, stopAll } from "../lib/animationHelper";
+import { RapierRigidBody } from "@react-three/rapier";
 
 const id = nanoid();
 
@@ -48,106 +48,16 @@ export type FSMContext = {
   animationNameByFSMState: Map<FSMStates, number>;
 };
 
-const reactToSkill = (context, state) => {
-  const animationNameByFSMState = new Map(
-    JSON.parse(localStorage.characterFSMStates)
-  );
-
-  const animationDurationByFSMState = new Map(
-    JSON.parse(localStorage.characterFSMDurations)
-  );
-
-  stopAll(
-    FSMSkillStates.map(
-      (skill) =>
-        context.actions![animationNameByFSMState.get(skill as FSMStates)!]
-    )
-  );
-
-  getFSMOneShotPlayerFrom(
-    state,
-    animationNameByFSMState,
-    animationDurationByFSMState
-  ).with(context);
-};
-
-// const setContext = {
-//   actions: [
-//     (context) => console.log(`Before:`, context),
-//     assign({
-//       characterFSMDurations: (
-//         _,
-//         event: Pick<FSMContext, "characterFSMDurations">
-//       ) => {
-//         console.log("characterFSMDurations", event);
-//         if (event.characterFSMDurations) {
-//           return event.characterFSMDurations;
-//         }
-//       },
-//     }),
-//     assign({
-//       animationNameByFSMState: (
-//         _,
-//         event: Pick<FSMContext, "animationNameByFSMState">
-//       ) => {
-//         console.log("animationNameByFSMState", event);
-
-//         if (event.animationNameByFSMState) {
-//           return event.animationNameByFSMState;
-//         }
-//       },
-//     }),
-//     assign({
-//       animationNameByFSMState: (
-//         _,
-//         event: Pick<FSMContext, "animationNameByFSMState">
-//       ) => {
-//         console.log("animationNameByFSMState", event);
-
-//         if (event.animationNameByFSMState) {
-//           return event.animationNameByFSMState;
-//         }
-//       },
-//     }),
-
-//     assign({
-//       rigidBody: (_, event: Pick<FSMContext, "rigidBody">) => {
-//         console.log("rigidBody", event);
-
-//         return event.rigidBody;
-//       },
-//     }),
-//     assign({
-//       mesh: (_, event: Pick<FSMContext, "mesh">) => {
-//         console.log("mesh", event);
-
-//         if (event.mesh) {
-//           return event.mesh;
-//         }
-//       },
-//     }),
-//     assign({
-//       actions: (context: FSMContext, event: Pick<FSMContext, "actions">) => {
-//         console.log("actions", event);
-
-//         if (event.actions) {
-//           event.actions[
-//             context.animationNameByFSMState.get(IDLE_STATE)!
-//           ]?.play();
-//           return event.actions;
-//         }
-//       },
-//     }),
-//   ],
-// };
-
 const config = {
-  actions: {
-    reactToSkill1: (context: FSMContext) => {
-      reactToSkill(context, REACTING_TO_SKILL_1_STATE);
+  delays: {
+    USING_SKILL_1_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      return context.characterFSMDurations?.get(USING_SKILL_1_STATE);
     },
-    reactToSkill2: (context: FSMContext) => {
-      reactToSkill(context, REACTING_TO_SKILL_2_STATE);
+    USING_SKILL_2_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      return context.characterFSMDurations?.get(USING_SKILL_2_STATE);
+    },
+    USING_SKILL_3_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      return context.characterFSMDurations?.get(USING_SKILL_3_STATE);
     },
   },
 };
@@ -156,8 +66,6 @@ export const characterMachine = createMachine(
   {
     id,
     initial: IDLE_STATE,
-    // initial: "active",
-    // preserveActionOrder: true,
     context: {
       initialHP: 100,
       currentHP: 100,
@@ -168,21 +76,19 @@ export const characterMachine = createMachine(
       characterFSMDurations: new Map(),
       animationNameByFSMState: new Map(),
     },
-    // context: { count: 0 },
     states: {
-      // active: {
-      //   on: {
-      //     SET_CONTEXT: {
-      //       actions: [
-      //         (context) => console.log(`Before: ${context.count}`), // "Before: 2"
-      //         assign({ count: (context) => context.count + 1 }), // count === 1
-      //         assign({ count: (context) => context.count + 1 }), // count === 2
-      //         (context) => console.log(`After: ${context.count}`), // "After: 2"
-      //       ],
-      //     },
-      //   },
-      // },
       [IDLE_STATE]: {
+        entry: [
+          ({ context }) => {
+            if (!context.actions) {
+              return;
+            }
+
+            context.actions.RUN.clampWhenFinished = true;
+            context?.actions?.RUN?.stop();
+            context?.actions?.IDLE?.play();
+          },
+        ],
         on: {
           MOVE_EVENT: MOVE_STATE,
           SKILL_1_EVENT: USING_SKILL_1_STATE,
@@ -191,7 +97,6 @@ export const characterMachine = createMachine(
           DEATH_EVENT: DEATH_STATE,
           SET_CONTEXT: {
             actions: [
-              (context) => console.log(`Before:`, context),
               assign({
                 characterFSMDurations: ({
                   context,
@@ -200,11 +105,11 @@ export const characterMachine = createMachine(
                   context: FSMContext;
                   event: Pick<FSMContext, "characterFSMDurations">;
                 }) => {
-                  console.log("1");
-
                   if (event?.characterFSMDurations) {
                     return event.characterFSMDurations;
                   }
+
+                  return context.characterFSMDurations;
                 },
               }),
               assign({
@@ -215,11 +120,11 @@ export const characterMachine = createMachine(
                   context: FSMContext;
                   event: Pick<FSMContext, "animationNameByFSMState">;
                 }) => {
-                  console.log("2");
-
                   if (event?.animationNameByFSMState) {
                     return event.animationNameByFSMState;
                   }
+
+                  return context.animationNameByFSMState;
                 },
               }),
               assign({
@@ -230,15 +135,11 @@ export const characterMachine = createMachine(
                   context: FSMContext;
                   event: Pick<FSMContext, "actions">;
                 }) => {
-                  console.log("6");
-
                   if (event?.actions) {
-                    // const animationName =
-                    //   context.animationNameByFSMState.get(IDLE_STATE)!;
-                    // console.log(animationName);
-                    // event.actions[animationName]?.play();
                     return event.actions;
                   }
+
+                  return context.actions;
                 },
               }),
               assign({
@@ -249,11 +150,11 @@ export const characterMachine = createMachine(
                   context: FSMContext;
                   event: Pick<FSMContext, "rigidBody">;
                 }) => {
-                  console.log("4");
-
                   if (event?.rigidBody) {
                     return event.rigidBody;
                   }
+
+                  return context.rigidBody;
                 },
               }),
               assign({
@@ -264,14 +165,15 @@ export const characterMachine = createMachine(
                   context: FSMContext;
                   event: Pick<FSMContext, "mesh">;
                 }) => {
-                  console.log("5", context);
-
                   if (event?.mesh) {
+                    console.log(event.mesh);
                     const animationName =
                       context.animationNameByFSMState.get(IDLE_STATE)!;
                     context.actions[animationName]?.play();
                     return event.mesh;
                   }
+
+                  return context.mesh;
                 },
               }),
             ],
@@ -279,6 +181,13 @@ export const characterMachine = createMachine(
         },
       },
       [MOVE_STATE]: {
+        entry: [
+          ({ context }) => {
+            context.actions.IDLE.clampWhenFinished = true;
+            context?.actions?.IDLE?.stop();
+            context?.actions?.RUN?.play();
+          },
+        ],
         on: {
           IDLE_EVENT: IDLE_STATE,
           SKILL_1_EVENT: USING_SKILL_1_STATE,
@@ -288,45 +197,99 @@ export const characterMachine = createMachine(
         },
       },
       [USING_SKILL_1_STATE]: {
-        on: {
-          IDLE_EVENT: REACTING_TO_SKILL_1_STATE,
-          MOVE_EVENT: MOVE_STATE,
-          DEATH_EVENT: DEATH_STATE,
-        },
+        entry: [
+          ({ context }) => {
+            getFSMOneShotPlayerFrom(USING_SKILL_1_STATE).with(context);
+          },
+        ],
+        after: { USING_SKILL_1_STATE_DELAY: IDLE_STATE },
+        // on: {
+        //   IDLE_EVENT: IDLE_STATE,
+        //   MOVE_EVENT: MOVE_STATE,
+        //   DEATH_EVENT: DEATH_STATE,
+        // },
       },
       [USING_SKILL_2_STATE]: {
-        on: {
-          IDLE_EVENT: REACTING_TO_SKILL_2_STATE,
-          MOVE_EVENT: MOVE_STATE,
-          DEATH_EVENT: DEATH_STATE,
-        },
+        entry: [
+          ({ context }) => {
+            getFSMOneShotPlayerFrom(USING_SKILL_2_STATE).with(context);
+          },
+        ],
+        after: { USING_SKILL_2_STATE_DELAY: IDLE_STATE },
+        // on: {
+        //   IDLE_EVENT: IDLE_STATE,
+        //   MOVE_EVENT: MOVE_STATE,
+        //   DEATH_EVENT: DEATH_STATE,
+        // },
       },
       [USING_SKILL_3_STATE]: {
-        on: {
-          MOVE_EVENT: MOVE_STATE,
-          IDLE_EVENT: IDLE_STATE,
-          DEATH_EVENT: DEATH_STATE,
-        },
+        entry: [
+          ({ context }) => {
+            getFSMOneShotPlayerFrom(USING_SKILL_3_STATE).with(context);
+          },
+        ],
+        after: { USING_SKILL_3_STATE_DELAY: IDLE_STATE },
+        // on: {
+        //   MOVE_EVENT: MOVE_STATE,
+        //   IDLE_EVENT: IDLE_STATE,
+        //   DEATH_EVENT: DEATH_STATE,
+        // },
       },
       [REACTING_TO_SKILL_1_STATE]: {
-        on: {
-          IDLE_EVENT: IDLE_STATE,
-          MOVE_EVENT: MOVE_STATE,
-          DEATH_EVENT: DEATH_STATE,
-        },
+        entry: [({ context }) => {}],
+        after: { 3000: IDLE_STATE },
+        // on: {
+        //   IDLE_EVENT: IDLE_STATE,
+        //   MOVE_EVENT: MOVE_STATE,
+        //   DEATH_EVENT: DEATH_STATE,
+        // },
       },
       [REACTING_TO_SKILL_2_STATE]: {
-        on: {
-          IDLE_EVENT: IDLE_STATE,
-          MOVE_EVENT: MOVE_STATE,
-          DEATH_EVENT: DEATH_STATE,
-        },
+        entry: [({ context }) => {}],
+        after: { 3000: IDLE_STATE },
+        // on: {
+        //   IDLE_EVENT: IDLE_STATE,
+        //   MOVE_EVENT: MOVE_STATE,
+        //   DEATH_EVENT: DEATH_STATE,
+        // },
       },
       [DEATH_STATE]: {
+        entry: [({ context }) => {}],
         type: "final",
       },
-      // setContext,
     },
   },
   config
 );
+
+// actions: {
+//   reactToSkill1: (context: FSMContext) => {
+//     reactToSkill(context, REACTING_TO_SKILL_1_STATE);
+//   },
+//   reactToSkill2: (context: FSMContext) => {
+//     reactToSkill(context, REACTING_TO_SKILL_2_STATE);
+//   },
+// },
+
+// const reactToSkill = (context, state) => {
+//   const animationNameByFSMState = new Map(
+//     JSON.parse(localStorage.characterFSMStates)
+//   );
+
+//   const animationDurationByFSMState = new Map(
+//     JSON.parse(localStorage.characterFSMDurations)
+//   );
+
+//   stopAll(
+//     FSMSkillStates.map(
+//       (skill) =>
+//         context.actions![animationNameByFSMState.get(skill as FSMStates)!]
+//     )
+//   );
+
+//   getFSMOneShotPlayerFrom(
+//     state,
+//     animationNameByFSMState,
+//     animationDurationByFSMState
+//   ).with(context);
+// };

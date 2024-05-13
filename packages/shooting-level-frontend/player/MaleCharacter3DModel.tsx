@@ -1,5 +1,12 @@
-import * as THREE from "three";
-import React, { useMemo, useEffect, useRef } from "react";
+import { Group, AnimationAction, AnimationClip } from "three";
+import {
+  MutableReference,
+  forwardRef,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import character3DModelFile from "../assets/models/Male_Character.glb";
@@ -16,214 +23,202 @@ import {
 } from "../machines/fsmbeta";
 import { Context } from "../providers/player-context-provider";
 import { useActor } from "@xstate/react";
-
-type GLTFResult = GLTF & {
+import { Mesh, SkinnedMesh, Bone, MeshBasicMaterial } from "three";
+export type GLTFResult = GLTF & {
   nodes: {
-    HANDED_MAUL_MESH: THREE.Mesh;
-    HANDED_MAUL_MESH_1: THREE.Mesh;
-    HANDED_MAUL_MESH_2: THREE.Mesh;
-    RIFLE: THREE.Mesh;
-    PACKED_MAUL_MESH: THREE.Mesh;
-    PACKED_MAUL_MESH_1: THREE.Mesh;
-    PACKED_MAUL_MESH_2: THREE.Mesh;
-    PACKED_MAUL_MESH_3: THREE.Mesh;
-    MALE_BASE_MESH_1: THREE.SkinnedMesh;
-    MALE_BASE_MESH_2: THREE.SkinnedMesh;
-    MALE_BASE_MESH_3: THREE.SkinnedMesh;
-    MALE_BASE_MESH_4: THREE.SkinnedMesh;
-    MALE_BASE_MESH_5: THREE.SkinnedMesh;
-    MALE_BASE_MESH_6: THREE.SkinnedMesh;
-    MALE_BASE_MESH_7: THREE.SkinnedMesh;
-    MALE_BASE_MESH_8: THREE.SkinnedMesh;
-    MALE_BASE_MESH_9: THREE.SkinnedMesh;
-    MALE_BASE_MESH_10: THREE.SkinnedMesh;
-    MALE_BASE_MESH_11: THREE.SkinnedMesh;
-    mixamorigHips: THREE.Bone;
+    HANDED_MAUL_MESH: Mesh;
+    HANDED_MAUL_MESH_1: Mesh;
+    HANDED_MAUL_MESH_2: Mesh;
+    RIFLE: Mesh;
+    PACKED_MAUL_MESH: Mesh;
+    PACKED_MAUL_MESH_1: Mesh;
+    PACKED_MAUL_MESH_2: Mesh;
+    PACKED_MAUL_MESH_3: Mesh;
+    MALE_BASE_MESH_1: SkinnedMesh;
+    MALE_BASE_MESH_2: SkinnedMesh;
+    MALE_BASE_MESH_3: SkinnedMesh;
+    MALE_BASE_MESH_4: SkinnedMesh;
+    MALE_BASE_MESH_5: SkinnedMesh;
+    MALE_BASE_MESH_6: SkinnedMesh;
+    MALE_BASE_MESH_7: SkinnedMesh;
+    MALE_BASE_MESH_8: SkinnedMesh;
+    MALE_BASE_MESH_9: SkinnedMesh;
+    MALE_BASE_MESH_10: SkinnedMesh;
+    MALE_BASE_MESH_11: SkinnedMesh;
+    mixamorigHips: Bone;
   };
   materials: {
-    Wood: THREE.MeshBasicMaterial;
-    Metal: THREE.MeshBasicMaterial;
-    Metal_Shade: THREE.MeshBasicMaterial;
-    Hair: THREE.MeshBasicMaterial;
-    Jacket_Shade: THREE.MeshBasicMaterial;
-    Skin_Base: THREE.MeshBasicMaterial;
-    Skin_Shade_2: THREE.MeshBasicMaterial;
-    Skin_Shade3: THREE.MeshBasicMaterial;
-    Skin_Shade_4: THREE.MeshBasicMaterial;
-    Jacket: THREE.MeshBasicMaterial;
-    Jacket_Inside: THREE.MeshBasicMaterial;
-    Jacket_Shade2: THREE.MeshBasicMaterial;
-    Pants: THREE.MeshBasicMaterial;
-    Pants_Shade: THREE.MeshBasicMaterial;
-    Shoes: THREE.MeshBasicMaterial;
+    Wood: MeshBasicMaterial;
+    Metal: MeshBasicMaterial;
+    Metal_Shade: MeshBasicMaterial;
+    Hair: MeshBasicMaterial;
+    Jacket_Shade: MeshBasicMaterial;
+    Skin_Base: MeshBasicMaterial;
+    Skin_Shade_2: MeshBasicMaterial;
+    Skin_Shade3: MeshBasicMaterial;
+    Skin_Shade_4: MeshBasicMaterial;
+    Jacket: MeshBasicMaterial;
+    Jacket_Inside: MeshBasicMaterial;
+    Jacket_Shade2: MeshBasicMaterial;
+    Pants: MeshBasicMaterial;
+    Pants_Shade: MeshBasicMaterial;
+    Shoes: MeshBasicMaterial;
   };
 };
 
 type ActionName = "DEATH" | "IDLE" | "MAUL" | "ROLL" | "RUN" | "SHOOTING";
-type GLTFActions = Record<ActionName, THREE.AnimationAction> &
-  THREE.AnimationClip;
+export type GLTFActions = Record<ActionName, AnimationAction> & AnimationClip;
+// const group = useRef<Group>();
 
-// if (!localStorage.characterFSMStates) {
-//   localStorage.characterFSMStates = JSON.stringify(
-//     Array.from(
-//       new Map([
-//         [IDLE_STATE, "IDLE"],
-//         [MOVE_STATE, "RUN"],
-//         [USING_SKILL_1_STATE, "SHOOTING"],
-//         [USING_SKILL_2_STATE, "MAUL"],
-//         [USING_SKILL_3_STATE, "ROLL"],
-//         [REACTING_TO_SKILL_1_STATE, "DEATH"],
-//         [REACTING_TO_SKILL_2_STATE, "DEATH"],
-//         [DEATH_STATE, "DEATH"],
-//       ]).entries()
-//     )
-//   );
-// }
+export const MaleCharacter3DModel = forwardRef<{
+  props: JSX.IntrinsicElements["group"];
+  group: MutableReference<Group>;
+}>((props, group) => {
+  // const { scene, materials, animations } = useGLTF(
+  //   character3DModelFile
+  // ) as GLTFResult;
+  // const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  // const { nodes } = useGraph(clone);
+  // const { actions } = useAnimations<GLTFActions>(animations, group);
+  // const [_, send] = useActor(Context.useActorRef().logic);
 
-export const MaleCharacter3DModel = (props: JSX.IntrinsicElements["group"]) => {
-  const group = useRef<THREE.Group>();
-  const { scene, materials, animations } = useGLTF(
-    character3DModelFile
-  ) as GLTFResult;
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes } = useGraph(clone);
-  const { actions } = useAnimations<GLTFActions>(animations, group);
-  const [state, send] = useActor(Context.useActorRef().logic);
+  // const updateMaulPosition = useCallback((isHanded: boolean) => {
+  //   const {
+  //     HANDED_MAUL_MESH,
+  //     HANDED_MAUL_MESH_1,
+  //     HANDED_MAUL_MESH_2,
+  //     PACKED_MAUL_MESH,
+  //     PACKED_MAUL_MESH_1,
+  //     PACKED_MAUL_MESH_2,
+  //     PACKED_MAUL_MESH_3,
+  //   } = props.nodes;
 
-  useEffect(() => {
-    const milliseconds = 1000;
+  //   HANDED_MAUL_MESH.visible = isHanded;
+  //   HANDED_MAUL_MESH_1.visible = isHanded;
+  //   HANDED_MAUL_MESH_2.visible = isHanded;
+  //   PACKED_MAUL_MESH.visible = !isHanded;
+  //   PACKED_MAUL_MESH_1.visible = !isHanded;
+  //   PACKED_MAUL_MESH_2.visible = !isHanded;
+  //   PACKED_MAUL_MESH_3.visible = !isHanded;
+  // }, []);
 
-    const animationNameByFSMState = new Map([
-      [IDLE_STATE, "IDLE"],
-      [MOVE_STATE, "RUN"],
-      [USING_SKILL_1_STATE, "SHOOTING"],
-      [USING_SKILL_2_STATE, "MAUL"],
-      [USING_SKILL_3_STATE, "ROLL"],
-      [REACTING_TO_SKILL_1_STATE, "DEATH"],
-      [REACTING_TO_SKILL_2_STATE, "DEATH"],
-      [DEATH_STATE, "DEATH"],
-    ]);
+  // useEffect(() => {
+  //   if (group?.current) {
+  //     updateMaulPosition(false);
 
-    const characterFSMDurations = new Map([
-      [IDLE_STATE, actions.IDLE?.getClip().duration! * milliseconds],
-      [MOVE_STATE, actions.RUN?.getClip().duration! * milliseconds],
-      [
-        USING_SKILL_1_STATE,
-        actions.SHOOTING?.getClip().duration! * milliseconds,
-      ],
-      [USING_SKILL_2_STATE, actions.MAUL?.getClip().duration! * milliseconds],
-      [USING_SKILL_3_STATE, actions.ROLL?.getClip().duration! * milliseconds],
-      [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
-    ]);
+  //     const milliseconds = 1000;
+  //     const animationNameByFSMState = new Map([
+  //       [IDLE_STATE, "IDLE"],
+  //       [MOVE_STATE, "RUN"],
+  //       [USING_SKILL_1_STATE, "SHOOTING"],
+  //       [USING_SKILL_2_STATE, "MAUL"],
+  //       [USING_SKILL_3_STATE, "ROLL"],
+  //       [REACTING_TO_SKILL_1_STATE, "DEATH"],
+  //       [REACTING_TO_SKILL_2_STATE, "DEATH"],
+  //       [DEATH_STATE, "DEATH"],
+  //     ]);
 
-    send({
-      type: "SET_CONTEXT",
-      actions,
-      mesh: group.current,
-      animationNameByFSMState,
-      characterFSMDurations: characterFSMDurations,
-    });
-    console.log("MD");
-  }, []);
+  //     const characterFSMDurations = new Map([
+  //       [IDLE_STATE, actions.IDLE?.getClip().duration! * milliseconds],
+  //       [MOVE_STATE, actions.RUN?.getClip().duration! * milliseconds],
+  //       [
+  //         USING_SKILL_1_STATE,
+  //         actions.SHOOTING?.getClip().duration! * milliseconds,
+  //       ],
+  //       [USING_SKILL_2_STATE, actions.MAUL?.getClip().duration! * milliseconds],
+  //       [USING_SKILL_3_STATE, actions.ROLL?.getClip().duration! * milliseconds],
+  //       [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
+  //     ]);
 
-  const updateMaulPosition = React.useCallback((isHanded: boolean) => {
-    const {
-      HANDED_MAUL_MESH,
-      HANDED_MAUL_MESH_1,
-      HANDED_MAUL_MESH_2,
-      PACKED_MAUL_MESH,
-      PACKED_MAUL_MESH_1,
-      PACKED_MAUL_MESH_2,
-      PACKED_MAUL_MESH_3,
-    } = nodes;
-
-    HANDED_MAUL_MESH.visible = isHanded;
-    HANDED_MAUL_MESH_1.visible = isHanded;
-    HANDED_MAUL_MESH_2.visible = isHanded;
-    PACKED_MAUL_MESH.visible = !isHanded;
-    PACKED_MAUL_MESH_1.visible = !isHanded;
-    PACKED_MAUL_MESH_2.visible = !isHanded;
-    PACKED_MAUL_MESH_3.visible = !isHanded;
-  }, []);
+  //     send({
+  //       type: "SET_CONTEXT",
+  //       actions,
+  //       mesh: group.current,
+  //       animationNameByFSMState,
+  //       characterFSMDurations: characterFSMDurations,
+  //       callback: updateMaulPosition,
+  //     });
+  //   }
+  // }, []);
 
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
-          <primitive object={nodes.mixamorigHips} />
+          <primitive object={props.nodes.mixamorigHips} />
           <group name="MALE_BASE_MESH">
             <skinnedMesh
               name="MALE_BASE_MESH_1"
-              geometry={nodes.MALE_BASE_MESH_1.geometry}
-              material={materials.Skin_Base}
-              skeleton={nodes.MALE_BASE_MESH_1.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_1.geometry}
+              material={props.materials.Skin_Base}
+              skeleton={props.nodes.MALE_BASE_MESH_1.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_2"
-              geometry={nodes.MALE_BASE_MESH_2.geometry}
-              material={materials.Skin_Shade_2}
-              skeleton={nodes.MALE_BASE_MESH_2.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_2.geometry}
+              material={props.materials.Skin_Shade_2}
+              skeleton={props.nodes.MALE_BASE_MESH_2.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_3"
-              geometry={nodes.MALE_BASE_MESH_3.geometry}
-              material={materials.Skin_Shade3}
-              skeleton={nodes.MALE_BASE_MESH_3.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_3.geometry}
+              material={props.materials.Skin_Shade3}
+              skeleton={props.nodes.MALE_BASE_MESH_3.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_4"
-              geometry={nodes.MALE_BASE_MESH_4.geometry}
-              material={materials.Skin_Shade_4}
-              skeleton={nodes.MALE_BASE_MESH_4.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_4.geometry}
+              material={props.materials.Skin_Shade_4}
+              skeleton={props.nodes.MALE_BASE_MESH_4.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_5"
-              geometry={nodes.MALE_BASE_MESH_5.geometry}
-              material={materials.Jacket}
-              skeleton={nodes.MALE_BASE_MESH_5.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_5.geometry}
+              material={props.materials.Jacket}
+              skeleton={props.nodes.MALE_BASE_MESH_5.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_6"
-              geometry={nodes.MALE_BASE_MESH_6.geometry}
-              material={materials.Jacket_Inside}
-              skeleton={nodes.MALE_BASE_MESH_6.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_6.geometry}
+              material={props.materials.Jacket_Inside}
+              skeleton={props.nodes.MALE_BASE_MESH_6.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_7"
-              geometry={nodes.MALE_BASE_MESH_7.geometry}
-              material={materials.Jacket_Shade}
-              skeleton={nodes.MALE_BASE_MESH_7.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_7.geometry}
+              material={props.materials.Jacket_Shade}
+              skeleton={props.nodes.MALE_BASE_MESH_7.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_8"
-              geometry={nodes.MALE_BASE_MESH_8.geometry}
-              material={materials.Jacket_Shade2}
-              skeleton={nodes.MALE_BASE_MESH_8.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_8.geometry}
+              material={props.materials.Jacket_Shade2}
+              skeleton={props.nodes.MALE_BASE_MESH_8.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_9"
-              geometry={nodes.MALE_BASE_MESH_9.geometry}
-              material={materials.Pants}
-              skeleton={nodes.MALE_BASE_MESH_9.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_9.geometry}
+              material={props.materials.Pants}
+              skeleton={props.nodes.MALE_BASE_MESH_9.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_10"
-              geometry={nodes.MALE_BASE_MESH_10.geometry}
-              material={materials.Pants_Shade}
-              skeleton={nodes.MALE_BASE_MESH_10.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_10.geometry}
+              material={props.materials.Pants_Shade}
+              skeleton={props.nodes.MALE_BASE_MESH_10.skeleton}
             />
             <skinnedMesh
               name="MALE_BASE_MESH_11"
-              geometry={nodes.MALE_BASE_MESH_11.geometry}
-              material={materials.Shoes}
-              skeleton={nodes.MALE_BASE_MESH_11.skeleton}
+              geometry={props.nodes.MALE_BASE_MESH_11.geometry}
+              material={props.materials.Shoes}
+              skeleton={props.nodes.MALE_BASE_MESH_11.skeleton}
             />
           </group>
         </group>
       </group>
     </group>
   );
-};
+});
 
 useGLTF.preload(character3DModelFile);
 
@@ -256,3 +251,9 @@ React.useEffect(() => {
     }
   }, []);
   */
+
+// console.log("MD");
+
+// if (state.context.actions) {
+//   state.context.actions.RUN.play();
+// }

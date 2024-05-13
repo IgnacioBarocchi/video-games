@@ -3,6 +3,7 @@ import { EffectComposer, Vignette } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { AnimatedScene } from "../components/AnimatedScene";
 import { Canvas } from "@react-three/fiber";
+import { MainMenu } from "ui";
 
 const Effects = () => {
   return (
@@ -20,33 +21,41 @@ const Effects = () => {
   );
 };
 
-export const Hub = () => {
+export const Hub = ({ onStart }) => {
   return (
-    <Canvas
-      fallback="Hub 3D Objects"
-      mode={"concurrent"}
-      flat
-      dpr={[0.2, 1]}
-      performance={{ min: 0.2 }}
-      frameloop={"always"}
-      shadows={false}
-      gl={{
-        logarithmicDepthBuffer: true,
-        precision: "lowp",
-        powerPreference: "high-performance",
-      }}
-      camera={{
-        fov: 30,
-        near: 0.1,
-        far: 9,
-        position: [0.2, 1, 3],
-        rotation: [0, 0, 0],
-      }}
-    >
-      <Suspense fallback={<div>Loading</div>}>
-        <AnimatedScene />
-        <Effects />
-      </Suspense>
-    </Canvas>
+    <>
+      <Canvas
+        fallback="Hub 3D Objects"
+        mode={"concurrent"}
+        flat
+        dpr={[0.2, 1]}
+        performance={{ min: 0.2 }}
+        frameloop={"always"}
+        shadows={false}
+        gl={{
+          logarithmicDepthBuffer: true,
+          precision: "lowp",
+          powerPreference: "high-performance",
+        }}
+        camera={{
+          fov: 30,
+          near: 0.1,
+          far: 9,
+          position: [0.2, 1, 3],
+          rotation: [0, 0, 0],
+        }}
+      >
+        <Suspense fallback={<div>Loading</div>}>
+          <AnimatedScene />
+          <Effects />
+        </Suspense>
+      </Canvas>
+      <MainMenu
+        onStartClick={onStart}
+        onQuitClick={() => {}}
+        onAboutClick={() => {}}
+        lobbyMusic={null}
+      />
+    </>
   );
 };
