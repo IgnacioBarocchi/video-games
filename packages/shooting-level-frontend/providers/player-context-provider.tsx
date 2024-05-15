@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import { createActorContext } from "@xstate/react";
+import { ReactNode, createContext } from "react";
 import { KeyboardControls } from "@react-three/drei";
-import { characterMachine } from "../machines/fsmbeta";
+import { PlayerMachine } from "../machines/player-machine";
+import { createActor } from "xstate";
 
 const keysMap = [
   { name: "forward", keys: ["KeyW"] },
@@ -13,7 +13,8 @@ const keysMap = [
   { name: "skill_3", keys: ["KeyL", "6"] },
 ];
 
-export const Context = createActorContext(characterMachine);
+const playerActor = createActor(PlayerMachine);
+export const Context = createContext(playerActor);
 
 export const PlayerContextProvider = ({
   children,
@@ -21,7 +22,7 @@ export const PlayerContextProvider = ({
   children: ReactNode;
 }) => {
   return (
-    <Context.Provider>
+    <Context.Provider value={playerActor}>
       <KeyboardControls map={keysMap}>{children}</KeyboardControls>
     </Context.Provider>
   );

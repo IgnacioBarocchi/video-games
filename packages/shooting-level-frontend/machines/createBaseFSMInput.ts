@@ -1,9 +1,7 @@
-import { createMachine, assign } from "xstate";
+import { assign } from "xstate";
 import { nanoid } from "nanoid";
 import { getFSMOneShotPlayerFrom, stopAll } from "../lib/animationHelper";
 import { RapierRigidBody } from "@react-three/rapier";
-
-const id = nanoid();
 
 export const IDLE_STATE = "IDLE_STATE";
 export const MOVE_STATE = "MOVE_STATE";
@@ -12,11 +10,14 @@ export const USING_SKILL_2_STATE = "USING_SKILL_2_STATE";
 export const USING_SKILL_3_STATE = "USING_SKILL_3_STATE";
 export const REACTING_TO_SKILL_1_STATE = "REACTING_TO_SKILL_1_STATE";
 export const REACTING_TO_SKILL_2_STATE = "REACTING_TO_SKILL_2_STATE";
+export const TAKING_DAMAGE_STATE = "TAKING_DAMAGE_STATE";
 export const DEATH_STATE = "DEATH";
 
-export const SKILL_1_EVENT = "SKILL_1_EVENT";
-export const SKILL_2_EVENT = "SKILL_2_EVENT";
-export const SKILL_3_EVENT = "SKILL_3_EVENT";
+export const USING_SKILL_1_EVENT = "SKILL_1_EVENT";
+export const USING_SKILL_2_EVENT = "SKILL_2_EVENT";
+export const USING_SKILL_3_EVENT = "SKILL_3_EVENT";
+export const REACTING_TO_SKILL_1_EVENT = "REACTING_TO_SKILL_1_EVENT";
+export const REACTING_TO_SKILL_2_EVENT = "REACTING_TO_SKILL_2_EVENT";
 export const IDLE_EVENT = "IDLE_EVENT";
 export const MOVE_EVENT = "MOVE_EVENT";
 export const DEATH_EVENT = "DEATH_EVENT";
@@ -48,39 +49,55 @@ export type FSMContext = {
   animationNameByFSMState: Map<FSMStates, number>;
 };
 
-const config = {
-  delays: {
-    USING_SKILL_1_STATE_DELAY: ({ context }: { context: FSMContext }) => {
-      return context.characterFSMDurations?.get(USING_SKILL_1_STATE);
+export const createBaseFSMInput = () => {
+  const baseMachineConfigInput = {
+    delays: {
+      USING_SKILL_1_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+        return context.characterFSMDurations?.get(USING_SKILL_1_STATE);
+      },
+      USING_SKILL_2_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+        return context.characterFSMDurations?.get(USING_SKILL_2_STATE);
+      },
+      USING_SKILL_3_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+        return context.characterFSMDurations?.get(USING_SKILL_3_STATE);
+      },
+      REACTING_TO_SKILL_1_STATE_DELAY: ({
+        context,
+      }: {
+        context: FSMContext;
+      }) => {
+        return context.characterFSMDurations?.get(REACTING_TO_SKILL_1_STATE);
+      },
+      REACTING_TO_SKILL_2_STATE_DELAY: ({
+        context,
+      }: {
+        context: FSMContext;
+      }) => {
+        return context.characterFSMDurations?.get(REACTING_TO_SKILL_2_STATE);
+      },
     },
-    USING_SKILL_2_STATE_DELAY: ({ context }: { context: FSMContext }) => {
-      return context.characterFSMDurations?.get(USING_SKILL_2_STATE);
-    },
-    USING_SKILL_3_STATE_DELAY: ({ context }: { context: FSMContext }) => {
-      return context.characterFSMDurations?.get(USING_SKILL_3_STATE);
-    },
-  },
-};
+  };
 
-export const characterMachine = createMachine(
-  {
-    id,
+  const baseMachineStateInput = {
+    id: nanoid(),
     initial: IDLE_STATE,
+    internal: true,
     context: {
       initialHP: 100,
       currentHP: 100,
-      damageTaken: 0,
       rigidBody: null,
       mesh: null,
       actions: null,
       characterFSMDurations: new Map(),
       animationNameByFSMState: new Map(),
+      // canUseSkill1InTarget: false,
+      // canUseSkill2InTarget: false,
     },
     states: {
       [IDLE_STATE]: {
         entry: [
           ({ context }) => {
-            if (!context.actions) {
+            if (!context?.actions?.RUN || !context?.actions?.MOVE) {
               return;
             }
 
@@ -90,11 +107,13 @@ export const characterMachine = createMachine(
           },
         ],
         on: {
-          MOVE_EVENT: MOVE_STATE,
-          SKILL_1_EVENT: USING_SKILL_1_STATE,
-          SKILL_2_EVENT: USING_SKILL_2_STATE,
-          SKILL_3_EVENT: USING_SKILL_3_STATE,
-          DEATH_EVENT: DEATH_STATE,
+          [MOVE_EVENT]: MOVE_STATE,
+          [USING_SKILL_1_EVENT]: USING_SKILL_1_STATE,
+          [USING_SKILL_2_EVENT]: USING_SKILL_2_STATE,
+          [USING_SKILL_3_EVENT]: USING_SKILL_3_STATE,
+          [REACTING_TO_SKILL_1_EVENT]: REACTING_TO_SKILL_1_STATE,
+          [REACTING_TO_SKILL_2_EVENT]: REACTING_TO_SKILL_2_STATE,
+          [DEATH_EVENT]: DEATH_STATE,
           SET_CONTEXT: {
             actions: [
               assign({
@@ -166,7 +185,6 @@ export const characterMachine = createMachine(
                   event: Pick<FSMContext, "mesh">;
                 }) => {
                   if (event?.mesh) {
-                    console.log(event.mesh);
                     const animationName =
                       context.animationNameByFSMState.get(IDLE_STATE)!;
                     context.actions[animationName]?.play();
@@ -183,17 +201,22 @@ export const characterMachine = createMachine(
       [MOVE_STATE]: {
         entry: [
           ({ context }) => {
+            if (!context?.actions?.RUN || !context?.actions?.MOVE) {
+              return;
+            }
             context.actions.IDLE.clampWhenFinished = true;
             context?.actions?.IDLE?.stop();
             context?.actions?.RUN?.play();
           },
         ],
         on: {
-          IDLE_EVENT: IDLE_STATE,
-          SKILL_1_EVENT: USING_SKILL_1_STATE,
-          SKILL_2_EVENT: USING_SKILL_2_STATE,
-          SKILL_3_EVENT: USING_SKILL_3_STATE,
-          DEATH_EVENT: DEATH_STATE,
+          [IDLE_EVENT]: IDLE_STATE,
+          [USING_SKILL_1_EVENT]: USING_SKILL_1_STATE,
+          [USING_SKILL_2_EVENT]: USING_SKILL_2_STATE,
+          [USING_SKILL_3_EVENT]: USING_SKILL_3_STATE,
+          [REACTING_TO_SKILL_1_EVENT]: REACTING_TO_SKILL_1_STATE,
+          [REACTING_TO_SKILL_2_EVENT]: REACTING_TO_SKILL_2_STATE,
+          [DEATH_EVENT]: DEATH_STATE,
         },
       },
       [USING_SKILL_1_STATE]: {
@@ -203,11 +226,6 @@ export const characterMachine = createMachine(
           },
         ],
         after: { USING_SKILL_1_STATE_DELAY: IDLE_STATE },
-        // on: {
-        //   IDLE_EVENT: IDLE_STATE,
-        //   MOVE_EVENT: MOVE_STATE,
-        //   DEATH_EVENT: DEATH_STATE,
-        // },
       },
       [USING_SKILL_2_STATE]: {
         entry: [
@@ -216,11 +234,6 @@ export const characterMachine = createMachine(
           },
         ],
         after: { USING_SKILL_2_STATE_DELAY: IDLE_STATE },
-        // on: {
-        //   IDLE_EVENT: IDLE_STATE,
-        //   MOVE_EVENT: MOVE_STATE,
-        //   DEATH_EVENT: DEATH_STATE,
-        // },
       },
       [USING_SKILL_3_STATE]: {
         entry: [
@@ -229,67 +242,55 @@ export const characterMachine = createMachine(
           },
         ],
         after: { USING_SKILL_3_STATE_DELAY: IDLE_STATE },
-        // on: {
-        //   MOVE_EVENT: MOVE_STATE,
-        //   IDLE_EVENT: IDLE_STATE,
-        //   DEATH_EVENT: DEATH_STATE,
-        // },
       },
       [REACTING_TO_SKILL_1_STATE]: {
-        entry: [({ context }) => {}],
-        after: { 3000: IDLE_STATE },
-        // on: {
-        //   IDLE_EVENT: IDLE_STATE,
-        //   MOVE_EVENT: MOVE_STATE,
-        //   DEATH_EVENT: DEATH_STATE,
-        // },
+        always: [
+          {
+            target: DEATH_STATE,
+            guard: (context: FSMContext) => context.currentHP <= 0,
+          },
+        ],
+        entry: [
+          assign({
+            currentHP: ({
+              context,
+            }: {
+              context: FSMContext;
+              event: Pick<FSMContext, "currentHP">;
+            }) => {
+              return context.currentHP - 50;
+            },
+          }),
+        ],
+        after: { REACTING_TO_SKILL_1_DELAY: IDLE_STATE },
       },
       [REACTING_TO_SKILL_2_STATE]: {
-        entry: [({ context }) => {}],
-        after: { 3000: IDLE_STATE },
-        // on: {
-        //   IDLE_EVENT: IDLE_STATE,
-        //   MOVE_EVENT: MOVE_STATE,
-        //   DEATH_EVENT: DEATH_STATE,
-        // },
+        always: [
+          {
+            target: DEATH_STATE,
+            guard: (context: FSMContext) => context.currentHP <= 0,
+          },
+        ],
+        entry: [
+          assign({
+            currentHP: ({
+              context,
+            }: {
+              context: FSMContext;
+              event: Pick<FSMContext, "currentHP">;
+            }) => {
+              return context.currentHP - 100;
+            },
+          }),
+        ],
+        after: { REACTING_TO_SKILL_2_DELAY: IDLE_STATE },
       },
       [DEATH_STATE]: {
         entry: [({ context }) => {}],
         type: "final",
       },
     },
-  },
-  config
-);
+  };
 
-// actions: {
-//   reactToSkill1: (context: FSMContext) => {
-//     reactToSkill(context, REACTING_TO_SKILL_1_STATE);
-//   },
-//   reactToSkill2: (context: FSMContext) => {
-//     reactToSkill(context, REACTING_TO_SKILL_2_STATE);
-//   },
-// },
-
-// const reactToSkill = (context, state) => {
-//   const animationNameByFSMState = new Map(
-//     JSON.parse(localStorage.characterFSMStates)
-//   );
-
-//   const animationDurationByFSMState = new Map(
-//     JSON.parse(localStorage.characterFSMDurations)
-//   );
-
-//   stopAll(
-//     FSMSkillStates.map(
-//       (skill) =>
-//         context.actions![animationNameByFSMState.get(skill as FSMStates)!]
-//     )
-//   );
-
-//   getFSMOneShotPlayerFrom(
-//     state,
-//     animationNameByFSMState,
-//     animationDurationByFSMState
-//   ).with(context);
-// };
+  return { baseMachineStateInput, baseMachineConfigInput };
+};

@@ -41,7 +41,7 @@ export const Hub = ({ onStart }) => {
           fov: 30,
           near: 0.1,
           far: 9,
-          position: [0.2, 1, 3],
+          position: [0.3, 1, 3],
           rotation: [0, 0, 0],
         }}
       >

@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { useState, Suspense } from "react";
 import { EffectComposer, Vignette } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { Canvas } from "@react-three/fiber";
@@ -7,17 +7,18 @@ import { Player } from "../player";
 import { Physics } from "@react-three/rapier";
 import { GroundModel } from "../components/Ground";
 import { OrbitControls, Preload } from "@react-three/drei";
+import { NPC } from "../npc";
 
 const Effects = () => {
   return (
     <>
-      {/* <fog attach="fog" args={["black", 1, 8.5]} /> */}
+      <fog attach="fog" args={["black", 1, 8.5]} />
       <EffectComposer>
         <Vignette
-          offset={0.5} // vignette offset
-          darkness={0.5} // vignette darkness
-          eskil={false} // Eskil's vignette technique
-          blendFunction={BlendFunction.NORMAL} // blend mode
+          offset={0.5}
+          darkness={0.5}
+          eskil={false}
+          blendFunction={BlendFunction.NORMAL}
         />
       </EffectComposer>
     </>
@@ -25,6 +26,8 @@ const Effects = () => {
 };
 
 export const Shooter3DScene = ({ onMissionPicked }) => {
+  const [playerIsLoaded, setPlayerIsLoaded] = useState(false);
+
   return (
     <PlayerContextProvider>
       <Canvas
@@ -52,11 +55,12 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         <OrbitControls makeDefault={true} enableDamping={true} />
         <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics debug>
+          <Physics>
             <GroundModel onMissionPicked={onMissionPicked} />
-            <Player />
+            <Player onLoad={() => setPlayerIsLoaded(true)} />
+            {playerIsLoaded && <NPC />}
           </Physics>
-          <Effects />
+          {/* <Effects /> */}
         </Suspense>
       </Canvas>
     </PlayerContextProvider>

@@ -4,16 +4,15 @@ import {
   CylinderCollider,
   RigidBody,
 } from "@react-three/rapier";
-import { MaleCharacter3DModel } from "./MaleCharacter3DModel";
 
 export const CharacterRigidBody = forwardRef(
   ({ children, position }, playerRigidBodyReference) => {
     return (
       <RigidBody
+        name="Player"
         lockRotations={true}
         colliders={false}
         ref={playerRigidBodyReference}
-        name={"Player"}
         position={position}
         //   userData={userData.current}
         //   position={position}

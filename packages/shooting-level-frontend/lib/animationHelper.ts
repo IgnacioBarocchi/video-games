@@ -5,7 +5,7 @@ import {
   FSMStates,
   IDLE_STATE,
   MOVE_STATE,
-} from "../machines/fsmbeta";
+} from "../machines/createBaseFSMInput";
 
 export const blendAnimationTransition = (action: AnimationAction | null) => {
   if (!action) return;

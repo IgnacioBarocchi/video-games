@@ -1,73 +1,43 @@
-import { MutableRefObject, useRef } from "react";
+// todo: remove unnecessary calculations of behavior handlers
+import { MutableRefObject, useRef, useContext } from "react";
 
 import { RapierRigidBody } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
-import { getDistance } from "../lib/getDistance";
+
 import { getVector3From } from "../lib/getVector3From";
-import { Context } from "../providers/PlayerProvider";
-import { RootState } from "@react-three/fiber/dist/declarations/src/core/store";
-import { Vector3 } from "three";
-import { Area } from "../components/Systems/EnemyRegion";
-import {
-  CombatInformation,
-  useEnemyNPCBehaviorHandlers,
-} from "./useEnemyNPCBehaviorHandlers";
 import { BaseFSM } from "../lib/getBaseMachineInput";
-import { useGameStore } from "./useGameStore";
+import { Context } from "../providers/player-context-provider";
+import { goToTarget } from "../lib/goToTarget";
+import { Vector3 } from "three";
+import {
+  DEATH_STATE,
+  IDLE_STATE,
+  MOVE_EVENT,
+  MOVE_STATE,
+  REACTING_TO_SKILL_2_STATE,
+} from "../machines/createBaseFSMInput";
 
 export const useEnemyNPCLogic = (params: {
-  machine: BaseFSM;
-  region: { area: Area; positions: Vector3[] };
+  NPCActor: BaseFSM;
   movement: "LINEAR VELOCITY" | "IMPULSE";
   playerIsReachableReference?: MutableRefObject<boolean | undefined>;
-  activeNPCReference?: MutableRefObject<boolean | undefined>;
 }) => {
-  const { setEnemiesCount, enemiesCount } = useGameStore((state) => ({
-    setEnemiesCount: state.setEnemiesCount,
-    enemiesCount: state.enemiesCount,
-  }));
-
-  const [playerState] = Context.useActorRef();
-
-  const {
-    machine: [state, send],
-    region,
-    movement,
-    playerIsReachableReference,
-    activeNPCReference,
-  } = params;
+  const playerActor = useContext(Context);
 
   const NPCRigidBodyReference =
     useRef<RapierRigidBody>() as MutableRefObject<RapierRigidBody>;
 
-  const {
-    handleRoamingState,
-    handleCombatState,
-    handleChaseState,
-    handleEscapeState,
-  } = useEnemyNPCBehaviorHandlers({
-    region,
-    NPCRigidBodyReference,
-    movement,
-    state,
-    send,
-    playerIsReachableReference,
-  });
-
-  useFrame((_: RootState, delta: number) => {
-    // !might break the code
-    // if (state.matches('Death') && activeNPCReference?.current) {
-    //   const result = enemiesCount + 1;
-    //   setEnemiesCount(result);
-    //   activeNPCReference.current = false;
-    //   window.THREE.Cache.clear();
-    //   return;
-    // }
+  useFrame(() => {
+    const NPCActorCurrentState = params.NPCActor.getSnapshot();
+    const playerActorCurrentState = playerActor.getSnapshot();
+    const playerRigidBody = playerActorCurrentState.context.rigidBody;
+    console.log(NPCActorCurrentState.value);
 
     if (
-      state.matches("Death") ||
-      state.matches("React to skill 2") ||
-      !NPCRigidBodyReference.current
+      NPCActorCurrentState.value === DEATH_STATE ||
+      NPCActorCurrentState.value === REACTING_TO_SKILL_2_STATE ||
+      !NPCRigidBodyReference.current ||
+      !playerRigidBody
     ) {
       return;
     }
@@ -77,34 +47,73 @@ export const useEnemyNPCLogic = (params: {
     );
 
     const playerPosition = getVector3From(
-      (playerState.context.rigidBody! as RapierRigidBody).translation()
+      (playerRigidBody! as RapierRigidBody).translation()
     );
 
-    const combatInformation: CombatInformation = {
-      selfPosition: getVector3From(NPCRigidBodyReference.current.translation()),
-      playerIsAlive: playerState.context.currentHP > 0,
-      playerPosition: getVector3From(
-        (playerState.context.rigidBody! as RapierRigidBody).translation()
-      ),
-      distanceToPlayer: getDistance({
+    if (NPCActorCurrentState.value === MOVE_STATE) {
+      goToTarget({
         sourcePosition: selfPosition,
-        targetPosition: playerPosition,
-      }),
-      delta,
-    };
-
-    const handlers = {
-      roaming: handleRoamingState,
-      fighting: handleCombatState,
-      chasing: handleChaseState,
-      escaping: handleEscapeState,
-    };
-
-    // @ts-ignore
-    handlers[state.context.combatStatus](combatInformation);
+        targetPosition: playerPosition, ///new Vector3(10, 0, 10), //playerPosition,
+        sourceRigidBody: NPCRigidBodyReference.current,
+        speed: 10,
+        style: params.movement,
+      });
+    } else if (NPCActorCurrentState.value === IDLE_STATE) {
+      params.NPCActor.send({ type: MOVE_EVENT });
+    }
   });
 
   return {
     NPCRigidBodyReference,
   };
 };
+
+// const actorRef = Context.useActorRef();
+// console.log(actorRef);
+// const actorRefLogic = actorRef.logic;
+// console.log(actorRefLogic);
+// playerState.getSnapsho()
+// const [playerState] = useActor(actorRefLogic);
+// ***
+// const {
+//   handleRoamingState,
+//   handleCombatState,
+//   handleChaseState,
+//   handleEscapeState,
+// } = useEnemyNPCBehaviorHandlers({
+//   region,
+//   NPCRigidBodyReference,
+//   movement,
+//   state,
+//   send,
+//   playerIsReachableReference,
+// });
+// ***
+// const combatInformation: CombatInformation = {
+//   selfPosition: getVector3From(NPCRigidBodyReference.current.translation()),
+//   playerIsAlive: playerState.context.currentHP > 0,
+//   playerPosition: getVector3From(
+//     (playerState.context.rigidBody! as RapierRigidBody).translation()
+//   ),
+//   distanceToPlayer: getDistance({
+//     sourcePosition: selfPosition,
+//     targetPosition: playerPosition,
+//   }),
+//   delta,
+// };
+// ***
+// const handlers = {
+//   roaming: handleRoamingState,
+//   fighting: handleCombatState,
+//   chasing: handleChaseState,
+//   escaping: handleEscapeState,
+// };
+// ***
+// // @ts-ignore
+// handlers[state.context.combatStatus](combatInformation);
+// import { getDistance } from "../lib/getDistance";
+// // import { Area } from "../components/Systems/EnemyRegion";
+// import {
+//   CombatInformation,
+//   useEnemyNPCBehaviorHandlers,
+// } from "./useEnemyNPCBehaviorHandlers";

@@ -4,7 +4,7 @@ import {
   USING_SKILL_1_STATE,
   USING_SKILL_2_STATE,
   USING_SKILL_3_STATE,
-} from "../machines/fsmbeta";
+} from "../machines/createBaseFSMInput";
 import { FSMStates } from "./getBaseMachineInput";
 
 export const canMove = (stateValue: FSMStates) => {

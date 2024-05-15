@@ -1,11 +1,18 @@
-import { useCallback, useEffect, memo } from "react";
+import { useContext, useCallback, useEffect, memo } from "react";
 import { useActor } from "@xstate/react";
 import { Context } from "../providers/player-context-provider";
-import { USING_SKILL_2_STATE } from "../machines/fsmbeta";
+import { USING_SKILL_2_STATE } from "../machines/createBaseFSMInput";
+import { useSelector } from "@xstate/react";
 
-export const Attachments = ({ nodes, stateValue }) => {
+const usingSkill2Selector = (state) => {
+  return state.value === USING_SKILL_2_STATE;
+};
+
+export const Attachments = ({ nodes }) => {
+  const playerActor = useContext(Context);
+  const maulIsHanded = useSelector(playerActor, usingSkill2Selector);
+
   const updateMaulPosition = (isHanded: boolean) => {
-    console.log({ isHanded });
     const {
       HANDED_MAUL_MESH,
       HANDED_MAUL_MESH_1,
@@ -28,13 +35,12 @@ export const Attachments = ({ nodes, stateValue }) => {
   };
 
   useEffect(() => {
-    console.log("val ", stateValue);
-    if (stateValue === USING_SKILL_2_STATE) {
+    if (maulIsHanded) {
       updateMaulPosition(true);
     } else {
       updateMaulPosition(false);
     }
-  }, [stateValue]);
+  }, [maulIsHanded]);
 
   return <></>;
 };

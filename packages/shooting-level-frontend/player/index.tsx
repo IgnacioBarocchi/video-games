@@ -1,5 +1,5 @@
 import { useActor } from "@xstate/react";
-import { useCallback, useRef, useEffect, useMemo } from "react";
+import { useContext, useCallback, useRef, useEffect, useMemo } from "react";
 import { Context } from "../providers/player-context-provider";
 import {
   GLTFActions,
@@ -20,12 +20,12 @@ import {
   REACTING_TO_SKILL_1_STATE,
   REACTING_TO_SKILL_2_STATE,
   DEATH_STATE,
-} from "../machines/fsmbeta";
+} from "../machines/createBaseFSMInput";
 import character3DModelFile from "../assets/models/Male_Character.glb";
 import { Attachments } from "./Attachments";
 
-export const Player = () => {
-  const [state, send] = useActor(Context.useActorRef().logic);
+export const Player = ({ onLoad }) => {
+  const playerActor = useContext(Context);
   const group = useRef<GroupProps>();
   const { scene, materials, animations } = useGLTF(
     character3DModelFile
@@ -35,13 +35,11 @@ export const Player = () => {
   const { actions } = useAnimations<GLTFActions>(animations, group);
   const { playerRigidBodyReference } = usePlayerLogic({
     useOrbitControls: false,
-    machine: [state, send],
+    actor: playerActor,
   });
 
   useEffect(() => {
-    if (group?.current) {
-      // updateMaulPosition(false);
-
+    if (group?.current && playerRigidBodyReference?.current && playerActor) {
       const milliseconds = 1000;
       const animationNameByFSMState = new Map([
         [IDLE_STATE, "IDLE"],
@@ -66,7 +64,7 @@ export const Player = () => {
         [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
       ]);
 
-      send({
+      playerActor.send({
         type: "SET_CONTEXT",
         actions,
         mesh: group.current,
@@ -74,6 +72,10 @@ export const Player = () => {
         animationNameByFSMState,
         characterFSMDurations,
       });
+
+      playerActor.start();
+
+      setTimeout(() => onLoad(), 1000);
     }
   }, []);
 
@@ -85,31 +87,7 @@ export const Player = () => {
         materials={materials}
         actions={actions}
       />
-      <Attachments nodes={nodes} stateValue={state.value} />
+      <Attachments nodes={nodes} />
     </CharacterRigidBody>
   );
 };
-
-// const updateMaulPosition = useCallback((isHanded: boolean) => {
-//   const {
-//     HANDED_MAUL_MESH,
-//     HANDED_MAUL_MESH_1,
-//     HANDED_MAUL_MESH_2,
-//     PACKED_MAUL_MESH,
-//     PACKED_MAUL_MESH_1,
-//     PACKED_MAUL_MESH_2,
-//     PACKED_MAUL_MESH_3,
-//     RIFLE,
-//   } = nodes;
-
-//   HANDED_MAUL_MESH.visible = isHanded;
-//   HANDED_MAUL_MESH_1.visible = isHanded;
-//   HANDED_MAUL_MESH_2.visible = isHanded;
-//   PACKED_MAUL_MESH.visible = !isHanded;
-//   PACKED_MAUL_MESH_1.visible = !isHanded;
-//   PACKED_MAUL_MESH_2.visible = !isHanded;
-//   PACKED_MAUL_MESH_3.visible = !isHanded;
-//   RIFLE.visible = !isHanded;
-
-//   console.log("AAAAA");
-// }, []);

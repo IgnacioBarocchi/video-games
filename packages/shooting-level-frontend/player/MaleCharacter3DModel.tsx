@@ -20,7 +20,7 @@ import {
   REACTING_TO_SKILL_1_STATE,
   REACTING_TO_SKILL_2_STATE,
   DEATH_STATE,
-} from "../machines/fsmbeta";
+} from "../machines/createBaseFSMInput";
 import { Context } from "../providers/player-context-provider";
 import { useActor } from "@xstate/react";
 import { Mesh, SkinnedMesh, Bone, MeshBasicMaterial } from "three";
