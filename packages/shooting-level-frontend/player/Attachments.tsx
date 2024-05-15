@@ -1,17 +1,27 @@
-import { useContext, useCallback, useEffect, memo } from "react";
-import { useActor } from "@xstate/react";
+import { useContext, useEffect } from "react";
 import { Context } from "../providers/player-context-provider";
-import { USING_SKILL_2_STATE } from "../machines/createBaseFSMInput";
+import {
+  REACTING_TO_SKILL_1_EVENT,
+  REACTING_TO_SKILL_2_EVENT,
+  USING_SKILL_1_STATE,
+  USING_SKILL_2_STATE,
+} from "../machines/createBaseFSMInput";
 import { useSelector } from "@xstate/react";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 
-const usingSkill2Selector = (state) => {
+const usingMaulSkillSelector = (state) => {
   return state.value === USING_SKILL_2_STATE;
+};
+
+const usingRifleSelector = (state) => {
+  return state.value === USING_SKILL_1_STATE;
 };
 
 export const Attachments = ({ nodes }) => {
   const playerActor = useContext(Context);
-  const maulIsHanded = useSelector(playerActor, usingSkill2Selector);
-
+  const maulIsHanded = useSelector(playerActor, usingMaulSkillSelector);
+  const isShooting = useSelector(playerActor, usingRifleSelector);
+  let timeoutID = 0;
   const updateMaulPosition = (isHanded: boolean) => {
     const {
       HANDED_MAUL_MESH,
@@ -34,13 +44,57 @@ export const Attachments = ({ nodes }) => {
     RIFLE.visible = !isHanded;
   };
 
-  useEffect(() => {
-    if (maulIsHanded) {
-      updateMaulPosition(true);
-    } else {
-      updateMaulPosition(false);
-    }
-  }, [maulIsHanded]);
+  const updateBulletTrail = (isShooting: boolean) => {
+    const { BULLET_TRAIL_MESH, BULLET_TRAIL_MESH_1 } = nodes;
+    BULLET_TRAIL_MESH.visible = isShooting;
+    BULLET_TRAIL_MESH_1.visible = isShooting;
+  };
 
-  return <></>;
+  useEffect(() => {
+    updateMaulPosition(maulIsHanded);
+    updateBulletTrail(false);
+
+    if (isShooting) {
+      updateBulletTrail(isShooting);
+      timeoutID = setTimeout(() => {
+        updateBulletTrail(false);
+      }, 100);
+    }
+
+    return () => clearTimeout(timeoutID);
+  }, [maulIsHanded, isShooting]);
+
+  if (isShooting) {
+    return (
+      <CuboidCollider
+        position={[0, 0.5, 5]}
+        args={[0.1, 1, 5]}
+        sensor
+        onIntersectionEnter={(payload) => {
+          if (payload.other.rigidBodyObject.name === "NPC") {
+            const actor = payload.other.rigidBodyObject.userData;
+            actor.send({ type: REACTING_TO_SKILL_1_EVENT });
+          }
+        }}
+      />
+    );
+  }
+
+  if (maulIsHanded) {
+    return (
+      <CuboidCollider
+        position={[0, 0.5, 1]}
+        args={[0.5, 1, 0.5]}
+        sensor
+        onIntersectionEnter={(payload) => {
+          if (payload.other.rigidBodyObject.name === "NPC") {
+            const actor = payload.other.rigidBodyObject.userData;
+            actor.send({ type: REACTING_TO_SKILL_2_EVENT });
+          }
+        }}
+      />
+    );
+  }
+
+  return null;
 };

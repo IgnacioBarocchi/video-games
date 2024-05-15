@@ -1,5 +1,4 @@
-import { useMachine } from "@xstate/react";
-import { useRef, useEffect, useMemo } from "react";
+import { useContext, useRef, useEffect, useMemo } from "react";
 import { GroupProps, useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
@@ -14,16 +13,20 @@ import {
   DEATH_STATE,
   USING_SKILL_2_EVENT,
   MOVE_EVENT,
+  REACTING_TO_SKILL_2_EVENT,
+  FSMStates,
 } from "../machines/createBaseFSMInput";
 import { NPCRigidBody } from "./NPCRigidBody";
-import { ZombieModel } from "./ZombieModel";
+import { ActionName, ZombieModel } from "./ZombieModel";
 import { ZombieMachine } from "../machines/zombie-machine";
 import { useEnemyNPCLogic } from "../hooks/useEnemyNPCLogic";
 import zombie3DMFile from "../assets/models/Zombie_Male.glb";
 import { createActor } from "xstate";
+import { Context } from "../providers/player-context-provider";
 
 export const NPC = () => {
   const NPCActor = createActor(ZombieMachine);
+  const playerActor = useContext(Context);
 
   const group = useRef<GroupProps>();
   const { scene, materials, animations } = useGLTF(zombie3DMFile) as GLTFResult;
@@ -39,7 +42,7 @@ export const NPC = () => {
   useEffect(() => {
     if (group?.current && NPCRigidBodyReference?.current && NPCActor) {
       const milliseconds = 1000;
-      const animationNameByFSMState = new Map([
+      const animationNameByFSMState = new Map<FSMStates, ActionName>([
         [IDLE_STATE, "RUN"],
         [MOVE_STATE, "RUN"],
         [USING_SKILL_1_STATE, "ATTACK"],
@@ -76,17 +79,13 @@ export const NPC = () => {
     }
 
     NPCActor.start();
-    console.log("started!");
-    NPCActor.send({ type: MOVE_EVENT });
-
-    console.log(NPCActor);
-    // console.log(NPCActor.getPersistedSnapshot().status);
-    console.log(NPCActor.getSnapshot().status);
+    // NPCActor.send({ type: MOVE_EVENT });
   }, []);
 
   const handleCollisionWithPlayer = (payload) => {
     if (payload.other.rigidBodyObject.name === "Player") {
       NPCActor.send({ type: USING_SKILL_2_EVENT });
+      playerActor.send({ type: REACTING_TO_SKILL_2_EVENT });
     }
   };
 
@@ -94,6 +93,7 @@ export const NPC = () => {
     <NPCRigidBody
       ref={NPCRigidBodyReference}
       onCollisionEnter={handleCollisionWithPlayer}
+      actor={NPCActor}
     >
       <ZombieModel
         ref={group}

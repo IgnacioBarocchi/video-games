@@ -32,6 +32,7 @@ export const Player = ({ onLoad }) => {
   ) as GLTFResult;
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
+
   const { actions } = useAnimations<GLTFActions>(animations, group);
   const { playerRigidBodyReference } = usePlayerLogic({
     useOrbitControls: false,
@@ -40,6 +41,9 @@ export const Player = ({ onLoad }) => {
 
   useEffect(() => {
     if (group?.current && playerRigidBodyReference?.current && playerActor) {
+      nodes.BULLET_TRAIL_MESH.visible = false;
+      nodes.BULLET_TRAIL_MESH_1.visible = false;
+
       const milliseconds = 1000;
       const animationNameByFSMState = new Map([
         [IDLE_STATE, "IDLE"],
@@ -61,6 +65,16 @@ export const Player = ({ onLoad }) => {
         ],
         [USING_SKILL_2_STATE, actions.MAUL?.getClip().duration! * milliseconds],
         [USING_SKILL_3_STATE, actions.ROLL?.getClip().duration! * milliseconds],
+        // *
+        [
+          REACTING_TO_SKILL_1_STATE,
+          actions.DEATH?.getClip().duration! * milliseconds,
+        ],
+        [
+          REACTING_TO_SKILL_2_STATE,
+          actions.DEATH?.getClip().duration! * milliseconds,
+        ],
+        // *
         [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
       ]);
 

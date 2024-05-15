@@ -18,8 +18,8 @@ export const CharacterRigidBody = forwardRef(
         //   position={position}
       >
         <CapsuleCollider
-          args={[0.2, 0.6]}
-          position={[0, 0.8, 0.2]}
+          args={[0.6, 0.2]}
+          position={[0, 0.8, 0]}
           // onCollisionEnter={onCollisionEnter}
         />
         <CylinderCollider args={[0.2, 2]} position={[0, 0.5, 0]} sensor />

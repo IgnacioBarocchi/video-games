@@ -1,32 +1,32 @@
-import * as THREE from "three";
+import { Bone, SkinnedMesh, MeshBasicMaterial, AnimationAction } from "three";
 import React, { forwardRef, MutableReference } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import zombieMFile from "../assets/models/Zombie_Male.glb";
 
-type GLTFResult = GLTF & {
+export type GLTFResult = GLTF & {
   nodes: {
-    ZOMBIE_MESH004: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_1: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_2: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_3: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_4: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_5: THREE.SkinnedMesh;
-    ZOMBIE_MESH004_6: THREE.SkinnedMesh;
-    mixamorigHips: THREE.Bone;
+    ZOMBIE_MESH004: SkinnedMesh;
+    ZOMBIE_MESH004_1: SkinnedMesh;
+    ZOMBIE_MESH004_2: SkinnedMesh;
+    ZOMBIE_MESH004_3: SkinnedMesh;
+    ZOMBIE_MESH004_4: SkinnedMesh;
+    ZOMBIE_MESH004_5: SkinnedMesh;
+    ZOMBIE_MESH004_6: SkinnedMesh;
+    mixamorigHips: Bone;
   };
   materials: {
-    Zombie_base: THREE.MeshBasicMaterial;
-    Zombie_2: THREE.MeshBasicMaterial;
-    Zombie_3: THREE.MeshBasicMaterial;
-    Zombie_shade_4: THREE.MeshBasicMaterial;
-    Socket: THREE.MeshBasicMaterial;
-    Blood: THREE.MeshBasicMaterial;
-    Blood_shade: THREE.MeshBasicMaterial;
+    Zombie_base: MeshBasicMaterial;
+    Zombie_2: MeshBasicMaterial;
+    Zombie_3: MeshBasicMaterial;
+    Zombie_shade_4: MeshBasicMaterial;
+    Socket: MeshBasicMaterial;
+    Blood: MeshBasicMaterial;
+    Blood_shade: MeshBasicMaterial;
   };
 };
 
-type ActionName =
+export type ActionName =
   | "ATTACK"
   | "BITE"
   | "DEATH"
@@ -34,7 +34,8 @@ type ActionName =
   | "RUN"
   | "SHOT"
   | "SCREAM";
-type GLTFActions = Record<ActionName, THREE.AnimationAction>;
+
+export type GLTFActions = Record<ActionName, AnimationAction>;
 
 export const ZombieModel = forwardRef<{
   props: JSX.IntrinsicElements["group"];

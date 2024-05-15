@@ -46,8 +46,8 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         camera={{
           fov: 50,
           near: 0.1,
-          // far: 9,
-          far: 3000,
+          far: 9,
+          // far: 3000,
           position: [0.2, 2, 5],
           rotation: [0, 0, 0],
         }}
@@ -55,12 +55,12 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         <OrbitControls makeDefault={true} enableDamping={true} />
         <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics>
+          <Physics debug>
             <GroundModel onMissionPicked={onMissionPicked} />
             <Player onLoad={() => setPlayerIsLoaded(true)} />
             {playerIsLoaded && <NPC />}
           </Physics>
-          {/* <Effects /> */}
+          <Effects />
         </Suspense>
       </Canvas>
     </PlayerContextProvider>

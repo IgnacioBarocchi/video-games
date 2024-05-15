@@ -19,6 +19,8 @@ import {
   USING_SKILL_1_EVENT,
   USING_SKILL_2_EVENT,
   USING_SKILL_3_EVENT,
+  IDLE_STATE,
+  MOVE_STATE,
 } from "../machines/createBaseFSMInput";
 
 const getFSMEvent = (keys: Keys) => {
@@ -50,21 +52,28 @@ export const usePlayerLogic = (params: {
   useFrame((rootState, delta) => {
     if (!playerRigidBodyReference.current) return;
     const actorCurrentState = actor.getSnapshot();
+    if (actorCurrentState.status === "error") {
+      throw new Error(actorCurrentState.status);
+    }
+
+    if (actorCurrentState === "done") {
+      console.log("");
+    }
     const keys = getKeys() as unknown as Keys;
 
     // if (canTransitionState(state.value as FSMStates)) {
     actor.send({ type: getFSMEvent(keys) });
     // }
 
-    // ! FIX CAN MOVE
-    // if (canMove(state.value as FSMStates)) {
-    const impulse = getPlayerImpulse(keys, delta);
+    if ([MOVE_STATE, IDLE_STATE].includes(actorCurrentState.value)) {
+      const impulse = getPlayerImpulse(keys, delta);
 
-    playerRigidBodyReference.current.setLinvel(impulse, false);
-    updateOrientation(orientation, setOrientation, keys);
-    const quaternionRotation = new Quaternion();
-    quaternionRotation.setFromEuler(new Euler(0, orientation, 0));
-    playerRigidBodyReference.current.setRotation(quaternionRotation, false);
+      playerRigidBodyReference.current.setLinvel(impulse, false);
+      updateOrientation(orientation, setOrientation, keys);
+      const quaternionRotation = new Quaternion();
+      quaternionRotation.setFromEuler(new Euler(0, orientation, 0));
+      playerRigidBodyReference.current.setRotation(quaternionRotation, false);
+    }
 
     if (actorCurrentState.value === USING_SKILL_3_STATE) {
       const impulseVector = new Vector3(0, 0, 5);

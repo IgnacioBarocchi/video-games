@@ -8,12 +8,12 @@ import { getVector3From } from "../lib/getVector3From";
 import { BaseFSM } from "../lib/getBaseMachineInput";
 import { Context } from "../providers/player-context-provider";
 import { goToTarget } from "../lib/goToTarget";
-import { Vector3 } from "three";
 import {
   DEATH_STATE,
   IDLE_STATE,
   MOVE_EVENT,
   MOVE_STATE,
+  REACTING_TO_SKILL_1_STATE,
   REACTING_TO_SKILL_2_STATE,
 } from "../machines/createBaseFSMInput";
 
@@ -31,11 +31,19 @@ export const useEnemyNPCLogic = (params: {
     const NPCActorCurrentState = params.NPCActor.getSnapshot();
     const playerActorCurrentState = playerActor.getSnapshot();
     const playerRigidBody = playerActorCurrentState.context.rigidBody;
-    console.log(NPCActorCurrentState.value);
+    // console.log(NPCActorCurrentState.status);
+    if (NPCActorCurrentState.status === "error") {
+      throw new Error(NPCActorCurrentState.status);
+    }
+
+    if (NPCActorCurrentState.status === "done") {
+      return;
+    }
 
     if (
       NPCActorCurrentState.value === DEATH_STATE ||
       NPCActorCurrentState.value === REACTING_TO_SKILL_2_STATE ||
+      NPCActorCurrentState.value === REACTING_TO_SKILL_1_STATE ||
       !NPCRigidBodyReference.current ||
       !playerRigidBody
     ) {
@@ -50,10 +58,15 @@ export const useEnemyNPCLogic = (params: {
       (playerRigidBody! as RapierRigidBody).translation()
     );
 
+    if (NPCActorCurrentState.value === REACTING_TO_SKILL_1_STATE) {
+      alert("M");
+      return;
+    }
+
     if (NPCActorCurrentState.value === MOVE_STATE) {
       goToTarget({
         sourcePosition: selfPosition,
-        targetPosition: playerPosition, ///new Vector3(10, 0, 10), //playerPosition,
+        targetPosition: playerPosition,
         sourceRigidBody: NPCRigidBodyReference.current,
         speed: 10,
         style: params.movement,

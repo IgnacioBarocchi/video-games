@@ -92,3 +92,11 @@ export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
     },
   };
 };
+
+export const pickAction = (state: FSMStates) => {
+  return {
+    from: (context: FSMContext) => {
+      return context?.actions[context.animationNameByFSMState?.get(state)];
+    },
+  };
+};

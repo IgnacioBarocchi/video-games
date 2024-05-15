@@ -1,6 +1,11 @@
+import { AnimationAction, Group, Object3DEventMap, LoopOnce } from "three";
 import { assign } from "xstate";
 import { nanoid } from "nanoid";
-import { getFSMOneShotPlayerFrom, stopAll } from "../lib/animationHelper";
+import {
+  getFSMOneShotPlayerFrom,
+  pickAction,
+  playFinalAnimation,
+} from "../lib/animationHelper";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const IDLE_STATE = "IDLE_STATE";
@@ -76,6 +81,12 @@ export const createBaseFSMInput = () => {
         return context.characterFSMDurations?.get(REACTING_TO_SKILL_2_STATE);
       },
     },
+    guards: {
+      isDead: ({ context }: { context: FSMContext }) => {
+        const isDeadB = context.currentHP <= 0;
+        return isDeadB;
+      },
+    },
   };
 
   const baseMachineStateInput = {
@@ -97,13 +108,25 @@ export const createBaseFSMInput = () => {
       [IDLE_STATE]: {
         entry: [
           ({ context }) => {
-            if (!context?.actions?.RUN || !context?.actions?.MOVE) {
+            // todo:  aaa
+            const idleAnimationName =
+              context.animationNameByFSMState?.get(IDLE_STATE)!;
+            const moveAnimationName =
+              context.animationNameByFSMState?.get(MOVE_STATE)!;
+
+            if (!idleAnimationName || !moveAnimationName) {
               return;
             }
+            context.actions[moveAnimationName].clampWhenFinished = true;
+            context.actions[moveAnimationName].stop();
+            context.actions[idleAnimationName].play();
 
-            context.actions.RUN.clampWhenFinished = true;
-            context?.actions?.RUN?.stop();
-            context?.actions?.IDLE?.play();
+            // const idleAction = pickAction(IDLE_STATE).from(context);
+            // idleAction.play();
+
+            // const moveAction = pickAction(MOVE_STATE).from(context);
+            // moveAction.clampWhenFinished = true;
+            // moveAction.stop();
           },
         ],
         on: {
@@ -201,12 +224,25 @@ export const createBaseFSMInput = () => {
       [MOVE_STATE]: {
         entry: [
           ({ context }) => {
-            if (!context?.actions?.RUN || !context?.actions?.MOVE) {
+            const idleAnimationName =
+              context.animationNameByFSMState?.get(IDLE_STATE)!;
+            const moveAnimationName =
+              context.animationNameByFSMState?.get(MOVE_STATE)!;
+
+            if (!idleAnimationName || !moveAnimationName) {
               return;
             }
-            context.actions.IDLE.clampWhenFinished = true;
-            context?.actions?.IDLE?.stop();
-            context?.actions?.RUN?.play();
+
+            context.actions[idleAnimationName].clampWhenFinished = true;
+            context.actions[idleAnimationName].stop();
+            context.actions[moveAnimationName].play();
+
+            // const moveAction = pickAction(MOVE_STATE).from(context);
+            // moveAction.play();
+
+            // const idleAction = pickAction(IDLE_STATE).from(context);
+            // idleAction.clampWhenFinished = true;
+            // idleAction.stop();
           },
         ],
         on: {
@@ -246,8 +282,8 @@ export const createBaseFSMInput = () => {
       [REACTING_TO_SKILL_1_STATE]: {
         always: [
           {
+            guard: "isDead",
             target: DEATH_STATE,
-            guard: (context: FSMContext) => context.currentHP <= 0,
           },
         ],
         entry: [
@@ -258,35 +294,62 @@ export const createBaseFSMInput = () => {
               context: FSMContext;
               event: Pick<FSMContext, "currentHP">;
             }) => {
-              return context.currentHP - 50;
-            },
-          }),
-        ],
-        after: { REACTING_TO_SKILL_1_DELAY: IDLE_STATE },
-      },
-      [REACTING_TO_SKILL_2_STATE]: {
-        always: [
-          {
-            target: DEATH_STATE,
-            guard: (context: FSMContext) => context.currentHP <= 0,
-          },
-        ],
-        entry: [
-          assign({
-            currentHP: ({
-              context,
-            }: {
-              context: FSMContext;
-              event: Pick<FSMContext, "currentHP">;
-            }) => {
+              getFSMOneShotPlayerFrom(REACTING_TO_SKILL_1_STATE).with(context);
+              pickAction(IDLE_STATE).from(context).stop();
+              pickAction(MOVE_STATE).from(context).stop();
+
               return context.currentHP - 100;
             },
           }),
         ],
-        after: { REACTING_TO_SKILL_2_DELAY: IDLE_STATE },
+        after: { REACTING_TO_SKILL_1_STATE_DELAY: IDLE_STATE },
+      },
+      [REACTING_TO_SKILL_2_STATE]: {
+        always: [
+          {
+            guard: "isDead",
+            target: DEATH_STATE,
+          },
+        ],
+        entry: [
+          assign({
+            currentHP: ({
+              context,
+            }: {
+              context: FSMContext;
+              event: Pick<FSMContext, "currentHP">;
+            }) => {
+              getFSMOneShotPlayerFrom(REACTING_TO_SKILL_2_STATE).with(context);
+              pickAction(IDLE_STATE).from(context).stop();
+              pickAction(MOVE_STATE).from(context).stop();
+
+              return context.currentHP - 100;
+            },
+          }),
+        ],
+        after: { REACTING_TO_SKILL_2_STATE_DELAY: IDLE_STATE },
       },
       [DEATH_STATE]: {
-        entry: [({ context }) => {}],
+        entry: [
+          ({ context }) => {
+            for (const state of [
+              IDLE_STATE,
+              MOVE_STATE,
+              USING_SKILL_1_STATE,
+              USING_SKILL_2_STATE,
+              USING_SKILL_3_STATE,
+              REACTING_TO_SKILL_1_STATE,
+              REACTING_TO_SKILL_2_STATE,
+            ] as FSMStates[]) {
+              const action = pickAction(state).from(context);
+              action.reset().setLoop(LoopOnce, 1).stop();
+            }
+
+            setTimeout(() => {
+              playFinalAnimation(pickAction(DEATH_STATE).from(context));
+            }, 500);
+          },
+        ],
         type: "final",
       },
     },
