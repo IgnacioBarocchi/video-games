@@ -4,6 +4,7 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import groundModelFile from "../assets/models/Ground.glb";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import useGameStore from "../store/store";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -65,7 +66,23 @@ const RoomDoodadsColliders = () => {
   );
 };
 
-const ElevatorColliders = ({ onElevatorNear, onIntersectionEnter }) => {
+const ElevatorColliders = ({
+  onElevatorNear,
+  onIntersectionEnter,
+  playerPickedBackpack,
+}) => {
+  if (!playerPickedBackpack) {
+    return (
+      <CuboidCollider
+        name="Collider"
+        position={[0, 0, -9.3]}
+        args={[1.1, 2, 1]}
+        sensor
+        onIntersectionEnter={onIntersectionEnter}
+      />
+    );
+  }
+
   return (
     <>
       <CuboidCollider
@@ -104,6 +121,9 @@ export function GroundModel({ onMissionPicked }) {
   ) as GLTFResult;
   const [shouldOpenTheDoor, setShouldOpenTheDoor] = useState(false);
   const { actions } = useAnimations<GLTFActions>(animations, group);
+  const playerPickedBackpack = useGameStore(
+    (state) => state.playerPickedBackpack
+  );
 
   useEffect(() => {
     if (shouldOpenTheDoor) {
@@ -119,6 +139,7 @@ export function GroundModel({ onMissionPicked }) {
       <RoomDoodadsColliders />
       <FenceColliders />
       <ElevatorColliders
+        playerPickedBackpack={playerPickedBackpack}
         onElevatorNear={() => setShouldOpenTheDoor(true)}
         onIntersectionEnter={onMissionPicked}
       />

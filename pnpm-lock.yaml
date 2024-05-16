@@ -364,6 +364,9 @@ importers:
       xstate:
         specifier: ^5.10.0
         version: 5.10.0
+      zustand:
+        specifier: ^4.5.2
+        version: 4.5.2(@types/react@18.2.66)(react@18.2.0)
     devDependencies:
       typescript:
         specifier: ^5.2.2

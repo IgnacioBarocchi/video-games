@@ -1,4 +1,70 @@
-"use strict";const d=require("electron");d.contextBridge.exposeInMainWorld("ipcRenderer",c(d.ipcRenderer));function c(e){const t=Object.getPrototypeOf(e);for(const[n,r]of Object.entries(t))Object.prototype.hasOwnProperty.call(e,n)||(typeof r=="function"?e[n]=function(...i){return r.call(e,...i)}:e[n]=r);return e}function s(e=["complete","interactive"]){return new Promise(t=>{e.includes(document.readyState)?t(!0):document.addEventListener("readystatechange",()=>{e.includes(document.readyState)&&t(!0)})})}const o={append(e,t){Array.from(e.children).find(n=>n===t)||e.appendChild(t)},remove(e,t){Array.from(e.children).find(n=>n===t)&&e.removeChild(t)}};function u(){const e=`
+"use strict";
+const electron = require("electron");
+electron.contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(electron.ipcRenderer));
+function withPrototype(obj) {
+  const protos = Object.getPrototypeOf(obj);
+  for (const [key, value] of Object.entries(protos)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key))
+      continue;
+    if (typeof value === "function") {
+      obj[key] = function(...args) {
+        return value.call(obj, ...args);
+      };
+    } else {
+      obj[key] = value;
+    }
+  }
+  return obj;
+}
+function domReady(condition = ["complete", "interactive"]) {
+  return new Promise((resolve) => {
+    if (condition.includes(document.readyState)) {
+      resolve(true);
+    } else {
+      document.addEventListener("readystatechange", () => {
+        if (condition.includes(document.readyState)) {
+          resolve(true);
+        }
+      });
+    }
+  });
+}
+const safeDOM = {
+  append(parent, child) {
+    if (!Array.from(parent.children).find((e) => e === child)) {
+      parent.appendChild(child);
+    }
+  },
+  remove(parent, child) {
+    if (Array.from(parent.children).find((e) => e === child)) {
+      parent.removeChild(child);
+    }
+  }
+};
+function useLoading() {
+  const styleContent = `
   width: 100vw;
   height: 100vh;
-  background-size: cover;`,t=document.createElement("style"),n=document.createElement("div");return t.id="app-loading-style",t.innerHTML=e,n.className="app-loading-wrap",{appendLoading(){o.append(document.head,t),o.append(document.body,n)},removeLoading(){o.remove(document.head,t),o.remove(document.body,n)}}}const{appendLoading:p,removeLoading:a}=u();s().then(p);window.onmessage=e=>{e.data.payload==="removeLoading"&&a()};setTimeout(a,4999);
+  background-size: cover;`;
+  const oStyle = document.createElement("style");
+  const oDiv = document.createElement("div");
+  oStyle.id = "app-loading-style";
+  oStyle.innerHTML = styleContent;
+  oDiv.className = "app-loading-wrap";
+  return {
+    appendLoading() {
+      safeDOM.append(document.head, oStyle);
+      safeDOM.append(document.body, oDiv);
+    },
+    removeLoading() {
+      safeDOM.remove(document.head, oStyle);
+      safeDOM.remove(document.body, oDiv);
+    }
+  };
+}
+const { appendLoading, removeLoading } = useLoading();
+domReady().then(appendLoading);
+window.onmessage = (ev) => {
+  ev.data.payload === "removeLoading" && removeLoading();
+};
+setTimeout(removeLoading, 4999);

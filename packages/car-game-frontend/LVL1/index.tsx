@@ -9,10 +9,10 @@ import useGameStore from "../store/store";
 import { memo, useEffect } from "react";
 const isOldVersion = true;
 
-const Scenario = memo(() => {
+const Scenario = memo(({ setWonTheGame }) => {
   return (
     <>
-      <Ground />
+      <Ground setWonTheGame={setWonTheGame} />
       <Barriers isOldVersion={isOldVersion} />
       <Zombies
         startZOffset={900}
@@ -27,7 +27,7 @@ const Scenario = memo(() => {
   );
 });
 
-export const LVL1 = () => {
+export const LVL1 = ({ setWonTheGame }) => {
   const { gameStarted, setLoading, loading } = useGameStore((state) => ({
     gameStarted: state.gameStarted,
     setLoading: state.setLoading,
@@ -42,7 +42,7 @@ export const LVL1 = () => {
 
   return (
     <>
-      <Scenario />
+      <Scenario setWonTheGame={setWonTheGame} />
       <Player />
       {/* <MemoizedPlayer isPlaying={gameStarted} /> */}
     </>

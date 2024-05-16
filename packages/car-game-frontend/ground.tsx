@@ -38,11 +38,11 @@ export const HighWay = () => {
     </RigidBody>
   );
 };
-export function Ground() {
+export function Ground({ setWonTheGame }) {
   return (
     <group>
       <HighWay />
-      <Shop />
+      <Shop setWonTheGame={setWonTheGame} />
     </group>
   );
 }

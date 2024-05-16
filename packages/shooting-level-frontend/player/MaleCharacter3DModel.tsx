@@ -47,6 +47,11 @@ export type GLTFResult = GLTF & {
     MALE_BASE_MESH_11: SkinnedMesh;
     BULLET_TRAIL_MESH: SkinnedMesh;
     BULLET_TRAIL_MESH_1: SkinnedMesh;
+    BACKPACK_MESH: Mesh;
+    BACKPACK_MESH_1: Mesh;
+    BACKPACK_MESH_2: Mesh;
+    BACKPACK_MESH_3: Mesh;
+    BACKPACK_MESH_4: Mesh;
     mixamorigHips: Bone;
   };
   materials: {
@@ -67,6 +72,11 @@ export type GLTFResult = GLTF & {
     Shoes: MeshBasicMaterial;
     Smoke: MeshBasicMaterial;
     Fire: MeshBasicMaterial;
+    Backpack_Base: MeshBasicMaterial;
+    Backpack_Stripes: MeshBasicMaterial;
+    Backpack_Details: MeshBasicMaterial;
+    Backpack_Shade: MeshBasicMaterial;
+    Backpack_High: MeshBasicMaterial;
   };
 };
 

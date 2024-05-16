@@ -8,6 +8,7 @@ import { Physics } from "@react-three/rapier";
 import { GroundModel } from "../components/Ground";
 import { OrbitControls, Preload } from "@react-three/drei";
 import { NPC } from "../npc";
+import { Backpack } from "../components/Backpack";
 
 const Effects = () => {
   return (
@@ -55,7 +56,8 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         <OrbitControls makeDefault={true} enableDamping={true} />
         <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics debug>
+          <Physics>
+            <Backpack position={[-6, 0, -3]} />
             <GroundModel onMissionPicked={onMissionPicked} />
             <Player onLoad={() => setPlayerIsLoaded(true)} />
             {playerIsLoaded && <NPC />}

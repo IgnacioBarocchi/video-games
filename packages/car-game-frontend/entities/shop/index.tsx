@@ -9,7 +9,7 @@ import { ROAD_LENGTH } from "game-constants";
 import { PositionalAudio } from "@react-three/drei";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
 
-export const Shop = () => {
+export const Shop = ({ setWonTheGame }) => {
   const [state, setState] = useState("DOOR CLOSED");
 
   const { setGameOver, setHaveZombies, setTitle } = useGameStore((state) => ({
@@ -52,6 +52,7 @@ export const Shop = () => {
               setTimeout(() => {
                 setGameOver({ reason: "WON" });
                 new Audio(moneyCounter).play();
+                setWonTheGame();
               }, 100);
             }
           }}

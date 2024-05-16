@@ -6,14 +6,32 @@ import { CarGameFrontend } from "car-game-frontend";
 export default function App() {
   const [pickMission, setPickMission] = useState(false);
   const [missionPicked, setMissionPicked] = useState(false);
+  const [wonTheGame, setWonTheGame] = useState(false);
+
+  const restartMissions = () => {
+    setPickMission(false);
+    setMissionPicked(false);
+    setWonTheGame(false);
+  };
 
   return (
     <>
-      {!pickMission && <Hub onStart={() => setPickMission(true)} />}
+      {!pickMission && !wonTheGame && (
+        <Hub onStart={() => setPickMission(true)} />
+      )}
       {!missionPicked && pickMission && (
         <Shooter3DScene onMissionPicked={() => setMissionPicked(true)} />
       )}
-      {missionPicked && <CarGameFrontend />}
+      {missionPicked && (
+        <CarGameFrontend
+          setWonTheGame={() => {
+            setTimeout(() => {
+              setWonTheGame(true);
+              restartMissions();
+            }, 10000);
+          }}
+        />
+      )}
     </>
   );
 }

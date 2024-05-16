@@ -16,6 +16,11 @@ type GLTFResult = GLTF & {
     RIFLE: THREE.Mesh
     BULLET_TRAIL_MESH: THREE.Mesh
     BULLET_TRAIL_MESH_1: THREE.Mesh
+    BACKPACK_MESH: THREE.Mesh
+    BACKPACK_MESH_1: THREE.Mesh
+    BACKPACK_MESH_2: THREE.Mesh
+    BACKPACK_MESH_3: THREE.Mesh
+    BACKPACK_MESH_4: THREE.Mesh
     PACKED_MAUL_MESH: THREE.Mesh
     PACKED_MAUL_MESH_1: THREE.Mesh
     PACKED_MAUL_MESH_2: THREE.Mesh
@@ -40,6 +45,11 @@ type GLTFResult = GLTF & {
     Hair: THREE.MeshBasicMaterial
     Smoke: THREE.MeshBasicMaterial
     Fire: THREE.MeshBasicMaterial
+    Backpack_Base: THREE.MeshBasicMaterial
+    Backpack_Stripes: THREE.MeshBasicMaterial
+    Backpack_Details: THREE.MeshBasicMaterial
+    Backpack_Shade: THREE.MeshBasicMaterial
+    Backpack_High: THREE.MeshBasicMaterial
     Jacket_Shade: THREE.MeshBasicMaterial
     Skin_Base: THREE.MeshBasicMaterial
     Skin_Shade_2: THREE.MeshBasicMaterial

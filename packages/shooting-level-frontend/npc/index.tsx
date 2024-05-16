@@ -15,6 +15,7 @@ import {
   MOVE_EVENT,
   REACTING_TO_SKILL_2_EVENT,
   FSMStates,
+  INACTIVE_STATE,
 } from "../machines/createBaseFSMInput";
 import { NPCRigidBody } from "./NPCRigidBody";
 import { ActionName, ZombieModel } from "./ZombieModel";
@@ -23,9 +24,15 @@ import { useEnemyNPCLogic } from "../hooks/useEnemyNPCLogic";
 import zombie3DMFile from "../assets/models/Zombie_Male.glb";
 import { createActor } from "xstate";
 import { Context } from "../providers/player-context-provider";
+import { useSelector } from "@xstate/react";
+
+const statusSelector = (state) => {
+  return state.value === INACTIVE_STATE;
+};
 
 export const NPC = () => {
   const NPCActor = createActor(ZombieMachine);
+  const isInactive = useSelector(NPCActor, statusSelector);
   const playerActor = useContext(Context);
 
   const group = useRef<GroupProps>();
@@ -88,6 +95,10 @@ export const NPC = () => {
       playerActor.send({ type: REACTING_TO_SKILL_2_EVENT });
     }
   };
+
+  if (isInactive) {
+    return null;
+  }
 
   return (
     <NPCRigidBody
