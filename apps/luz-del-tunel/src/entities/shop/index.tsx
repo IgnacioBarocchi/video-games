@@ -5,7 +5,7 @@ import useGameStore from "../../store/store";
 import { Vector3 } from "three";
 import moneyCounter from "../../assets/audio/money-counter.mp3";
 import openGate from "../../assets/audio/open-gate.mp3";
-import { ROAD_LENGTH } from "../../constants";
+import { ROAD_LENGTH } from "game-constants";
 import { PositionalAudio } from "@react-three/drei";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
 

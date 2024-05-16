@@ -31,6 +31,9 @@ importers:
       '@xstate/react':
         specifier: ^4.1.0
         version: 4.1.0(@types/react@18.2.66)(react@18.2.0)(xstate@5.10.0)
+      game-constants:
+        specifier: workspace:*
+        version: link:../../packages/game-constants
       hub-screen-frontend:
         specifier: workspace:*
         version: link:../../packages/hub-screen-frontend
@@ -135,6 +138,12 @@ importers:
         specifier: ^0.14.5
         version: 0.14.5
 
+  packages/game-constants:
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
   packages/hub-screen-frontend:
     dependencies:
       '@react-three/drei':
@@ -201,6 +210,9 @@ importers:
       '@xstate/react':
         specifier: ^4.1.0
         version: 4.1.0(@types/react@18.2.66)(react@18.2.0)(xstate@5.10.0)
+      game-constants:
+        specifier: workspace:*
+        version: link:../game-constants
       install:
         specifier: ^0.13.0
         version: 0.13.0

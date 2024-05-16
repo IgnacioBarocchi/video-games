@@ -7,7 +7,7 @@ import { PositionalAudio } from "@react-three/drei";
 import hitSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-hit.mp3";
 import scrapeSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-scrape.mp3";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
-import { CAR_IMPACT_COST } from "../../constants";
+import { CAR_IMPACT_COST } from "game-constants";
 import useGameStore from "../../store/store";
 
 export const BurntCar: FC<{ position: [number, number, number] }> = ({

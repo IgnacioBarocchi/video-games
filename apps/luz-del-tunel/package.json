@@ -32,6 +32,7 @@
     "physics": "workspace:*",
     "hub-screen-frontend": "workspace:*",
     "shooting-level-frontend": "workspace:*",
+    "game-constants": "workspace:*",
     "vite-electron-plugin": "^0.8.3",
     "vite-tsconfig-paths": "^4.3.2",
     "xstate": "^5.10.0",

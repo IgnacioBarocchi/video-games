@@ -17,6 +17,7 @@ export const REACTING_TO_SKILL_1_STATE = "REACTING_TO_SKILL_1_STATE";
 export const REACTING_TO_SKILL_2_STATE = "REACTING_TO_SKILL_2_STATE";
 export const TAKING_DAMAGE_STATE = "TAKING_DAMAGE_STATE";
 export const DEATH_STATE = "DEATH";
+export const INACTIVE_STATE = "INACTIVE_STATE";
 
 export const USING_SKILL_1_EVENT = "SKILL_1_EVENT";
 export const USING_SKILL_2_EVENT = "SKILL_2_EVENT";
@@ -26,6 +27,7 @@ export const REACTING_TO_SKILL_2_EVENT = "REACTING_TO_SKILL_2_EVENT";
 export const IDLE_EVENT = "IDLE_EVENT";
 export const MOVE_EVENT = "MOVE_EVENT";
 export const DEATH_EVENT = "DEATH_EVENT";
+export const INACTIVE_EVENT = "INACTIVE_EVENT";
 
 export const FSMSkillStates = [
   USING_SKILL_1_STATE,
@@ -80,6 +82,9 @@ export const createBaseFSMInput = () => {
       }) => {
         return context.characterFSMDurations?.get(REACTING_TO_SKILL_2_STATE);
       },
+      DEATH_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+        return context.characterFSMDurations?.get(DEATH_STATE);
+      },
     },
     guards: {
       isDead: ({ context }: { context: FSMContext }) => {
@@ -101,8 +106,6 @@ export const createBaseFSMInput = () => {
       actions: null,
       characterFSMDurations: new Map(),
       animationNameByFSMState: new Map(),
-      // canUseSkill1InTarget: false,
-      // canUseSkill2InTarget: false,
     },
     states: {
       [IDLE_STATE]: {
@@ -345,11 +348,12 @@ export const createBaseFSMInput = () => {
               action.reset().setLoop(LoopOnce, 1).stop();
             }
 
-            setTimeout(() => {
-              playFinalAnimation(pickAction(DEATH_STATE).from(context));
-            }, 500);
+            playFinalAnimation(pickAction(DEATH_STATE).from(context));
           },
         ],
+        after: { DEATH_STATE_DELAY: INACTIVE_STATE },
+      },
+      [INACTIVE_STATE]: {
         type: "final",
       },
     },

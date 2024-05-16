@@ -4,7 +4,7 @@ import {
   NOTIFICATION_DURATION,
   STARTING_ARS,
   TITLE_DURATION,
-} from "../constants";
+} from "game-constants";
 
 export type CarNotification = {
   type: "HIT ZOMBIE" | "HIT BARRIER";

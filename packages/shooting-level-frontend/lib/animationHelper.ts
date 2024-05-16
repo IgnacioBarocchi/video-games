@@ -15,14 +15,13 @@ export const blendAnimationTransition = (action: AnimationAction | null) => {
 
 export const playOneShotAnimation = (action: AnimationAction | null) => {
   if (!action) return;
-  // action.clampWhenF
-  // inished = true;
+
   action?.reset()?.play();
 };
 
 export const easeOutAnimation = (action: AnimationAction | null) => {
   if (!action) return;
-  // action.clampWhenFinished = true;
+
   action?.fadeOut(0.2);
 };
 
@@ -53,18 +52,10 @@ export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
   return {
     with: (context: FSMContext) => {
       if (state === DEATH_STATE) {
-        throw new Error("use play final animation");
-        // don't play audios here
+        throw new Error("Use 'playFinalAnimation' and don't play audios.");
       }
 
       if (context.actions) {
-        // context.actions[
-        //   context.animationNameByFSMState.get(IDLE_STATE)!
-        // ]?.stop();
-        // context.actions[
-        //   context.animationNameByFSMState.get(MOVE_STATE)!
-        // ]?.stop();
-
         const action =
           context.actions[context.animationNameByFSMState.get(state)!] ??
           context.actions[context.animationNameByFSMState.get(IDLE_STATE)!];
@@ -72,9 +63,11 @@ export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
         easeOutAnimation(
           context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
         );
+
         easeOutAnimation(
           context.actions[context.animationNameByFSMState.get(MOVE_STATE)!]
         );
+
         playOneShotAnimation(action);
 
         setTimeout(() => {
@@ -83,10 +76,6 @@ export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
             .fadeIn(0.5)
             .reset()
             .play();
-          // easeOutAnimation(action);
-          // context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
-          //   ?.fadeIn(0.2)
-          //   .play();
         }, context.characterFSMDurations.get(state));
       }
     },
@@ -100,3 +89,17 @@ export const pickAction = (state: FSMStates) => {
     },
   };
 };
+
+// context.actions[
+//   context.animationNameByFSMState.get(IDLE_STATE)!
+// ]?.stop();
+// context.actions[
+//   context.animationNameByFSMState.get(MOVE_STATE)!
+// ]?.stop();
+// action.clampWhenF
+// inished = true;
+// action.clampWhenFinished = true;
+// easeOutAnimation(action);
+// context.actions[context.animationNameByFSMState.get(IDLE_STATE)!]
+//   ?.fadeIn(0.2)
+//   .play();

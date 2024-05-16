@@ -5,7 +5,7 @@ import { LVL1 } from "./LVL1";
 import { LobbyTurnTable } from "./lobby-turn-table";
 import { World3D } from "./world-3d";
 import useGameStore from "./store/store";
-import { BROWN, CAMERA_FAR } from "./constants";
+import { BROWN, CAMERA_FAR } from "game-constants";
 import { memo, useState } from "react";
 import { Hub } from "hub-screen-frontend";
 import { Shooter3DScene } from "shooting-level-frontend";

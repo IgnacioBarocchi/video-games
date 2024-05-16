@@ -15,7 +15,7 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 import { throttle } from "../../lib/throttle";
-import { ZOMBIE_IMPACT_COST } from "../../constants";
+import { ZOMBIE_IMPACT_COST } from "game-constants";
 import useGameStore from "../../store/store";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { ZombieModel } from "./model";

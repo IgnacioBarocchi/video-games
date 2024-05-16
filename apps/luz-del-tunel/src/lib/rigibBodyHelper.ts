@@ -6,7 +6,7 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 import { Vector } from "@dimforge/rapier3d-compat";
-import { ENTITY } from "../constants";
+import { ENTITY } from "game-constants";
 
 export const getImpulseVectorTowards = (params: {
   sourcePosition: Vector3;

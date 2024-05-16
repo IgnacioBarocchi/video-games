@@ -21,7 +21,7 @@ import zombieDeathSound2 from "../../assets/audio/in-game-sfx/zombie/zombie-deat
 import zombieDeathSound3 from "../../assets/audio/in-game-sfx/zombie/zombie-death-variant-3.m4a";
 import useGameStore from "../../store/store";
 import { throttle } from "../../lib/throttle";
-import { ZOMBIE_IMPACT_COST } from "../../constants";
+import { ZOMBIE_IMPACT_COST } from "game-constants";
 import { useMachine } from "@xstate/react";
 import {
   ATTACK_EVENT,

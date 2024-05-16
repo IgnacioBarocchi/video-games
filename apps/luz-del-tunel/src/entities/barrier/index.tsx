@@ -6,7 +6,7 @@ import useGameStore from "../../store/store";
 import { PositionalAudio } from "@react-three/drei";
 import concreteImpact from "../../assets/audio/in-game-sfx/concrete-barrier/impact.m4a";
 import { throttle } from "../../lib/throttle";
-import { BARRIER_IMPACT_COST } from "../../constants";
+import { BARRIER_IMPACT_COST } from "game-constants";
 
 export const Barrier: FC<{ position: [number, number, number] }> = ({
   position,

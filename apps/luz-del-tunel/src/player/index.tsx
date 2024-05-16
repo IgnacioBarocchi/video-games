@@ -32,7 +32,7 @@ import { usePointerLockControls } from "./usePointerLockControls";
 import { Attachments } from "./attachments";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import useGameStore from "../store/store";
-import { CAMERA_FAR, ENTITY } from "../constants";
+import { CAMERA_FAR, ENTITY } from "game-constants";
 
 const useMusic = false;
 

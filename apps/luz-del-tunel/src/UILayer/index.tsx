@@ -11,7 +11,7 @@ import {
   TitleScreen,
 } from "ui";
 import { memo, useMemo, useState } from "react";
-import { DOLLAR_RATE, LAST_SECONDS, TIME_LIMIT } from "../constants";
+import { DOLLAR_RATE, LAST_SECONDS, TIME_LIMIT } from "game-constants";
 import lobbyMusic from "../assets/audio/lobby/lobby-music.mp3";
 
 const StopWatch = memo(({ onEnd }) => {
