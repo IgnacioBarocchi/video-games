@@ -6,7 +6,6 @@ import { BurntCarModel3 } from "../entities/burnt/models/BurntCar3";
 import { ShopModel } from "../entities/shop/ShopModel";
 import { SignModel } from "../entities/signs/model/Sign";
 import { TreeModel } from "../entities/tree/TreeModel";
-import { ZombieModel } from "../entities/zombie/model";
 import { CarModel } from "../player/model";
 import { DriverModel } from "../player/model/Driver";
 

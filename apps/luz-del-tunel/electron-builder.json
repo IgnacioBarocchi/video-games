@@ -1,5 +1,8 @@
 /**
  * @see https://www.electron.build/configuration/configuration
+    
+ * win:{"icon": "./public/icons/favicon.png"}
+ * linux:{"icon": "./public/icons/favicon.png"}
  */
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
@@ -13,7 +16,6 @@
   "mac": {
     "target": ["dmg"],
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}",
-    "icon": "./public/icons/favicon.ico",
     "category": "public.app-category.utilities"
   },
   "win": {
@@ -23,8 +25,7 @@
         "arch": ["x64"]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
-    "icon": "./public/icons/favicon.ico"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
   },
   "nsis": {
     "oneClick": false,
@@ -34,7 +35,6 @@
   },
   "linux": {
     "target": ["AppImage"],
-    "artifactName": "${productName}-Linux-${version}.${ext}",
-    "icon": "./public/icons/favicon.png"
+    "artifactName": "${productName}-Linux-${version}.${ext}"
   }
 }

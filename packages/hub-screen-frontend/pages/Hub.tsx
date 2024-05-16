@@ -45,7 +45,7 @@ export const Hub = ({ onStart }) => {
           rotation: [0, 0, 0],
         }}
       >
-        <Suspense fallback={<div>Loading</div>}>
+        <Suspense fallback={null}>
           <AnimatedScene />
           <Effects />
         </Suspense>
