@@ -31,6 +31,7 @@
     "three-stdlib": "^2.29.6",
     "ui": "workspace:*",
     "physics": "workspace:*",
+    "characters": "workspace:*",
     "hub-screen-frontend": "workspace:*",
     "shooting-level-frontend": "workspace:*",
     "game-constants": "workspace:*",

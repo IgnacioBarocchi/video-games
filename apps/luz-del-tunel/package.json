@@ -2,6 +2,7 @@
   "name": "camino-a-los-dolares",
   "private": true,
   "version": "0.0.0",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build && electron-builder",
@@ -10,34 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dimforge/rapier3d-compat": "^0.12.0",
-    "@react-three/drei": "^9.105.3",
-    "@react-three/fiber": "^8.16.1",
-    "@react-three/postprocessing": "^2.16.2",
-    "@react-three/rapier": "^1.3.0",
-    "@types/three": "^0.163.0",
-    "@xstate/react": "^4.1.0",
-    "leva": "^0.9.35",
-    "nanoid": "^5.0.7",
-    "postprocessing": "^6.35.3",
-    "r3f": "^1.0.0",
-    "r3f-perf": "^7.2.1",
-    "rapier": "^1.0.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "styled-components": "^6.1.8",
-    "three": "^0.163.0",
-    "three-stdlib": "^2.29.6",
-    "ui": "workspace:*",
-    "physics": "workspace:*",
     "car-game-frontend": "workspace:*",
     "hub-screen-frontend": "workspace:*",
     "shooting-level-frontend": "workspace:*",
-    "game-constants": "workspace:*",
     "vite-electron-plugin": "^0.8.3",
-    "vite-tsconfig-paths": "^4.3.2",
-    "xstate": "^5.10.0",
-    "zustand": "^4.5.2"
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
@@ -55,6 +33,5 @@
     "vite": "^5.2.0",
     "vite-plugin-electron": "^0.14.0",
     "vite-plugin-electron-renderer": "^0.14.5"
-  },
-  "main": "dist-electron/main.js"
+  }
 }
