@@ -1,26 +1,19 @@
 import { MutableRefObject, memo, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  BallCollider,
-  CuboidCollider,
-  RapierRigidBody,
-  RigidBody,
-  useAfterPhysicsStep,
-} from "@react-three/rapier";
+import { RapierRigidBody, useAfterPhysicsStep } from "@react-three/rapier";
 import {
   PerspectiveCamera,
   Vector3Tuple,
   Object3D,
   Object3DEventMap,
 } from "three";
-import { Character } from "../classes/Character";
-import { InputControls } from "../controls/input";
-import { ThirdPersonCamera } from "../classes/ThirdPersonCamera";
-import { usePointerLockControls } from "../usePointerLockControls";
-import { CAMERA_FAR, ENTITY } from "game-constants";
-import { CarModel } from "./models/CarModel";
-
-const h = 0.2;
+import { Character } from "../../classes/Character";
+import { InputControls } from "../../controls/input";
+import { usePointerLockControls } from "../../controls/usePointerLockControls";
+import { CAMERA_FAR } from "game-constants";
+import { CarModel } from "../models/CarModel";
+import { CarThirdPersonCamera } from "../../classes/CarThirdPersonCamera";
+import { CarRigidBody } from "../../physics/CarRigidBody";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -34,22 +27,11 @@ export type PlayerObjectReferences = MutableRefObject<{
   modelRef: React.RefObject<Object3D<Object3DEventMap>>;
 }>;
 
-const Wheels = () => {
-  return (
-    <>
-      <BallCollider args={[0.5]} position={[1.5, 0.5, 3]} />
-      <BallCollider args={[0.5]} position={[1.5, 0.5, -3]} />
-      <BallCollider args={[0.5]} position={[-1.5, 0.5, 3]} />
-      <BallCollider args={[0.5]} position={[-1.5, 0.5, -3]} />
-    </>
-  );
-};
-
 export const CarPlayer = memo(
   ({
-    position = [-10, h + 1, -10],
-    cameraPhi = 0,
-    cameraTheta = 0,
+    position = [-5, 1.2, -10],
+    cameraPhi = 20,
+    cameraTheta = 15,
     orientation = [0, 0, 1],
   }: Props) => {
     const playerObjectReferences = useRef({
@@ -59,7 +41,7 @@ export const CarPlayer = memo(
 
     const camera = useThree((s) => {
       const cam = s.camera;
-      cam.fov = 90;
+      cam["fov"] = 20;
       cam.zoom = 1;
       cam.near = 0.000000005;
       cam.far = CAMERA_FAR;
@@ -71,7 +53,12 @@ export const CarPlayer = memo(
 
     const cameraOperator = useMemo(
       () =>
-        new ThirdPersonCamera({ camera, phi: cameraPhi, theta: cameraTheta }),
+        new CarThirdPersonCamera({
+          camera,
+          phi: cameraPhi,
+          theta: cameraTheta,
+          normalRadius: 1.5, //2.5,
+        }),
       [camera, cameraPhi, cameraTheta]
     );
 
@@ -85,6 +72,7 @@ export const CarPlayer = memo(
           orientation,
           camera,
           playerObjectReferences,
+          isCar: true,
         }),
       [playerObjectReferences, camera, orientation]
     );
@@ -108,33 +96,13 @@ export const CarPlayer = memo(
     return (
       <>
         <InputControls />
-        <RigidBody
-          name={ENTITY.CAR}
-          ref={playerObjectReferences.current.rigidbody}
+        <CarRigidBody
           position={position}
-          lockRotations
-          mass={2000}
-          density={1500}
-          friction={5}
-          restitution={0.1}
+          ref={playerObjectReferences.current.rigidbody}
         >
-          <CuboidCollider
-            name="Front"
-            args={[3, 1, 5.5]}
-            position={[0, 3, 0.2]}
-          />
-          {/* 
-          <CuboidCollider
-            name="Rest"
-            args={[3, 1, 5.5]}
-            position={[0, 3, 0.2]}
-          /> */}
-          <Wheels />
           <CarModel ref={playerObjectReferences} />
-        </RigidBody>
+        </CarRigidBody>
       </>
     );
   }
 );
-
-// cam.filmGauge = 24;

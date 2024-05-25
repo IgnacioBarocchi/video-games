@@ -34,7 +34,7 @@ export function SignModel(props: JSX.IntrinsicElements["group"]) {
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} scale={0.5}>
       <group>
         <mesh
           geometry={nodes.Cylinder002.geometry}

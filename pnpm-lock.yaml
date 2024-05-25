@@ -238,6 +238,9 @@ importers:
       game-constants:
         specifier: workspace:*
         version: link:../game-constants
+      nanoid:
+        specifier: ^5.0.7
+        version: 5.0.7
       r3f:
         specifier: ^1.0.0
         version: 1.0.0
@@ -366,6 +369,9 @@ importers:
       camera:
         specifier: workspace:*
         version: link:../camera
+      characters:
+        specifier: workspace:*
+        version: link:../characters
       game-constants:
         specifier: workspace:*
         version: link:../game-constants

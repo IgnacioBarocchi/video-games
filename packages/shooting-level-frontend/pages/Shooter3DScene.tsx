@@ -9,6 +9,7 @@ import { GroundModel } from "../components/Ground";
 import { OrbitControls, Preload } from "@react-three/drei";
 import { NPC } from "../npc";
 import { Backpack } from "../components/Backpack";
+import { HumanPlayer, PlayerActorProvider, ZombieNPC } from "characters";
 
 const Effects = () => {
   return (
@@ -30,7 +31,8 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
   const [playerIsLoaded, setPlayerIsLoaded] = useState(false);
 
   return (
-    <PlayerContextProvider>
+    // <PlayerContextProvider>
+    <PlayerActorProvider>
       <Canvas
         fallback="Shooter 3D Scene"
         mode={"concurrent"}
@@ -57,14 +59,17 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         <Preload all={true} />
         <Suspense fallback={null}>
           <Physics>
-            <Backpack position={[-6, 0, -3]} />
             <GroundModel onMissionPicked={onMissionPicked} />
-            <Player onLoad={() => setPlayerIsLoaded(true)} />
-            {playerIsLoaded && <NPC />}
+            <HumanPlayer position={[-7, 0, -4]} />
+            <ZombieNPC position={[0, 0, 0]} />
+            {/* <Backpack position={[-6, 0, -3]} /> */}
+            {/* <Player onLoad={() => setPlayerIsLoaded(true)} /> */}
+            {/* {playerIsLoaded && <NPC />} */}
           </Physics>
           <Effects />
         </Suspense>
       </Canvas>
-    </PlayerContextProvider>
+    </PlayerActorProvider>
+    // </PlayerContextProvider>
   );
 };

@@ -36,7 +36,7 @@ export function TreeModel(props: JSX.IntrinsicElements["group"]) {
 
   return (
     <>
-      <group {...props} dispose={null}>
+      <group {...props} dispose={null} scale={0.5}>
         <group position={[0, 1.03, 0]}>
           <mesh
             geometry={nodes.Cylinder.geometry}

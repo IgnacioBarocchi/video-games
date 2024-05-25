@@ -7,23 +7,23 @@ export const BurntCars = memo<{ isOldVersion?: boolean }>(
     if (isOldVersion) {
       return (
         <>
-          {[...Array(25)].map((_, i) => (
+          {[...Array(7)].map((_, i) => (
             <BurntCar
               key={i}
               position={[
-                25,
+                7,
                 4,
-                i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
+                i * -Math.floor(Math.random() * (25 - 7) + 7) - 2,
               ]}
             />
           ))}
-          {[...Array(25)].map((_, i) => (
+          {[...Array(7)].map((_, i) => (
             <BurntCar
               key={i}
               position={[
-                -25,
+                -7,
                 4,
-                i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
+                i * -Math.floor(Math.random() * (25 - 7) + 7) - 2,
               ]}
             />
           ))}
@@ -36,9 +36,9 @@ export const BurntCars = memo<{ isOldVersion?: boolean }>(
         name="Burnt Cars"
         depth={2000}
         ZOffset={400}
-        numberOfEntities={[25, 25]}
+        numberOfEntities={[7, 7]}
         Entity={BurntCar}
-        spaceBetween={{ x: [26, 25], y: [2, 4] }}
+        spaceBetween={{ x: [26, 7], y: [2, 4] }}
       />
     );
   }

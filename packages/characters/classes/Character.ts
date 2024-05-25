@@ -16,21 +16,18 @@ import {
 } from "./helpers";
 import { input } from "../controls/input";
 
-const runSpeed = 30;
-const walkSpeed = 20;
-const jumpSpeed = 10;
-
 export class Character {
   velocity = new Vector3();
   arcadeVelocityInfluence = new Vector3(1, 0, 1);
   arcadeVelocityTarget = new Vector3();
   velocitySimulator: VectorSpringSimulator;
   rotationSimulator: RelativeSpringSimulator;
-
-  defaultVelocitySimulatorMass = 1000;
-  defaultVelocitySimulatorDamping = 0.9;
-  defaultRotationSimulatorMass = 200;
-  defaultRotationSimulatorDamping = 0.6;
+  defaultVelocitySimulatorMass = 80; // Average mass of an adult male in kg
+  defaultVelocitySimulatorDamping = 0.7; // Slightly less damping to allow for more realistic human motion
+  defaultRotationSimulatorMass = 10; // Reduced mass for rotational movement to reflect human agility
+  defaultRotationSimulatorDamping = 0.5;
+  runSpeed;
+  walkSpeed;
   grounded = false;
   footShape = new Ray({ x: 0, y: 0, z: 0 }, { x: 0, y: -1, z: 0 });
   gravityLimit = -30;
@@ -39,7 +36,6 @@ export class Character {
   orientation = new Vector3(0, 0, 1);
   orientationTarget = new Vector3(0, 0, 1);
   viewVector = new Vector3();
-  analyser;
   readonly position = new Vector3();
   public previousDrivingState = "STOP";
   public drivingState = "STOP";
@@ -50,15 +46,23 @@ export class Character {
     orientation?: Vector3Tuple;
     camera: Camera;
     playerObjectReferences: PlayerObjectReferences;
+    isCar?: boolean;
   }) {
+    this.defaultVelocitySimulatorMass = props.isCar ? 1000 : 80; // Average mass of an adult male in kg
+    this.defaultVelocitySimulatorDamping = props.isCar ? 0.9 : 0.7; // Slightly less damping to allow for more realistic human motion
+    this.defaultRotationSimulatorMass = props.isCar ? 200 : 10; // Reduced mass for rotational movement to reflect human agility
+    this.defaultRotationSimulatorDamping = props.isCar ? 0.6 : 0.5;
+    this.runSpeed = props.isCar ? 30 : 10;
+    this.walkSpeed = props.isCar ? 20 : 7;
+
     this.playerObjectReferences = props.playerObjectReferences;
-    this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(
-      1500,
-      new Vector3(0, 0, 6),
-      new Vector3(0, 0, 0),
-      new Quaternion(0, 0, 0, 0),
-      true
-    );
+    // this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(
+    //   1500,
+    //   new Vector3(0, 0, 6),
+    //   new Vector3(0, 0, 0),
+    //   new Quaternion(0, 0, 0, 0),
+    //   true
+    // );
 
     this.camera = props.camera;
 
@@ -123,10 +127,10 @@ export class Character {
   }
 
   private updateMoveSpeed() {
-    let targetSpeed = walkSpeed;
+    let targetSpeed = this.walkSpeed;
 
     if (input.SPRINT) {
-      targetSpeed = runSpeed;
+      targetSpeed = this.runSpeed;
     }
 
     this.moveSpeed = MathUtils.lerp(this.moveSpeed, targetSpeed, 0.116);
@@ -282,7 +286,7 @@ export class Character {
     );
 
     if (this.jumping === 1) {
-      this.simulatedVelocity.y += jumpSpeed;
+      // this.simulatedVelocity.y += jumpSpeed;
       this.jumping = 2;
     }
     if (this.shouldJump) {

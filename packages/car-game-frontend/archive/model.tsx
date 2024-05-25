@@ -1,11 +1,8 @@
 import * as THREE from "three";
-import { useAnimations, useGLTF } from "@react-three/drei";
-import { forwardRef, memo, useEffect, useMemo, useState } from "react";
+import { useGLTF } from "@react-three/drei";
+import { forwardRef, memo, useState } from "react";
 import { GLTF } from "three-stdlib";
 import { PlayerObjectReferences } from ".";
-import { Animator } from "./Animator";
-import { useFrame } from "@react-three/fiber";
-import { DriverModel } from "./model/Driver";
 import truckModelFile from "../assets/models/Car/Car.glb";
 
 export type GLTFResult = GLTF & {
@@ -41,6 +38,7 @@ type ActionName =
   | "Front_Wheels_Running"
   | "Front_Wheels_Turn_left"
   | "Back_Wheels_Running";
+
 export type GLTFActions = Record<ActionName, THREE.AnimationAction>;
 
 export const CarModel = memo(

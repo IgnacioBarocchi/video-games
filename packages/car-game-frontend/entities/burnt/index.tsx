@@ -33,8 +33,8 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
     >
       <CuboidCollider
         name="Burnt Car"
-        args={[3, 2.2, 5.5]}
-        position={[0, 2.2, 0.2]}
+        args={[1.5, 1.1, 2.5]}
+        position={[0, 1.1, 0.1]}
         restitution={0}
         onContactForce={(payload) => {
           if (
@@ -52,9 +52,9 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
           }
         }}
       />
-      {burntCarModelID === 1 && <BurntCarModel1 scale={1.2} />}
-      {burntCarModelID === 2 && <BurntCarModel2 scale={1.2} />}
-      {burntCarModelID === 3 && <BurntCarModel3 scale={1.2} />}
+      {burntCarModelID === 1 && <BurntCarModel1 scale={0.5} />}
+      {burntCarModelID === 2 && <BurntCarModel2 scale={0.5} />}
+      {burntCarModelID === 3 && <BurntCarModel3 scale={0.5} />}
       {playHitSound && (
         <PositionalAudio
           autoplay

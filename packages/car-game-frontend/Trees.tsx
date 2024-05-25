@@ -12,7 +12,7 @@ export const Trees = memo<{ isOldVersion?: boolean }>(({ isOldVersion }) => {
             dispose={null}
             key={i + "R"}
             position={[
-              Math.floor(Math.random() * (41 - 25) + 25),
+              Math.floor(Math.random() * (20 - 11) + 11),
               Math.floor(Math.random() * (2 - 0) + 0),
               i * -Math.floor(Math.random() * (100 - 50) + 50) - 2,
             ]}
@@ -24,7 +24,7 @@ export const Trees = memo<{ isOldVersion?: boolean }>(({ isOldVersion }) => {
             dispose={null}
             key={i + "L"}
             position={[
-              -Math.floor(Math.random() * (41 - 25) + 25),
+              -Math.floor(Math.random() * (20 - 11) + 11),
               Math.floor(Math.random() * (2 - 0) + 0),
               i * -Math.floor(Math.random() * (100 - 50) + 50) - 2,
             ]}

@@ -4,7 +4,7 @@ export const DARK_GREEN = "#515651";
 export const GREY = "#7e7b79";
 export const PALE_ORANGE = "#d5b59f";
 export const LIGHT_GREEN = "#bcbca9";
-export const CAMERA_FAR = 50;
+export const CAMERA_FAR = 100;
 export const ENTITY = {
   PLAYER: "PLAYER",
   CAR: "CAR",
@@ -12,7 +12,7 @@ export const ENTITY = {
   ZOMBIE: "ZOMBIE",
   CONCRETE_BARRIER: "CONCRETE_BARRIER",
 };
-export const TIME_LIMIT = 80;
+export const TIME_LIMIT = 50000; // 80;
 export const LAST_SECONDS = 5;
 export const DOLLAR_RATE = 609283.0142;
 export const STARTING_ARS = DOLLAR_RATE * 100;

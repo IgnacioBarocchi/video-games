@@ -18,6 +18,7 @@
     "@xstate/react": "^4.1.0",
     "camera": "workspace:*",
     "game-constants": "workspace:*",
+    "characters": "workspace:*",
     "install": "^0.13.0",
     "leva": "^0.9.35",
     "nanoid": "^5.0.7",

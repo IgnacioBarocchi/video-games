@@ -6,15 +6,16 @@ export enum Controls {
   LEFT = "LEFT",
   RIGHT = "RIGHT",
   SPRINT = "SPRINT",
+  TOGGLE_CAR = "TOGGLE_CAR",
 }
 
 const keymap = [
   { name: Controls.FORWARD, keys: ["ArrowUp", "W", "w", "I", "i"] },
-  // { name: Controls.BACKWARD, keys: ["ArrowDown", "S", "s", "K", "k"] },
+  { name: Controls.BACKWARD, keys: ["ArrowDown", "S", "s", "K", "k"] },
   { name: Controls.LEFT, keys: ["ArrowLeft", "A", "a", "J", "j"] },
   { name: Controls.RIGHT, keys: ["ArrowRight", "D", "d", "L", "l"] },
-  // { name: Controls.JUMP, keys: ['Space'] },
   { name: Controls.SPRINT, keys: ["ShiftLeft", "ShiftRight"] },
+  { name: Controls.TOGGLE_CAR, keys: ["F", "f"] },
 ];
 
 // Single reference

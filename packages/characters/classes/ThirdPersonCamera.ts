@@ -15,7 +15,7 @@ export class ThirdPersonCamera {
     sensitivityY = sensitivityX * 0.74,
     phi = 0,
     theta = 0,
-    normalRadius = 6, //2.8, // 3.16,
+    normalRadius = 2, //2.8, // 3.16,
   }: {
     camera: PerspectiveCamera;
     sensitivityX?: number;
@@ -45,8 +45,8 @@ export class ThirdPersonCamera {
     target.getWorldPosition(this.target);
     // this.target.y += 0.74;
     // this.target.y += 1.4;
-    this.target.y += 6; // 5;
-    this.target.z += 4; //2;
+    this.target.y += 2.5; // 5;
+    this.target.z += 3; //2;
 
     this.updateCameraPosition();
     this.camera.updateMatrix();

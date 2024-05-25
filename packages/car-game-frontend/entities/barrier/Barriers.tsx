@@ -2,6 +2,11 @@ import { FC } from "react";
 import { Barrier } from ".";
 import { EntitiesRegion } from "../../EntitiesRegion";
 
+const getBarrierXPosition = () => {
+  const n = Math.random();
+  return n > 0.33 ? 6 : n > 66 ? 3 : 0;
+};
+
 export const Barriers: FC<{ isOldVersion?: boolean }> = ({ isOldVersion }) => {
   if (isOldVersion) {
     return (
@@ -10,7 +15,7 @@ export const Barriers: FC<{ isOldVersion?: boolean }> = ({ isOldVersion }) => {
           <Barrier
             key={i}
             position={[
-              Math.random() > 0.5 ? 14 : 7,
+              getBarrierXPosition(),
               0,
               i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
             ]}
@@ -20,7 +25,7 @@ export const Barriers: FC<{ isOldVersion?: boolean }> = ({ isOldVersion }) => {
           <Barrier
             key={i}
             position={[
-              Math.random() > 0.5 ? -14 : -7,
+              -getBarrierXPosition(),
               0,
               i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
             ]}

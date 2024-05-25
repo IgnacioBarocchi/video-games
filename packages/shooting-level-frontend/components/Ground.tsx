@@ -5,6 +5,7 @@ import { GLTF } from "three-stdlib";
 import groundModelFile from "../assets/models/Ground.glb";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import useGameStore from "../store/store";
+import { ENTITY } from "game-constants";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -140,8 +141,14 @@ export function GroundModel({ onMissionPicked }) {
       <FenceColliders />
       <ElevatorColliders
         playerPickedBackpack={playerPickedBackpack}
-        onElevatorNear={() => setShouldOpenTheDoor(true)}
-        onIntersectionEnter={onMissionPicked}
+        onElevatorNear={(payload) => {
+          if (payload.other.rigidBodyObject.name === ENTITY.PLAYER)
+            setShouldOpenTheDoor(true);
+        }}
+        onIntersectionEnter={(payload) => {
+          if (payload.other.rigidBodyObject.name === ENTITY.PLAYER)
+            onMissionPicked();
+        }}
       />
       <group ref={group} dispose={null}>
         <group name="Scene">

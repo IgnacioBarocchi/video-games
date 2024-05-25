@@ -26,11 +26,10 @@ import {
 } from "three";
 import { Character } from "./Character";
 import { InputControls } from "./input";
-import { CarModel, GLTFActions, GLTFResult } from "./model";
+import { CarModel } from "./model";
 import { ThirdPersonCamera } from "./ThirdPersonCamera";
 import { usePointerLockControls } from "./usePointerLockControls";
 import { Attachments } from "./attachments";
-import { useAnimations, useGLTF } from "@react-three/drei";
 import useGameStore from "../store/store";
 import { CAMERA_FAR, ENTITY } from "game-constants";
 

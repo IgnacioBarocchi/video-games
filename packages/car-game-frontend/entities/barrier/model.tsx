@@ -24,7 +24,7 @@ export const BarrierModel: FC<{
 }> = (props) => {
   const { nodes, materials } = useGLTF(barrierModelFile) as GLTFResult;
   return (
-    <group {...props} dispose={null} scale={2}>
+    <group {...props} dispose={null}>
       <mesh geometry={nodes.Cube_1.geometry} material={materials.Concrete} />
       <mesh geometry={nodes.Cube_2.geometry} material={materials.Alert} />
       <mesh geometry={nodes.Cube_3.geometry} material={materials.High_Alert} />
