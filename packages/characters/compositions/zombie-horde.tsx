@@ -1,4 +1,5 @@
-import { ZombieNPC } from "../npcs/zombie-npc/zombie-npc";
+// import { ZombieNPC } from "../npcs/zombie-npc/archive/zombie-npc-with-actor";
+import { ZombieNPC } from "../npcs/zombie-npc/zombie-npc-with-fsm";
 
 export interface ZombieHordeProps {
   numberOfZombies: number;

@@ -37,21 +37,22 @@ import {
   MaleCharacter3DModel,
 } from "../models/MaleCharacter3DModel";
 import character3DModelFile from "../../assets/models/Male_Character.glb";
-import HumanoidRigidBody from "../../physics/HumanoidRigidBody";
+import { HumanoidRigidBody } from "../../physics/HumanoidRigidBody";
 import { Keys } from "../../lib/keysMap";
 import { getFSMEvent } from "../../controls/getFSMEvent";
+
+import { Context } from "../../providers/player-actor-provider";
+import { Attachments } from "./attachments";
 import {
-  DEATH_STATE,
   IDLE_STATE,
   MOVE_STATE,
-  REACTING_TO_SKILL_1_STATE,
-  REACTING_TO_SKILL_2_STATE,
   USING_SKILL_1_STATE,
   USING_SKILL_2_STATE,
   USING_SKILL_3_STATE,
-} from "../../machines/createBaseFSMInput";
-import { Context } from "../../providers/player-actor-provider";
-import { Attachments } from "./attachments";
+  REACTING_TO_SKILL_1_STATE,
+  REACTING_TO_SKILL_2_STATE,
+  DEATH_STATE,
+} from "../../machines/machine-constants";
 
 export type Props = {
   position?: Vector3Tuple;

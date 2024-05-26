@@ -31,7 +31,6 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
   const [playerIsLoaded, setPlayerIsLoaded] = useState(false);
 
   return (
-    // <PlayerContextProvider>
     <PlayerActorProvider>
       <Canvas
         fallback="Shooter 3D Scene"
@@ -70,6 +69,5 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         </Suspense>
       </Canvas>
     </PlayerActorProvider>
-    // </PlayerContextProvider>
   );
 };

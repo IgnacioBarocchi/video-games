@@ -1,14 +1,15 @@
 import { useContext, useEffect } from "react";
-import {
-  REACTING_TO_SKILL_1_EVENT,
-  REACTING_TO_SKILL_2_EVENT,
-  USING_SKILL_1_STATE,
-  USING_SKILL_2_STATE,
-} from "../../machines/createBaseFSMInput";
+
 import { useSelector } from "@xstate/react";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import useGameStore from "../../store/store";
 import { Context } from "../../providers/player-actor-provider";
+import {
+  USING_SKILL_2_STATE,
+  USING_SKILL_1_STATE,
+  REACTING_TO_SKILL_1_EVENT,
+  REACTING_TO_SKILL_2_EVENT,
+} from "../../machines/machine-constants";
 
 const usingMaulSkillSelector = (state) => {
   return state.value === USING_SKILL_2_STATE;

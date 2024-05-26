@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import wind from "../assets/audio/wind.mp3";
 import {
   NOTIFICATION_DURATION,

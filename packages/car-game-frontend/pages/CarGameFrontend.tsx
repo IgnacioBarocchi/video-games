@@ -1,3 +1,4 @@
+import React from "react";
 import { World3D } from "../world-3d";
 import { CAMERA_FAR } from "game-constants";
 import { UILayer } from "../UILayer";
@@ -10,7 +11,7 @@ export const CarGameFrontend = ({ setWonTheGame }) => {
   return (
     <>
       <World3D>
-        <Perf />
+        <Perf position="bottom-left" />
         {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
         <Preload all={true} />
         <Physics debug={true} gravity={[0, -30, 0]} colliders={false}>

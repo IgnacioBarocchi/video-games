@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { EffectComposer, SSAO } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
+
 function Effects() {
   return (
     <EffectComposer>

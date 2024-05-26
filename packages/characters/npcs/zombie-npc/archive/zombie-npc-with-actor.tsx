@@ -1,25 +1,37 @@
-import { useContext, useRef, useEffect, useMemo, FC } from "react";
-import { GroupProps, useGraph } from "@react-three/fiber";
+import {
+  useContext,
+  useRef,
+  useEffect,
+  useMemo,
+  FC,
+  MutableRefObject,
+} from "react";
+import { GroupProps, useFrame, useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
-import { ActionName, Zombie3DModel } from "../models/zombie-3D-model";
-import { ZombieMachine } from "../../machines/zombie-machine";
-import { useEnemyNPCLogic } from "../hooks/useEnemyNPCLogic";
+import { ActionName, Zombie3DModel } from "../../models/zombie-3D-model";
+import { complexZombieMachine } from "../../../machines/complex-zombie-machine";
 import { createActor } from "xstate";
-import { Context } from "../../providers/player-actor-provider";
+import { Context } from "../../../providers/player-actor-provider";
 import { useSelector } from "@xstate/react";
-import HumanoidRigidBody from "../../physics/HumanoidRigidBody";
-import { GLTFActions, GLTFResult } from "../models/zombie-3D-model";
-import { USING_SKILL_3_EVENT } from "../../machines/createBaseFSMInput";
+import { HumanoidRigidBody } from "../../../physics/HumanoidRigidBody";
+import { GLTFActions, GLTFResult } from "../../models/zombie-3D-model";
+
 import { ENTITY } from "game-constants";
 import { Vector3 } from "three";
 import {
+  CollisionEnterPayload,
   IntersectionEnterPayload,
   CylinderCollider as PlayerDetector,
   RapierRigidBody,
 } from "@react-three/rapier";
-import zombie3DMFile from "../../assets/models/Zombie_Male.glb";
+import zombie3DMFile from "../../../assets/models/Zombie_Male.glb";
+
+import { Attachments } from "../attachments";
+import { getVector3From } from "../../../lib/getVector3From";
+import { goToTarget } from "../../../lib/goToTarget";
 import {
+  FSMStates,
   IDLE_STATE,
   MOVE_STATE,
   USING_SKILL_1_STATE,
@@ -28,18 +40,16 @@ import {
   REACTING_TO_SKILL_1_STATE,
   REACTING_TO_SKILL_2_STATE,
   DEATH_STATE,
+  MOVE_EVENT,
   USING_SKILL_2_EVENT,
   REACTING_TO_SKILL_2_EVENT,
-  FSMStates,
-  INACTIVE_STATE,
+  USING_SKILL_3_EVENT,
   USING_SKILL_1_EVENT,
-  DEATH_EVENT,
-} from "../../machines/createBaseFSMInput";
-import { Attachments } from "./attachments";
+  IDLE_EVENT,
+} from "../../../machines/machine-constants";
 
-const statusSelector = (state) => {
-  return state.value === INACTIVE_STATE;
-};
+const payloadIsThePlayer = (payload: CollisionEnterPayload) =>
+  [ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name);
 
 export interface ZombieNPCProps {
   position: Vector3 | [number, number, number];
@@ -50,24 +60,22 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
   position,
   collisionCallback,
 }) => {
-  const NPCActor = createActor(ZombieMachine);
-  const isInactive = useSelector(NPCActor, statusSelector);
+  const NPCActor = createActor(complexZombieMachine);
+  // const isInactive = useSelector(NPCActor, statusSelector);
   const playerActor = useContext(Context);
-  const playerRigidBody = useRef<RapierRigidBody>(null);
+  const playerRigidBodyReference = useRef<RapierRigidBody>(null);
   const group = useRef<GroupProps>();
   const { scene, materials, animations } = useGLTF(zombie3DMFile) as GLTFResult;
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
   const { nodes } = useGraph(clone);
   const { actions } = useAnimations<GLTFActions>(animations, group);
-
-  const { NPCRigidBodyReference } = useEnemyNPCLogic({
-    NPCActor,
-    playerRigidBody,
-    movement: "LINEAR VELOCITY",
-  });
+  const NPCRigidBodyReference = useRef<RapierRigidBody>(null);
 
   useEffect(() => {
+    let timeoutId = 0;
     if (group?.current && NPCRigidBodyReference?.current && NPCActor) {
+      console.count("EFFECT!");
+
       const milliseconds = 1000;
       const animationNameByFSMState = new Map<FSMStates, ActionName>([
         [IDLE_STATE, "RUN"],
@@ -103,15 +111,67 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
         animationNameByFSMState,
         characterFSMDurations,
       });
+      NPCActor.start();
+
+      timeoutId = setTimeout(() => {
+        NPCActor.send({ type: MOVE_EVENT });
+      }, 1000);
     }
 
-    NPCActor.start();
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
-  const handleCollisionWithPlayer = (payload) => {
+  useFrame(() => {
+    const NPCActorCurrentState = NPCActor.getSnapshot();
+
+    if (NPCActorCurrentState.status === "error") {
+      throw new Error(NPCActorCurrentState.status);
+    }
+
     if (
-      ![ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name)
+      !playerRigidBodyReference?.current ||
+      NPCActorCurrentState.status === "done" ||
+      [
+        DEATH_STATE,
+        REACTING_TO_SKILL_2_STATE,
+        REACTING_TO_SKILL_1_STATE,
+      ].includes(NPCActorCurrentState.value)
     ) {
+      // console.log("valid", NPCActorCurrentState.value);
+      // console.log("POS", playerPosition?.current);
+      return;
+    } else {
+      // console.log("IS VALID!!!!", NPCActorCurrentState.value);
+    }
+
+    if (
+      NPCActorCurrentState.value === MOVE_STATE ||
+      NPCActorCurrentState.value === IDLE_STATE
+    ) {
+      const sourcePosition = getVector3From(
+        NPCRigidBodyReference.current.translation()
+      );
+
+      const targetPosition = getVector3From(
+        playerRigidBodyReference.current.translation()
+      );
+
+      const sourceRigidBody = NPCRigidBodyReference.current;
+
+      goToTarget({
+        sourcePosition,
+        targetPosition,
+        sourceRigidBody,
+        style: "LINEAR VELOCITY",
+        speed: 8000,
+      });
+    }
+  });
+
+  const handleCollisionWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
       return;
     }
 
@@ -130,16 +190,14 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
       payload.other.rigidBodyObject.name === ENTITY.CAR &&
       Math.abs(payload.rigidBody?.linvel().z!) > 2
     ) {
-      NPCActor.send({ type: DEATH_EVENT });
+      NPCActor.send({ type: REACTING_TO_SKILL_2_EVENT });
     }
 
     collisionCallback?.();
   };
 
-  const handleIntersectionWithPlayer = (payload) => {
-    if (
-      ![ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name)
-    ) {
+  const handleIntersectionEnterWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
       return;
     }
 
@@ -154,31 +212,37 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
     }
   };
 
-  const handleRegisterPlayer = (payload: IntersectionEnterPayload) => {
-    if (
-      ![ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name)
-    ) {
+  const handleIntersectionExitWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
       return;
     }
 
-    if (payload.other.rigidBody) {
-      playerRigidBody.current = payload.other.rigidBody;
+    NPCActor.send({ type: MOVE_EVENT });
+  };
+
+  const handleRegisterPlayer = (payload: IntersectionEnterPayload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    if (payload?.other?.rigidBody) {
+      playerRigidBodyReference.current = payload.other.rigidBody;
+      NPCActor.send({ type: MOVE_EVENT });
     }
   };
 
   const handleUnregisterPlayer = (payload: IntersectionEnterPayload) => {
-    if (
-      ![ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name)
-    ) {
+    if (!payloadIsThePlayer(payload)) {
       return;
     }
 
-    playerRigidBody.current = null;
+    playerRigidBodyReference.current = null;
+    NPCActor.send({ type: IDLE_EVENT });
   };
 
-  if (isInactive) {
-    return null;
-  }
+  // if (isInactive) {
+  //   return null;
+  // }
 
   return (
     <HumanoidRigidBody
@@ -186,14 +250,15 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
       entity={ENTITY.ZOMBIE}
       ref={NPCRigidBodyReference}
       onBodyCollision={handleCollisionWithPlayer}
-      onSensorEnter={handleIntersectionWithPlayer}
+      onSensorEnter={handleIntersectionEnterWithPlayer}
+      onSensorExit={handleIntersectionExitWithPlayer}
       userData={NPCActor}
     >
       <PlayerDetector
         sensor
         name="Region"
         position={[0, 1, 0]}
-        args={[1, 200]}
+        args={[1, 25]}
         onIntersectionEnter={handleRegisterPlayer}
         onIntersectionExit={handleUnregisterPlayer}
       />

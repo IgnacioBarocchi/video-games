@@ -5,20 +5,23 @@ import zombieDeathSound3 from "../../assets/audio/zombie/zombie-death-variant-3.
 import hitByCar from "../../assets/audio/zombie/hit-by-car.mp3";
 
 import { useSelector } from "@xstate/react";
-import { DEATH_STATE } from "../../machines/createBaseFSMInput";
+import { DEATH_STATE } from "../../machines/machine-constants";
 
 const getZombieHitAudio = () =>
   [zombieDeathSound1, zombieDeathSound2, zombieDeathSound3][
     Math.floor(Math.random() * 3)
   ];
 
-const stateSelector = (state) => state.value === DEATH_STATE;
+const stateSelector = (state) => {
+  const a = state.value === DEATH_STATE;
+  // if (a) alert(a);
+  return a;
+};
 
-export const Attachments = ({ NPCActor }) => {
-  const isDead = useSelector(NPCActor, stateSelector);
-  if (isDead) {
-    alert("A");
-  }
+export const Attachments = ({ isDead }) => {
+  //   const isDead = useSelector(NPCActor, stateSelector);
+  //   if (isDead) {
+  // return  }
   if (isDead) {
     return (
       <>

@@ -1,11 +1,11 @@
 import { AnimationAction, LoopOnce } from "three";
+import { FSMContext } from "../machines/createLiskovFSMInput";
 import {
-  DEATH_STATE,
-  FSMContext,
   FSMStates,
+  DEATH_STATE,
   IDLE_STATE,
   MOVE_STATE,
-} from "../machines/createBaseFSMInput";
+} from "../machines/machine-constants";
 
 export const blendAnimationTransition = (action: AnimationAction | null) => {
   if (!action) return;

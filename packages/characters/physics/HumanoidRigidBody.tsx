@@ -62,5 +62,3 @@ export const HumanoidRigidBody = forwardRef<
     );
   }
 );
-
-export default HumanoidRigidBody;

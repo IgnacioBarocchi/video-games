@@ -4,6 +4,7 @@ import { Shop } from "./entities/shop";
 import { GroundModel } from "./GroundModel";
 import { ROAD_LENGTH } from "game-constants";
 import { MathUtils } from "three";
+import { Bank } from "./entities/shop/Bank";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 1;
@@ -70,7 +71,8 @@ export function Ground({ setWonTheGame }) {
   return (
     <group>
       <HighWay />
-      <Shop setWonTheGame={setWonTheGame} />
+      <Bank />
+      {/* <Shop setWonTheGame={setWonTheGame} /> */}
     </group>
   );
 }

@@ -1,0 +1,300 @@
+import {
+  useContext,
+  useRef,
+  useEffect,
+  useMemo,
+  FC,
+  MutableRefObject,
+  useState,
+  useCallback,
+} from "react";
+import { GroupProps, useFrame, useGraph } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { SkeletonUtils } from "three-stdlib";
+import { ActionName, Zombie3DModel } from "../models/zombie-3D-model";
+import { ZombieMachine } from "../../machines/zombie-machine";
+import { useEnemyNPCLogic } from "../hooks/useEnemyNPCLogic";
+import { createActor } from "xstate";
+import { Context } from "../../providers/player-actor-provider";
+import { useMachine, useSelector } from "@xstate/react";
+import { HumanoidRigidBody } from "../../physics/HumanoidRigidBody";
+import { GLTFActions, GLTFResult } from "../models/zombie-3D-model";
+import {
+  IDLE_EVENT,
+  MOVE_EVENT,
+  USING_SKILL_3_EVENT,
+} from "../../machines/createBaseFSMInput";
+import { ENTITY } from "game-constants";
+import { Vector3 } from "three";
+import {
+  CollisionEnterPayload,
+  CollisionPayload,
+  IntersectionEnterPayload,
+  CylinderCollider as PlayerDetector,
+  RapierRigidBody,
+} from "@react-three/rapier";
+import zombie3DMFile from "../../assets/models/Zombie_Male.glb";
+import {
+  IDLE_STATE,
+  MOVE_STATE,
+  USING_SKILL_1_STATE,
+  USING_SKILL_2_STATE,
+  USING_SKILL_3_STATE,
+  REACTING_TO_SKILL_1_STATE,
+  REACTING_TO_SKILL_2_STATE,
+  DEATH_STATE,
+  USING_SKILL_2_EVENT,
+  REACTING_TO_SKILL_2_EVENT,
+  FSMStates,
+  INACTIVE_STATE,
+  USING_SKILL_1_EVENT,
+  DEATH_EVENT,
+} from "../../machines/createBaseFSMInput";
+import { Attachments } from "./attachments";
+import { getVector3From } from "../../lib/getVector3From";
+import { goToTarget } from "../../lib/goToTarget";
+
+const payloadIsThePlayer = (payload: CollisionPayload) =>
+  [ENTITY.PLAYER, ENTITY.CAR].includes(payload.other.rigidBodyObject.name);
+
+const statusSelector = (state) => {
+  return state.value === INACTIVE_STATE;
+};
+
+// const isValid = () => {
+//   !playerPosition?.current ||
+//     state.status === "done" ||
+//     [
+//       DEATH_STATE,
+//       REACTING_TO_SKILL_2_STATE,
+//       REACTING_TO_SKILL_1_STATE,
+//     ].includes(state.value);
+// };
+// const isInactive = useSelector(NPCActor, statusSelector);
+
+export interface ZombieNPCProps {
+  position: Vector3 | [number, number, number];
+  collisionCallback?: Function;
+}
+
+export const ZombieNPC: FC<ZombieNPCProps> = ({
+  position,
+  collisionCallback,
+}) => {
+  const [state, send] = useMachine(ZombieMachine);
+  // todo: move to context
+  const [meleeRange, setMeleeRange] = useState(false);
+  const playerActor = useContext(Context);
+  const playerRigidBodyReference = useRef<RapierRigidBody>(null);
+  const group = useRef<GroupProps>();
+  const { scene, materials, animations } = useGLTF(zombie3DMFile) as GLTFResult;
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+  const { actions } = useAnimations<GLTFActions>(animations, group);
+  const NPCRigidBodyReference = useRef<RapierRigidBody>(null);
+
+  useEffect(() => {
+    let timeoutId = 0;
+    if (group?.current && NPCRigidBodyReference?.current) {
+      console.count("EFFECT!");
+
+      const milliseconds = 1000;
+      const animationNameByFSMState = new Map<FSMStates, ActionName>([
+        [IDLE_STATE, "RUN"],
+        [MOVE_STATE, "RUN"],
+        [USING_SKILL_1_STATE, "ATTACK"],
+        [USING_SKILL_2_STATE, "BITE"],
+        [USING_SKILL_3_STATE, "SCREAM"],
+        [REACTING_TO_SKILL_1_STATE, "SHOT"],
+        [REACTING_TO_SKILL_2_STATE, "HEAD_HIT"],
+        [DEATH_STATE, "DEATH"],
+      ]);
+
+      const characterFSMDurations = new Map([
+        [IDLE_STATE, actions.RUN?.getClip().duration! * milliseconds],
+        [MOVE_STATE, actions.RUN?.getClip().duration! * milliseconds],
+        [
+          USING_SKILL_1_STATE,
+          actions.ATTACK?.getClip().duration! * milliseconds,
+        ],
+        [USING_SKILL_2_STATE, actions.BITE?.getClip().duration! * milliseconds],
+        [
+          USING_SKILL_3_STATE,
+          actions.SCREAM?.getClip().duration! * milliseconds,
+        ],
+        [DEATH_STATE, actions.DEATH?.getClip().duration! * milliseconds],
+      ]);
+
+      send({
+        type: "SET_CONTEXT",
+        actions,
+        mesh: group.current,
+        rigidBody: NPCRigidBodyReference.current,
+        animationNameByFSMState,
+        characterFSMDurations,
+      });
+
+      timeoutId = setTimeout(() => {
+        send({ type: MOVE_EVENT });
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useFrame(() => {
+    if (state.status === "error") {
+      throw new Error(state.status);
+    }
+
+    if (
+      !playerRigidBodyReference?.current ||
+      state.status === "done" ||
+      ![MOVE_STATE, IDLE_STATE].includes(state.value)
+    ) {
+      return;
+    }
+
+    if (meleeRange) {
+      send({ type: USING_SKILL_1_EVENT });
+
+      return;
+    }
+
+    if (state.value === MOVE_STATE) {
+      const sourcePosition = getVector3From(
+        NPCRigidBodyReference.current.translation()
+      );
+
+      const targetPosition = getVector3From(
+        playerRigidBodyReference.current.translation()
+      );
+
+      const sourceRigidBody = NPCRigidBodyReference.current;
+
+      goToTarget({
+        sourcePosition,
+        targetPosition,
+        sourceRigidBody,
+        style: "LINEAR VELOCITY",
+        speed: 8000,
+      });
+    }
+  });
+
+  const handleCollisionWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    if (payload.other.rigidBodyObject.name === ENTITY.PLAYER) {
+      const attackChance = Math.random() < 0.75;
+
+      if (attackChance) {
+        send({ type: USING_SKILL_2_EVENT });
+        playerActor?.send({ type: REACTING_TO_SKILL_2_EVENT });
+      } else {
+        send({ type: USING_SKILL_3_EVENT });
+      }
+    }
+
+    if (
+      payload.other.rigidBodyObject.name === ENTITY.CAR &&
+      Math.abs(payload.rigidBody?.linvel().z!) > 2
+    ) {
+      send({ type: REACTING_TO_SKILL_2_EVENT });
+    }
+
+    // collisionCallback?.();
+  };
+
+  const handleIntersectionEnterWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    // payload.target.rigidBody.userData.send({ type: USING_SKILL_1_EVENT });
+
+    const attackChance = Math.random() < 0.75;
+
+    if (attackChance) {
+      send({ type: USING_SKILL_1_EVENT });
+      // TODO: ZOMBIE NEEDS ARM ATTACHMENT TO HIT THE PLAYER
+      // playerActor?.send({ type: REACTING_TO_SKILL_1_EVENT });
+    } else {
+      send({ type: USING_SKILL_3_EVENT });
+    }
+
+    if (!meleeRange) {
+      setMeleeRange(true);
+    }
+  };
+
+  const handleIntersectionExitWithPlayer = (payload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    send({ type: MOVE_EVENT });
+
+    if (meleeRange) {
+      setMeleeRange(false);
+    }
+  };
+
+  const handleRegisterPlayer = (payload: IntersectionEnterPayload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    if (payload?.other?.rigidBody) {
+      playerRigidBodyReference.current = payload.other.rigidBody;
+      send({ type: MOVE_EVENT });
+    }
+  };
+
+  const handleUnregisterPlayer = (payload: IntersectionEnterPayload) => {
+    if (!payloadIsThePlayer(payload)) {
+      return;
+    }
+
+    playerRigidBodyReference.current = null;
+    send({ type: IDLE_EVENT });
+  };
+
+  if (state.matches(INACTIVE_STATE)) {
+    return null;
+  }
+
+  return (
+    <HumanoidRigidBody
+      position={position}
+      entity={ENTITY.ZOMBIE}
+      ref={NPCRigidBodyReference}
+      onBodyCollision={handleCollisionWithPlayer}
+      onSensorEnter={handleIntersectionEnterWithPlayer}
+      onSensorExit={handleIntersectionExitWithPlayer}
+      // userData={NPCActor}
+    >
+      <PlayerDetector
+        sensor
+        name="Region"
+        position={[0, 1, 0]}
+        args={[1, 200]}
+        onIntersectionEnter={handleRegisterPlayer}
+        onIntersectionExit={handleUnregisterPlayer}
+      />
+      <Zombie3DModel
+        ref={group}
+        nodes={nodes}
+        materials={materials}
+        actions={actions}
+      />
+    </HumanoidRigidBody>
+  );
+};
+
+// onIntersectionEnter={handleRegisterPlayer}
+// onIntersectionExit={handleUnregisterPlayer}

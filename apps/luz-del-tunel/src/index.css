@@ -13,7 +13,11 @@
 * {
   font-family: "Technor", serif;
   box-sizing: border-box;
-  /* filter: grayscale(); */
+  /*  */
+  /* filter: hue-rotate(19deg) invert(0.05) filedrop(NaN) grayscale(0.06)
+    brightness(0.9) saturate(0.9) url("#squiggly-2");
+  filter: hue-rotate(90deg); */
+  /* filter: blur(2px) contrast(1.2); */
 }
 
 :root {

@@ -5,7 +5,7 @@ import {
   USING_SKILL_2_EVENT,
   USING_SKILL_1_EVENT,
   IDLE_EVENT,
-} from "../machines/createBaseFSMInput";
+} from "../machines/machine-constants";
 
 export const getFSMEvent = (keys: Keys) => {
   const { forward, backward, leftward, rightward, skill_1, skill_2, skill_3 } =

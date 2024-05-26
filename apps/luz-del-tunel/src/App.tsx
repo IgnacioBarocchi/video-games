@@ -14,16 +14,16 @@ export default function App() {
     setWonTheGame(false);
   };
 
-  // return (
-  //   <CarGameFrontend
-  //     setWonTheGame={() => {
-  //       setTimeout(() => {
-  //         setWonTheGame(true);
-  //         restartMissions();
-  //       }, 10000);
-  //     }}
-  //   />
-  // );
+  return (
+    <CarGameFrontend
+      setWonTheGame={() => {
+        setTimeout(() => {
+          setWonTheGame(true);
+          restartMissions();
+        }, 10000);
+      }}
+    />
+  );
 
   return (
     <>

@@ -1,10 +1,10 @@
-export const ROAD_LENGTH = 2000;
+export const ROAD_LENGTH = 2000; //2000;
 export const BROWN = "#453b2e";
 export const DARK_GREEN = "#515651";
 export const GREY = "#7e7b79";
 export const PALE_ORANGE = "#d5b59f";
 export const LIGHT_GREEN = "#bcbca9";
-export const CAMERA_FAR = 100;
+export const CAMERA_FAR = 3000;
 export const ENTITY = {
   PLAYER: "PLAYER",
   CAR: "CAR",

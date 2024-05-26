@@ -52,8 +52,8 @@ export class Character {
     this.defaultVelocitySimulatorDamping = props.isCar ? 0.9 : 0.7; // Slightly less damping to allow for more realistic human motion
     this.defaultRotationSimulatorMass = props.isCar ? 200 : 10; // Reduced mass for rotational movement to reflect human agility
     this.defaultRotationSimulatorDamping = props.isCar ? 0.6 : 0.5;
-    this.runSpeed = props.isCar ? 30 : 10;
-    this.walkSpeed = props.isCar ? 20 : 7;
+    this.runSpeed = props.isCar ? 60 : 10;
+    this.walkSpeed = props.isCar ? 40 : 7;
 
     this.playerObjectReferences = props.playerObjectReferences;
     // this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(

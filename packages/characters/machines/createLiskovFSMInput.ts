@@ -7,43 +7,26 @@ import {
   playFinalAnimation,
 } from "../lib/animationHelper";
 import { RapierRigidBody } from "@react-three/rapier";
-
-export const IDLE_STATE = "IDLE_STATE";
-export const MOVE_STATE = "MOVE_STATE";
-export const USING_SKILL_1_STATE = "USING_SKILL_1_STATE";
-export const USING_SKILL_2_STATE = "USING_SKILL_2_STATE";
-export const USING_SKILL_3_STATE = "USING_SKILL_3_STATE";
-export const REACTING_TO_SKILL_1_STATE = "REACTING_TO_SKILL_1_STATE";
-export const REACTING_TO_SKILL_2_STATE = "REACTING_TO_SKILL_2_STATE";
-export const TAKING_DAMAGE_STATE = "TAKING_DAMAGE_STATE";
-export const DEATH_STATE = "DEATH";
-export const INACTIVE_STATE = "INACTIVE_STATE";
-
-export const USING_SKILL_1_EVENT = "SKILL_1_EVENT";
-export const USING_SKILL_2_EVENT = "SKILL_2_EVENT";
-export const USING_SKILL_3_EVENT = "SKILL_3_EVENT";
-export const REACTING_TO_SKILL_1_EVENT = "REACTING_TO_SKILL_1_EVENT";
-export const REACTING_TO_SKILL_2_EVENT = "REACTING_TO_SKILL_2_EVENT";
-export const IDLE_EVENT = "IDLE_EVENT";
-export const MOVE_EVENT = "MOVE_EVENT";
-export const DEATH_EVENT = "DEATH_EVENT";
-export const INACTIVE_EVENT = "INACTIVE_EVENT";
-
-export const FSMSkillStates = [
+import {
+  FSMStates,
   USING_SKILL_1_STATE,
   USING_SKILL_2_STATE,
   USING_SKILL_3_STATE,
-];
-
-export type FSMStates =
-  | typeof IDLE_STATE
-  | typeof MOVE_STATE
-  | typeof USING_SKILL_1_STATE
-  | typeof USING_SKILL_2_STATE
-  | typeof USING_SKILL_3_STATE
-  | typeof REACTING_TO_SKILL_1_STATE
-  | typeof REACTING_TO_SKILL_2_STATE
-  | typeof DEATH_STATE;
+  REACTING_TO_SKILL_1_STATE,
+  REACTING_TO_SKILL_2_STATE,
+  DEATH_STATE,
+  IDLE_STATE,
+  MOVE_STATE,
+  MOVE_EVENT,
+  USING_SKILL_1_EVENT,
+  USING_SKILL_2_EVENT,
+  USING_SKILL_3_EVENT,
+  REACTING_TO_SKILL_1_EVENT,
+  REACTING_TO_SKILL_2_EVENT,
+  DEATH_EVENT,
+  IDLE_EVENT,
+  INACTIVE_STATE,
+} from "./machine-constants";
 
 export type FSMContext = {
   initialHP: number;
@@ -54,6 +37,7 @@ export type FSMContext = {
   actions: { [x: string]: AnimationAction } | null;
   characterFSMDurations: Map<FSMStates, string>;
   animationNameByFSMState: Map<FSMStates, number>;
+  userControlled: boolean;
 };
 
 export const createBaseFSMInput = () => {
@@ -95,7 +79,9 @@ export const createBaseFSMInput = () => {
   };
 
   const baseMachineStateInput = {
-    id: nanoid(),
+    id: nanoid(15),
+    description:
+      "Machine that does not violate the LSP. It can be used for Players or NPC's",
     initial: IDLE_STATE,
     internal: true,
     context: {
@@ -111,7 +97,7 @@ export const createBaseFSMInput = () => {
       [IDLE_STATE]: {
         entry: [
           ({ context }) => {
-            // todo:  aaa
+            console.info("ENTRY", IDLE_STATE);
             const idleAnimationName =
               context.animationNameByFSMState?.get(IDLE_STATE)!;
             const moveAnimationName =
@@ -123,13 +109,6 @@ export const createBaseFSMInput = () => {
             context.actions[moveAnimationName].clampWhenFinished = true;
             context.actions[moveAnimationName].stop();
             context.actions[idleAnimationName].play();
-
-            // const idleAction = pickAction(IDLE_STATE).from(context);
-            // idleAction.play();
-
-            // const moveAction = pickAction(MOVE_STATE).from(context);
-            // moveAction.clampWhenFinished = true;
-            // moveAction.stop();
           },
         ],
         on: {
@@ -220,6 +199,17 @@ export const createBaseFSMInput = () => {
                   return context.mesh;
                 },
               }),
+              assign({
+                mesh: ({
+                  context,
+                  event,
+                }: {
+                  context: FSMContext;
+                  event: Pick<FSMContext, "userControlled">;
+                }) => {
+                  return event.userControlled;
+                },
+              }),
             ],
           },
         },
@@ -227,6 +217,7 @@ export const createBaseFSMInput = () => {
       [MOVE_STATE]: {
         entry: [
           ({ context }) => {
+            console.info("ENTRY", MOVE_STATE);
             const idleAnimationName =
               context.animationNameByFSMState?.get(IDLE_STATE)!;
             const moveAnimationName =
@@ -239,13 +230,6 @@ export const createBaseFSMInput = () => {
             context.actions[idleAnimationName].clampWhenFinished = true;
             context.actions[idleAnimationName].stop();
             context.actions[moveAnimationName].play();
-
-            // const moveAction = pickAction(MOVE_STATE).from(context);
-            // moveAction.play();
-
-            // const idleAction = pickAction(IDLE_STATE).from(context);
-            // idleAction.clampWhenFinished = true;
-            // idleAction.stop();
           },
         ],
         on: {
@@ -261,6 +245,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_1_STATE]: {
         entry: [
           ({ context }) => {
+            console.info("ENTRY", USING_SKILL_1_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_1_STATE).with(context);
           },
         ],
@@ -269,6 +254,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_2_STATE]: {
         entry: [
           ({ context }) => {
+            console.info("ENTRY", USING_SKILL_2_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_2_STATE).with(context);
           },
         ],
@@ -277,6 +263,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_3_STATE]: {
         entry: [
           ({ context }) => {
+            console.info("ENTRY", USING_SKILL_3_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_3_STATE).with(context);
           },
         ],
@@ -335,6 +322,7 @@ export const createBaseFSMInput = () => {
       [DEATH_STATE]: {
         entry: [
           ({ context }) => {
+            console.info("ENTRY", DEATH_STATE);
             for (const state of [
               IDLE_STATE,
               MOVE_STATE,
