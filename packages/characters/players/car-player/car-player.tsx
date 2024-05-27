@@ -1,11 +1,12 @@
 import { MutableRefObject, memo, useMemo, useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { PositionalAudioProps, useFrame, useThree } from "@react-three/fiber";
 import { RapierRigidBody, useAfterPhysicsStep } from "@react-three/rapier";
 import {
   PerspectiveCamera,
   Vector3Tuple,
   Object3D,
   Object3DEventMap,
+  MathUtils,
 } from "three";
 import { Character } from "../../classes/Character";
 import { InputControls } from "../../controls/input";
@@ -14,6 +15,7 @@ import { CAMERA_FAR } from "game-constants";
 import { CarModel } from "../models/CarModel";
 import { CarThirdPersonCamera } from "../../classes/CarThirdPersonCamera";
 import { CarRigidBody } from "../../physics/CarRigidBody";
+import { Attachments } from "./attachments";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -38,6 +40,8 @@ export const CarPlayer = memo(
       rigidbody: useRef<RapierRigidBody>(null),
       modelRef: useRef<Object3D>(null),
     });
+
+    const audioRef = useRef<PositionalAudioProps>(null);
 
     const camera = useThree((s) => {
       const cam = s.camera;
@@ -85,12 +89,29 @@ export const CarPlayer = memo(
       if (!playerObjectReferences?.current?.rigidbody?.current) {
         return;
       }
+
       if (!playerObjectReferences?.current?.modelRef?.current) {
+        return;
+      }
+
+      if (!audioRef?.current) {
         return;
       }
 
       character.update(delta);
       cameraOperator.update(playerObjectReferences?.current?.modelRef?.current);
+
+      const carSpeed =
+        playerObjectReferences.current.rigidbody.current.linvel().z;
+
+      console.log(carSpeed);
+      const volume = MathUtils.clamp(
+        Number(Math.abs(carSpeed).toFixed(2)),
+        0,
+        10
+      );
+
+      audioRef.current!.setVolume(volume);
     });
 
     return (
@@ -101,6 +122,7 @@ export const CarPlayer = memo(
           ref={playerObjectReferences.current.rigidbody}
         >
           <CarModel ref={playerObjectReferences} />
+          <Attachments ref={audioRef} />
         </CarRigidBody>
       </>
     );

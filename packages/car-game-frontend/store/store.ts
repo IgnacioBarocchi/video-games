@@ -11,6 +11,8 @@ export type CarNotification = {
   cost: number;
 };
 
+export type GameOverReason = { reason: "TIME OUT" | "WON" };
+
 export type CarGameState = {
   loading: boolean;
   setLoading: (value: boolean) => void;
@@ -42,8 +44,7 @@ const useCarGameStore = create<CarGameState>((set) => ({
     set({ gameStarted: true });
   },
   gameOver: null,
-  setGameOver: (value: { reason: "TIME OUT" | "CAR BREAK" | "WON" }) =>
-    set({ gameOver: value }),
+  setGameOver: (value: GameOverReason) => set({ gameOver: value }),
   haveZombies: true,
   setHaveZombies: (value: boolean) => set({ haveZombies: value }),
   crashCount: 0,

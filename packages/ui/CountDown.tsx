@@ -2,22 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { css, keyframes, styled } from "styled-components";
 import { panelPadding } from "./elements/Panel";
 import { Text } from "./elements/Text";
+import { LAST_SECONDS, TIME_LIMIT } from "game-constants";
+import { FloatingNotification } from "./FloatingNotification";
 
 const initialValues = `
   top: ${panelPadding};
   left: ${panelPadding};
-  font-size: 3em; 
   color: white;
   transform: none;
 `;
 
-const finalValues = `
+const finalValues = ` 
+  position: relative;
   top: 20%;
   left: 50%;
   font-size: 6em;
   color: red;
   transform: translateX(-50%);
-`;
+  `;
 
 const move = keyframes`
   from {
@@ -33,19 +35,14 @@ const animationRule = css(
   move
 );
 
-const Container = styled(Text)<{ lastSeconds: boolean }>`
+const MovingText = styled(Text)<{ lastSeconds: boolean }>`
   ${({ lastSeconds }) => (lastSeconds ? finalValues : initialValues)};
-  position: absolute;
   animation: ${({ lastSeconds }) => (lastSeconds ? animationRule : "none")};
+  width: fit-content;
 `;
 
-export const CountDown = ({
-  tickAudio,
-  onEnd,
-  timeLimit,
-  lastSecondsLimit,
-}) => {
-  const [timer, setTimer] = useState(timeLimit);
+export const CountDown = ({ tickAudio, onEnd }) => {
+  const [timer, setTimer] = useState(TIME_LIMIT);
   const [lastSeconds, setLastSeconds] = useState(false);
   const id = useRef(null);
 
@@ -61,7 +58,7 @@ export const CountDown = ({
   }, []);
 
   useEffect(() => {
-    if (!lastSeconds && timer === lastSecondsLimit) {
+    if (!lastSeconds && timer === LAST_SECONDS) {
       setLastSeconds(true);
     }
 
@@ -70,7 +67,7 @@ export const CountDown = ({
       onEnd();
     }
 
-    if (timer <= lastSecondsLimit) {
+    if (timer <= LAST_SECONDS) {
       new Audio(tickAudio).play();
     }
   }, [timer]);
@@ -78,9 +75,25 @@ export const CountDown = ({
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;
 
+  if (minutes === 0 && seconds === 0) {
+    return null;
+  }
+
   return (
-    <Container lastSeconds={lastSeconds}>
-      {`0${minutes}:${seconds < 10 ? "0" : ""}${seconds}`}
-    </Container>
+    <FloatingNotification
+      dismiss={false}
+      position="top-left"
+      fullWidth={true}
+      fullHeight={true}
+    >
+      <MovingText lastSeconds={lastSeconds}>
+        {`0${minutes}:${seconds < 10 ? "0" : ""}${seconds}`}
+      </MovingText>
+    </FloatingNotification>
   );
 };
+
+// relative: absolute;
+// z-index: 3;
+// background: green;
+// width: 100vw;

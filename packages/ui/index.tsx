@@ -6,3 +6,4 @@ export * from "./end-credits";
 export * from "./@gui-elements/loading-screen";
 export * from "./title-screen";
 export * from "./in-game-screen/";
+export * from "./FloatingNotification";

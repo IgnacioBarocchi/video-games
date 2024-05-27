@@ -17,15 +17,10 @@ function createOnceFunction(callback: Function) {
 const ZombieImplementation = memo<{
   position: [number, number, number];
 }>(({ position }) => {
-  console.log(
-    "THE ZOMBIE RELOAD EVERY TIME THAT setCarNotification OR subMoney IS CALLED. IF WE COMMENT OUT THOSE LINES, THIS MESSAGE WON'T SHOW. WE NEED TO FIX THIS BEHAVIOR WITH ZUSTAND"
-  );
-
+  const subMoney = useCarGameStore(useCallback((state) => state.subMoney, []));
   const setCarNotification = useCarGameStore(
     useCallback((state) => state.setCarNotification, [])
   );
-
-  const subMoney = useCarGameStore(useCallback((state) => state.subMoney, []));
 
   const collisionCallback = createOnceFunction(() => {
     setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
