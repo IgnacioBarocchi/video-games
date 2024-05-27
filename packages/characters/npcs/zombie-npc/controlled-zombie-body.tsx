@@ -30,6 +30,7 @@ export interface ControlledZombieBody {
   playerImpactHandler: Function;
   ref: Ref<RapierRigidBody>;
   children?: ReactNode;
+  isDead: boolean;
 }
 
 export const ControlledZombieBody = forwardRef<
@@ -46,11 +47,13 @@ export const ControlledZombieBody = forwardRef<
       goIdle,
       playerImpactHandler,
       children,
+      isDead,
     },
     ref
   ) => {
     return (
       <HumanoidRigidBody
+        isDead={isDead}
         position={position}
         entity={ENTITY.ZOMBIE}
         ref={ref}

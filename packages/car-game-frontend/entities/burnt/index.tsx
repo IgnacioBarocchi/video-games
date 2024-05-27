@@ -8,7 +8,7 @@ import hitSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-hit.mp3
 import scrapeSound from "../../assets/audio/in-game-sfx/burnt-car/burnt-car-scrape.mp3";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
 import { CAR_IMPACT_COST } from "game-constants";
-import useGameStore from "../../store/store";
+import useCarGameStore from "../../store/store";
 
 export const BurntCar: FC<{ position: [number, number, number] }> = ({
   position,
@@ -16,7 +16,7 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
   const [playHitSound, setPlayHitSound] = useState(false);
   const [playScrapeSound, setPlayScrapeSound] = useState(false);
   const burntCarModelID = Math.floor(Math.random() * (3 - 1) + 1);
-  const { setCarNotification, subMoney } = useGameStore((gameState) => ({
+  const { setCarNotification, subMoney } = useCarGameStore((gameState) => ({
     subMoney: gameState.subMoney,
     setCarNotification: gameState.setCarNotification,
   }));

@@ -11,7 +11,26 @@ export type CarNotification = {
   cost: number;
 };
 
-const useGameStore = create((set) => ({
+export type CarGameState = {
+  loading: boolean;
+  setLoading: (value: boolean) => void;
+  gameStarted: boolean;
+  setGameStarted: () => void;
+  gameOver: { reason: GameOverReason } | null;
+  setGameOver: (value: { reason: GameOverReason }) => void;
+  haveZombies: boolean;
+  setHaveZombies: (value: boolean) => void;
+  crashCount: number;
+  registerCrashCount: () => void;
+  carNotification: CarNotification | null;
+  setCarNotification: (value: CarNotification) => void;
+  title: string | null;
+  setTitle: (value: string) => void;
+  money: number;
+  subMoney: (amount: number) => void;
+};
+
+const useCarGameStore = create<CarGameState>((set) => ({
   loading: true,
   setLoading: (value: boolean) => set({ loading: value }),
   gameStarted: true,
@@ -50,4 +69,4 @@ const useGameStore = create((set) => ({
     set((state) => ({ money: state.money - amount })),
 }));
 
-export default useGameStore;
+export default useCarGameStore;

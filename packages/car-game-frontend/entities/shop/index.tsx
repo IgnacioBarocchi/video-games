@@ -1,7 +1,7 @@
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ShopModel } from "./ShopModel";
 import { useState } from "react";
-import useGameStore from "../../store/store";
+import useCarGameStore from "../../store/store";
 import { Vector3 } from "three";
 import moneyCounter from "../../assets/audio/money-counter.mp3";
 import openGate from "../../assets/audio/open-gate.mp3";
@@ -12,11 +12,13 @@ import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
 export const Shop = ({ setWonTheGame }) => {
   const [state, setState] = useState("DOOR CLOSED");
 
-  const { setGameOver, setHaveZombies, setTitle } = useGameStore((state) => ({
-    setGameOver: state.setGameOver,
-    setHaveZombies: state.setHaveZombies,
-    setTitle: state.setTitle,
-  }));
+  const { setGameOver, setHaveZombies, setTitle } = useCarGameStore(
+    (state) => ({
+      setGameOver: state.setGameOver,
+      setHaveZombies: state.setHaveZombies,
+      setTitle: state.setTitle,
+    })
+  );
 
   return (
     <>

@@ -2,7 +2,7 @@ import { RigidBody } from "@react-three/rapier";
 import { BarrierModel } from "./model";
 import { FC, useState } from "react";
 import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
-import useGameStore from "../../store/store";
+import useCarGameStore from "../../store/store";
 import { PositionalAudio } from "@react-three/drei";
 import concreteImpact from "../../assets/audio/in-game-sfx/concrete-barrier/impact.m4a";
 import { throttle } from "../../lib/throttle";
@@ -11,7 +11,7 @@ import { BARRIER_IMPACT_COST } from "game-constants";
 export const Barrier: FC<{ position: [number, number, number] }> = ({
   position,
 }) => {
-  const { registerCrashCount, setCarNotification, subMoney } = useGameStore(
+  const { registerCrashCount, setCarNotification, subMoney } = useCarGameStore(
     (state) => ({
       registerCrashCount: state.registerCrashCount,
       setCarNotification: state.setCarNotification,

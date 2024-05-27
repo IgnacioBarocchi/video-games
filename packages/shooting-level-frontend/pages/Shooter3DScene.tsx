@@ -9,7 +9,7 @@ import { GroundModel } from "../components/Ground";
 import { OrbitControls, Preload } from "@react-three/drei";
 import { NPC } from "../npc";
 import { Backpack } from "../components/Backpack";
-import { HumanPlayer, PlayerActorProvider, ZombieNPC } from "characters";
+import { HumanPlayer, PlayerActorProvider, ZombieNPCV2 } from "characters";
 
 const Effects = () => {
   return (

@@ -42,19 +42,25 @@ import {
   IDLE_EVENT,
   MOVE_EVENT,
   USING_SKILL_3_EVENT,
+  DEATH_EVENT,
 } from "../../machines/machine-constants";
 import { Attachments } from "./attachments";
+import { simpleZombieMachine } from "../../machines/simple-zombie-machine";
 
 export interface ZombieNPCProps {
   position: Vector3 | [number, number, number];
   collisionCallback?: Function;
+  playerContext: "CAR" | "HUMAN";
 }
 
-export const ZombieNPC: FC<ZombieNPCProps> = ({
+export const ZombieNPCV2: FC<ZombieNPCProps> = ({
   position,
   collisionCallback,
+  playerContext,
 }) => {
-  const [state, send] = useMachine(complexZombieMachine);
+  const [state, send] = useMachine(
+    playerContext === "HUMAN" ? complexZombieMachine : simpleZombieMachine
+  );
   // todo: move to context
   const [meleeRange, setMeleeRange] = useState(false);
   const playerActor = useContext(Context);
@@ -69,8 +75,6 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
   useEffect(() => {
     let timeoutId = 0;
     if (group?.current && NPCRigidBodyReference?.current) {
-      console.count("EFFECT!");
-
       const milliseconds = 1000;
       const animationNameByFSMState = new Map<FSMStates, ActionName>([
         [IDLE_STATE, "RUN"],
@@ -116,7 +120,7 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
     return () => {
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [playerContext]);
 
   useFrame(() => {
     if (state.status === "error") {
@@ -131,7 +135,7 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
       return;
     }
 
-    if (meleeRange) {
+    if (meleeRange && playerContext === "HUMAN") {
       send({ type: USING_SKILL_1_EVENT });
       return;
     }
@@ -159,7 +163,10 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
 
   const playerImpactHandler = useCallback(
     (payload) => {
-      if (payload.other.rigidBodyObject.name === ENTITY.PLAYER) {
+      if (
+        playerContext === "HUMAN" &&
+        payload.other.rigidBodyObject.name === ENTITY.PLAYER
+      ) {
         const attackChance = Math.random() < 0.75;
 
         if (attackChance) {
@@ -171,29 +178,31 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
       }
 
       if (
+        playerContext === "CAR" &&
         payload.other.rigidBodyObject.name === ENTITY.CAR &&
         Math.abs(payload.rigidBody?.linvel().z!) > 2
       ) {
-        send({ type: REACTING_TO_SKILL_2_EVENT });
+        if (collisionCallback) {
+          collisionCallback();
+        }
+        send({ type: DEATH_EVENT });
       }
-
-      collisionCallback?.();
     },
     [playerActor, collisionCallback, send]
   );
 
   const attackPlayer = useCallback(() => {
-    const attackChance = Math.random() < 0.75;
+    // const attackChance = Math.random() < 0.75;
 
-    if (attackChance) {
-      send({ type: USING_SKILL_1_EVENT });
-      // TODO: ZOMBIE NEEDS ARM ATTACHMENT TO HIT THE PLAYER
-      // playerActor?.send({ type: REACTING_TO_SKILL_1_EVENT });
-    } else {
-      send({ type: USING_SKILL_3_EVENT });
-    }
+    // if (attackChance) {
+    send({ type: USING_SKILL_1_EVENT });
+    // TODO: ZOMBIE NEEDS ARM ATTACHMENT TO HIT THE PLAYER
+    // playerActor?.send({ type: REACTING_TO_SKILL_1_EVENT });
+    // } else {
+    //   send({ type: USING_SKILL_3_EVENT });
+    // }
 
-    if (!meleeRange) {
+    if (!meleeRange && playerContext === "HUMAN") {
       setMeleeRange(true);
     }
   }, [meleeRange, send]);
@@ -201,7 +210,7 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
   const chasePlayer = useCallback(() => {
     send({ type: MOVE_EVENT });
 
-    if (meleeRange) {
+    if (meleeRange && playerContext === "HUMAN") {
       setMeleeRange(false);
     }
   }, [meleeRange, send]);
@@ -234,6 +243,7 @@ export const ZombieNPC: FC<ZombieNPCProps> = ({
       attackPlayer={attackPlayer}
       goIdle={goIdle}
       playerImpactHandler={playerImpactHandler}
+      isDead={state.matches(DEATH_STATE)}
       Zombie3DModelVariant={() => (
         <Zombie3DModel
           ref={group}

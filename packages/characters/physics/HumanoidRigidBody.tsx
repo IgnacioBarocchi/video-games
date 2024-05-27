@@ -1,5 +1,6 @@
 import { Ref, ReactNode, forwardRef } from "react";
 import {
+  CapsuleArgs,
   CapsuleCollider,
   CollisionEnterHandler,
   CylinderCollider,
@@ -8,6 +9,11 @@ import {
 } from "@react-three/rapier";
 import { Vector3 } from "three";
 import { ENTITY } from "game-constants";
+
+const aliveBodyDimensions: CapsuleArgs = [0.6, 0.2];
+const deadBodyDimensions: CapsuleArgs = [0.005, 0.005];
+const aliveBodyPositionOffset: [number, number, number] = [0, 0.8, 0];
+const deadBodyPositionOffset: [number, number, number] = [0, 0.005, 0];
 
 export interface HumanoidRigidBodyProps {
   children: ReactNode;
@@ -18,6 +24,7 @@ export interface HumanoidRigidBodyProps {
   onBodyCollision?: CollisionEnterHandler;
   onSensorEnter?: CollisionEnterHandler;
   onSensorExit?: CollisionEnterHandler;
+  isDead?: boolean;
 }
 
 export const HumanoidRigidBody = forwardRef<
@@ -33,6 +40,7 @@ export const HumanoidRigidBody = forwardRef<
       onBodyCollision,
       onSensorEnter,
       onSensorExit,
+      isDead = false,
     },
     ref
   ) => {
@@ -46,12 +54,14 @@ export const HumanoidRigidBody = forwardRef<
         userData={userData}
       >
         <CapsuleCollider
-          args={[0.6, 0.2]}
-          position={[0, 0.8, 0]}
+          name="Body"
+          args={isDead ? deadBodyDimensions : aliveBodyDimensions}
+          position={isDead ? deadBodyPositionOffset : aliveBodyPositionOffset}
           onCollisionEnter={onBodyCollision}
         />
         <CylinderCollider
           sensor
+          name="Proximity sensor"
           args={[0.2, 2]}
           position={[0, 0.5, 0]}
           onIntersectionEnter={onSensorEnter}

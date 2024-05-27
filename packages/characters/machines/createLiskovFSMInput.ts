@@ -27,8 +27,10 @@ import {
   IDLE_EVENT,
   INACTIVE_STATE,
 } from "./machine-constants";
+const description =
+  "Machine that does not violate the LSP. It can be used for [Players] or [NPC's]. Author: Ignacio Barocchi";
 
-export type FSMContext = {
+export type ComplexFSMContext = {
   initialHP: number;
   currentHP: number;
   damageTaken: number;
@@ -43,35 +45,47 @@ export type FSMContext = {
 export const createBaseFSMInput = () => {
   const baseMachineConfigInput = {
     delays: {
-      USING_SKILL_1_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      USING_SKILL_1_STATE_DELAY: ({
+        context,
+      }: {
+        context: ComplexFSMContext;
+      }) => {
         return context.characterFSMDurations?.get(USING_SKILL_1_STATE);
       },
-      USING_SKILL_2_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      USING_SKILL_2_STATE_DELAY: ({
+        context,
+      }: {
+        context: ComplexFSMContext;
+      }) => {
         return context.characterFSMDurations?.get(USING_SKILL_2_STATE);
       },
-      USING_SKILL_3_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      USING_SKILL_3_STATE_DELAY: ({
+        context,
+      }: {
+        context: ComplexFSMContext;
+      }) => {
         return context.characterFSMDurations?.get(USING_SKILL_3_STATE);
       },
       REACTING_TO_SKILL_1_STATE_DELAY: ({
         context,
       }: {
-        context: FSMContext;
+        context: ComplexFSMContext;
       }) => {
         return context.characterFSMDurations?.get(REACTING_TO_SKILL_1_STATE);
       },
       REACTING_TO_SKILL_2_STATE_DELAY: ({
         context,
       }: {
-        context: FSMContext;
+        context: ComplexFSMContext;
       }) => {
         return context.characterFSMDurations?.get(REACTING_TO_SKILL_2_STATE);
       },
-      DEATH_STATE_DELAY: ({ context }: { context: FSMContext }) => {
+      DEATH_STATE_DELAY: ({ context }: { context: ComplexFSMContext }) => {
         return context.characterFSMDurations?.get(DEATH_STATE);
       },
     },
     guards: {
-      isDead: ({ context }: { context: FSMContext }) => {
+      isDead: ({ context }: { context: ComplexFSMContext }) => {
         const isDeadB = context.currentHP <= 0;
         return isDeadB;
       },
@@ -80,8 +94,7 @@ export const createBaseFSMInput = () => {
 
   const baseMachineStateInput = {
     id: nanoid(15),
-    description:
-      "Machine that does not violate the LSP. It can be used for Players or NPC's",
+    description,
     initial: IDLE_STATE,
     internal: true,
     context: {
@@ -97,7 +110,7 @@ export const createBaseFSMInput = () => {
       [IDLE_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", IDLE_STATE);
+            // console.info("ENTRY", IDLE_STATE);
             const idleAnimationName =
               context.animationNameByFSMState?.get(IDLE_STATE)!;
             const moveAnimationName =
@@ -126,8 +139,8 @@ export const createBaseFSMInput = () => {
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "characterFSMDurations">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "characterFSMDurations">;
                 }) => {
                   if (event?.characterFSMDurations) {
                     return event.characterFSMDurations;
@@ -141,8 +154,8 @@ export const createBaseFSMInput = () => {
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "animationNameByFSMState">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "animationNameByFSMState">;
                 }) => {
                   if (event?.animationNameByFSMState) {
                     return event.animationNameByFSMState;
@@ -156,8 +169,8 @@ export const createBaseFSMInput = () => {
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "actions">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "actions">;
                 }) => {
                   if (event?.actions) {
                     return event.actions;
@@ -171,8 +184,8 @@ export const createBaseFSMInput = () => {
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "rigidBody">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "rigidBody">;
                 }) => {
                   if (event?.rigidBody) {
                     return event.rigidBody;
@@ -186,8 +199,8 @@ export const createBaseFSMInput = () => {
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "mesh">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "mesh">;
                 }) => {
                   if (event?.mesh) {
                     const animationName =
@@ -200,12 +213,12 @@ export const createBaseFSMInput = () => {
                 },
               }),
               assign({
-                mesh: ({
+                userControlled: ({
                   context,
                   event,
                 }: {
-                  context: FSMContext;
-                  event: Pick<FSMContext, "userControlled">;
+                  context: ComplexFSMContext;
+                  event: Pick<ComplexFSMContext, "userControlled">;
                 }) => {
                   return event.userControlled;
                 },
@@ -217,7 +230,7 @@ export const createBaseFSMInput = () => {
       [MOVE_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", MOVE_STATE);
+            // console.info("ENTRY", MOVE_STATE);
             const idleAnimationName =
               context.animationNameByFSMState?.get(IDLE_STATE)!;
             const moveAnimationName =
@@ -245,7 +258,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_1_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", USING_SKILL_1_STATE);
+            // console.info("ENTRY", USING_SKILL_1_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_1_STATE).with(context);
           },
         ],
@@ -254,7 +267,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_2_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", USING_SKILL_2_STATE);
+            // console.info("ENTRY", USING_SKILL_2_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_2_STATE).with(context);
           },
         ],
@@ -263,7 +276,7 @@ export const createBaseFSMInput = () => {
       [USING_SKILL_3_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", USING_SKILL_3_STATE);
+            // console.info("ENTRY", USING_SKILL_3_STATE);
             getFSMOneShotPlayerFrom(USING_SKILL_3_STATE).with(context);
           },
         ],
@@ -281,8 +294,8 @@ export const createBaseFSMInput = () => {
             currentHP: ({
               context,
             }: {
-              context: FSMContext;
-              event: Pick<FSMContext, "currentHP">;
+              context: ComplexFSMContext;
+              event: Pick<ComplexFSMContext, "currentHP">;
             }) => {
               getFSMOneShotPlayerFrom(REACTING_TO_SKILL_1_STATE).with(context);
               pickAction(IDLE_STATE).from(context).stop();
@@ -306,8 +319,8 @@ export const createBaseFSMInput = () => {
             currentHP: ({
               context,
             }: {
-              context: FSMContext;
-              event: Pick<FSMContext, "currentHP">;
+              context: ComplexFSMContext;
+              event: Pick<ComplexFSMContext, "currentHP">;
             }) => {
               getFSMOneShotPlayerFrom(REACTING_TO_SKILL_2_STATE).with(context);
               pickAction(IDLE_STATE).from(context).stop();
@@ -322,7 +335,6 @@ export const createBaseFSMInput = () => {
       [DEATH_STATE]: {
         entry: [
           ({ context }) => {
-            console.info("ENTRY", DEATH_STATE);
             for (const state of [
               IDLE_STATE,
               MOVE_STATE,

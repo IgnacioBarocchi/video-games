@@ -1,18 +1,22 @@
 // import { ZombieNPC } from "../npcs/zombie-npc/archive/zombie-npc-with-actor";
-import { ZombieNPC } from "../npcs/zombie-npc/zombie-npc-with-fsm";
+import { FC } from "react";
+import {
+  ZombieNPCProps,
+  ZombieNPCV2,
+} from "../npcs/zombie-npc/zombie-npc-with-fsm";
 
 export interface ZombieHordeProps {
   numberOfZombies: number;
   startZOffset: number;
   Zend: number;
-  collisionCallback?: Function;
+  Component: FC<ZombieNPCProps>;
 }
 
-export const ZombieHorde = ({
+export const NPCComposition = ({
   numberOfZombies,
   startZOffset = -800,
   Zend = -2000,
-  collisionCallback,
+  Component,
 }) => {
   const distributionFactor = Zend / numberOfZombies;
   if (Zend < startZOffset) {
@@ -22,16 +26,10 @@ export const ZombieHorde = ({
   return (
     <>
       {[...Array(numberOfZombies)].map((_, i) => {
-        const xPos = Math.random() * 21 - 10;
+        const xPos = Math.random() * 10 - 10;
         const zPos = -Math.min(i * distributionFactor, Zend) - startZOffset;
 
-        return (
-          <ZombieNPC
-            key={i}
-            position={[xPos, 1, zPos]}
-            collisionCallback={collisionCallback}
-          />
-        );
+        return <Component key={i} position={[xPos, 1, zPos]} />;
       })}
     </>
   );

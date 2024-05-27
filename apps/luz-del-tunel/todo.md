@@ -1,0 +1,4 @@
+- Work on shooting scene, integrating zombie.
+- Provide zombie attachments (sound and hit box).
+- Implement local zombie NPC in car game with collision callback to avoid rerenders. it will be called zombie IMP.
+- Work on barrier model.

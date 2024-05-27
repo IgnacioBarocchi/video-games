@@ -1,11 +1,12 @@
 import { AnimationAction, LoopOnce } from "three";
-import { FSMContext } from "../machines/createLiskovFSMInput";
+import { ComplexFSMContext } from "../machines/createLiskovFSMInput";
 import {
   FSMStates,
   DEATH_STATE,
   IDLE_STATE,
   MOVE_STATE,
 } from "../machines/machine-constants";
+import { SimpleNPCFSMContext } from "../machines/simple-zombie-machine";
 
 export const blendAnimationTransition = (action: AnimationAction | null) => {
   if (!action) return;
@@ -50,7 +51,7 @@ export const playFinalAnimation = (action: AnimationAction | null) => {
 
 export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
   return {
-    with: (context: FSMContext) => {
+    with: (context: ComplexFSMContext | SimpleNPCFSMContext) => {
       if (state === DEATH_STATE) {
         throw new Error("Use 'playFinalAnimation' and don't play audios.");
       }
@@ -84,7 +85,7 @@ export const getFSMOneShotPlayerFrom = (state: FSMStates) => {
 
 export const pickAction = (state: FSMStates) => {
   return {
-    from: (context: FSMContext) => {
+    from: (context: ComplexFSMContext | SimpleNPCFSMContext) => {
       return context?.actions[context.animationNameByFSMState?.get(state)];
     },
   };
