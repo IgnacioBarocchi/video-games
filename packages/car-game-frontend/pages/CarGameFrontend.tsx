@@ -11,7 +11,7 @@ export const CarGameFrontend = ({ setWonTheGame }) => {
   return (
     <>
       <World3D>
-        {/* <Perf position="bottom-left" /> */}
+        <Perf position="bottom-left" />
         {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
         <Preload all={true} />
         <Physics debug={true} gravity={[0, -30, 0]} colliders={false}>
