@@ -4,6 +4,7 @@ import { Panel, panelPadding } from "../elements/Panel";
 import { Title } from "../elements/Text";
 import { Button } from "../elements/Button";
 import { Box } from "../elements/Box";
+import useGameContext from "game-constants/hooks/use-game-context";
 
 export const MainMenu = ({
   onStartClick,
@@ -11,6 +12,7 @@ export const MainMenu = ({
   onAboutClick,
   lobbyMusic,
 }) => {
+  const { changeGameState } = useGameContext();
   const [shouldFade, setShouldFade] = useState(false);
   useEffect(() => {
     const audio = new Audio(lobbyMusic);
@@ -23,7 +25,7 @@ export const MainMenu = ({
 
   const handleStart = () => {
     setShouldFade(true);
-    setTimeout(() => onStartClick(), 1500);
+    setTimeout(() => changeGameState("SHOOTER GAME"), 1500);
   };
 
   return (

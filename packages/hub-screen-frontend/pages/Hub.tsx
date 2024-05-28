@@ -21,7 +21,7 @@ const Effects = () => {
   );
 };
 
-export const Hub = ({ onStart }) => {
+export const Hub = () => {
   return (
     <>
       <Canvas
@@ -51,7 +51,7 @@ export const Hub = ({ onStart }) => {
         </Suspense>
       </Canvas>
       <MainMenu
-        onStartClick={onStart}
+        onStartClick={() => {}}
         onQuitClick={() => {}}
         onAboutClick={() => {}}
         lobbyMusic={null}

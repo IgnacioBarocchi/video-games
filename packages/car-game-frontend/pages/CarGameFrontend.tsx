@@ -6,12 +6,18 @@ import { Physics } from "@react-three/rapier";
 import { LVL1 } from "../LVL1";
 import { Perf } from "r3f-perf";
 import { Preload } from "@react-three/drei";
-import { FloatingNotification } from "ui";
-import { Clock, MoneyLoss } from "../gui-panels/panel";
+import { FloatingNotification, LoadingScreen } from "ui";
+import {
+  Clock,
+  EndGamePanel,
+  LoadingPanel,
+  MoneyLoss,
+} from "../gui-panels/panel";
+import useCarGameStore from "../store/store";
 
 const M = memo(({ setWonTheGame }) => (
   <World3D>
-    <Perf position="top-right" />
+    {/* <Perf position="top-right" /> */}
     <Preload all={true} />
     <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
       <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
@@ -26,6 +32,8 @@ export const CarGameFrontend = ({ setWonTheGame }) => {
       <M setWonTheGame={setWonTheGame} />
       <MoneyLoss />
       <Clock />
+      <LoadingPanel />
+      <EndGamePanel />
     </>
   );
 };

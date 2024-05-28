@@ -130,6 +130,10 @@ export const HumanPlayer = memo(
     );
 
     useAfterPhysicsStep((api) => {
+      if (!playerObjectReferences?.current?.rigidbody?.current) {
+        return;
+      }
+
       character.physicsPostStep(api);
     });
 
@@ -201,7 +205,7 @@ export const HumanPlayer = memo(
       if (!playerObjectReferences?.current?.modelRef?.current) {
         return;
       }
-
+      console.log(playerObjectReferences?.current?.rigidbody?.current);
       character.update(delta);
       cameraOperator.update(playerObjectReferences?.current?.modelRef?.current);
 

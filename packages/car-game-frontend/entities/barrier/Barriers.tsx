@@ -7,44 +7,42 @@ const getBarrierXPosition = () => {
   return n > 0.33 ? 6 : n > 66 ? 3 : 0;
 };
 
-export const Barriers: FC<{ isOldVersion?: boolean }> = ({ isOldVersion }) => {
-  if (isOldVersion) {
-    return (
-      <>
-        {[...Array(25)].map((_, i) => (
-          <Barrier
-            key={i}
-            position={[
-              getBarrierXPosition(),
-              0,
-              i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
-            ]}
-          />
-        ))}
-        {[...Array(25)].map((_, i) => (
-          <Barrier
-            key={i}
-            position={[
-              -getBarrierXPosition(),
-              0,
-              i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
-            ]}
-          />
-        ))}
-      </>
-    );
-  }
-
+export const Barriers = () => {
   return (
     <>
-      <EntitiesRegion
-        name="Barriers"
-        depth={2000}
-        ZOffset={400}
-        numberOfEntities={[10, 10]}
-        Entity={Barrier}
-        spaceBetween={{ x: [-15, 15], y: 0 }}
-      />
+      {[...Array(25)].map((_, i) => (
+        <Barrier
+          key={i}
+          position={[
+            getBarrierXPosition(),
+            0,
+            i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
+          ]}
+        />
+      ))}
+      {[...Array(25)].map((_, i) => (
+        <Barrier
+          key={i}
+          position={[
+            -getBarrierXPosition(),
+            0,
+            i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
+          ]}
+        />
+      ))}
     </>
   );
+
+  // return (
+  //   <>
+  //     <EntitiesRegion
+  //       name="Barriers"
+  //       depth={2000}
+  //       ZOffset={400}
+  //       numberOfEntities={[10, 10]}
+  //       Entity={Barrier}
+  //       spaceBetween={{ x: [-15, 15], y: 0 }}
+  //     />
+  //   </>
+  // );
 };

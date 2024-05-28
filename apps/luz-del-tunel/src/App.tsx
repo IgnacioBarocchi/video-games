@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Hub } from "hub-screen-frontend";
 import { Shooter3DScene } from "shooting-level-frontend";
 import { CarGameFrontend } from "car-game-frontend";
+import { MainProvider } from "game-constants";
+import { Stages } from "./Stages";
 
 export default function App() {
   const [pickMission, setPickMission] = useState(false);
@@ -15,14 +17,17 @@ export default function App() {
   };
 
   return (
-    <CarGameFrontend
-      setWonTheGame={() => {
-        setTimeout(() => {
-          setWonTheGame(true);
-          restartMissions();
-        }, 10000);
-      }}
-    />
+    <MainProvider>
+      <Stages />
+      {/* <CarGameFrontend
+        setWonTheGame={() => {
+          setTimeout(() => {
+            setWonTheGame(true);
+            restartMissions();
+          }, 10000);
+        }}
+      /> */}
+    </MainProvider>
   );
 
   return (

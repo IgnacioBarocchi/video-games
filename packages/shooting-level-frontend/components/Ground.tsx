@@ -6,6 +6,7 @@ import groundModelFile from "../assets/models/Ground.glb";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import useGameStore from "../store/store";
 import { ENTITY } from "game-constants";
+import useGameContext from "game-constants/hooks/use-game-context";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -115,7 +116,9 @@ const ElevatorColliders = ({
   );
 };
 
-export function GroundModel({ onMissionPicked }) {
+export function GroundModel() {
+  const { changeGameState } = useGameContext();
+
   const group = useRef<THREE.Group>();
   const { nodes, materials, animations } = useGLTF(
     groundModelFile
@@ -147,7 +150,7 @@ export function GroundModel({ onMissionPicked }) {
         }}
         onIntersectionEnter={(payload) => {
           if (payload.other.rigidBodyObject.name === ENTITY.PLAYER)
-            onMissionPicked();
+            changeGameState("CAR GAME");
         }}
       />
       <group ref={group} dispose={null}>

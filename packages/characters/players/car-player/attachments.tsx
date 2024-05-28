@@ -25,16 +25,3 @@ export const Attachments = forwardRef<
     </>
   );
 });
-
-/* 
-<PositionalAudio
-    ref={attachmentReferences.current?.audio.drivingOnSurface}
-    url={
-      attachmentReferences.current?.isOverSnow
-        ? drivingOnSnow
-        : drivingOnAsphalt
-    }
-    autoplay
-    loop
-/> 
-*/

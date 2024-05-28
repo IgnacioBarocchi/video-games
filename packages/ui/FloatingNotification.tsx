@@ -47,15 +47,24 @@ const positionStyles = {
     bottom: 0;
     right: 0;
   `,
+  center: css`
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  `,
 };
 
 const NotificationWrapper = styled.div<{
+  height?: string;
+  width?: string;
   fullHeight?: boolean;
   fullWidth?: boolean;
 }>`
   position: absolute;
-  width: ${({ fullWidth }) => (fullWidth ? "100vw" : "300px")};
-  height: ${({ fullHeight }) => (fullHeight ? "100vh" : "auto")};
+  width: ${({ fullWidth, width }) =>
+    fullWidth ? "100vw" : width ? width : "300px"};
+  height: ${({ fullHeight, height }) =>
+    fullHeight ? "100vh" : height ? height : "auto"};
   overflow: hidden;
   ${({ position }) => positionStyles[position] || positionStyles["top-right"]};
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
@@ -68,9 +77,10 @@ export const FloatingNotification = ({
   children,
   dismiss,
   position,
-
   fullHeight,
   fullWidth,
+  width,
+  height,
 }) => {
   const [isVisible, setIsVisible] = useState(!dismiss);
 
@@ -88,6 +98,8 @@ export const FloatingNotification = ({
       isVisible={isVisible}
       fullHeight={fullHeight}
       fullWidth={fullWidth}
+      width={width}
+      height={height}
     >
       {children}
     </NotificationWrapper>

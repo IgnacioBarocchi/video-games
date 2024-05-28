@@ -9,6 +9,7 @@ import { CarPlayer } from "characters";
 import React from "react";
 import { ZombieHorde } from "../zombie-horde/zombie-horde";
 import { ROAD_LENGTH } from "game-constants";
+import { Rain } from "../rain";
 
 const Scenario = ({ setWonTheGame }) => {
   return (
@@ -17,8 +18,9 @@ const Scenario = ({ setWonTheGame }) => {
       <ZombieHorde />
       <Trees />
       <Signs />
+      <Barriers />
       {/* <BurntCars isOldVersion={isOldVersion} />
-      <Barriers isOldVersion={isOldVersion} /> */}
+       */}
     </>
   );
 };
@@ -35,7 +37,7 @@ export const LVL1 = ({ setWonTheGame }) => {
   return (
     <>
       <Scenario setWonTheGame={setWonTheGame} />
-      <CarPlayer position={[-5, 1.2, ROAD_LENGTH - 20]} />
+      <CarPlayer position={[-5, 1.2, ROAD_LENGTH - 20]} isRaining={true} />
     </>
   );
 };

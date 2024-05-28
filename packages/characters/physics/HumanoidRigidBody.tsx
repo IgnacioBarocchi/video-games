@@ -20,7 +20,7 @@ export interface HumanoidRigidBodyProps {
   position: Vector3 | [number, number, number];
   entity: typeof ENTITY.PLAYER | typeof ENTITY.ZOMBIE;
   userData?: any;
-  playerRigidBodyReference: Ref<RapierRigidBody>;
+  ref: Ref<RapierRigidBody>;
   onBodyCollision?: CollisionEnterHandler;
   onSensorEnter?: CollisionEnterHandler;
   onSensorExit?: CollisionEnterHandler;
@@ -29,7 +29,7 @@ export interface HumanoidRigidBodyProps {
 
 export const HumanoidRigidBody = forwardRef<
   RapierRigidBody,
-  Omit<HumanoidRigidBodyProps, "playerRigidBodyReference">
+  Omit<HumanoidRigidBodyProps, "ref">
 >(
   (
     {
@@ -52,6 +52,9 @@ export const HumanoidRigidBody = forwardRef<
         ref={ref}
         position={position}
         userData={userData}
+        density={isDead ? 0 : 40}
+        mass={isDead ? 0 : 60}
+        friction={isDead ? 0 : 2}
       >
         <CapsuleCollider
           name="Body"

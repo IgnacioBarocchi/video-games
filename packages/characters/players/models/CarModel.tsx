@@ -18,14 +18,6 @@ export type GLTFResult = GLTF & {
     CAR_BODY_MESH_7: THREE.Mesh;
     CAR_BODY_MESH_8: THREE.Mesh;
     CAR_BODY_MESH_9: THREE.Mesh;
-    BACK_WHEELS_MESH: THREE.Mesh;
-    BACK_WHEELS_MESH_1: THREE.Mesh;
-    BACK_WHEELS_MESH_2: THREE.Mesh;
-    BACK_WHEELS_MESH_3: THREE.Mesh;
-    FRONT_WHEELS_MESH: THREE.Mesh;
-    FRONT_WHEELS_MESH_1: THREE.Mesh;
-    FRONT_WHEELS_MESH_2: THREE.Mesh;
-    FRONT_WHEELS_MESH_3: THREE.Mesh;
     MIRRORS_MESH: THREE.Mesh;
     MIRRORS_MESH_1: THREE.Mesh;
     MIRRORS_MESH_2: THREE.Mesh;
@@ -33,6 +25,16 @@ export type GLTFResult = GLTF & {
     MIRRORS_MESH_4: THREE.Mesh;
     MIRRORS_MESH_5: THREE.Mesh;
     MIRRORS_MESH_6: THREE.Mesh;
+    FRONT_WHEELS_MESH: THREE.Mesh;
+    FRONT_WHEELS_MESH_1: THREE.Mesh;
+    FRONT_WHEELS_MESH_2: THREE.Mesh;
+    FRONT_WHEELS_MESH_3: THREE.Mesh;
+    FRONT_WHEELS_MESH_4: THREE.Mesh;
+    BACK_WHEELS_MESH: THREE.Mesh;
+    BACK_WHEELS_MESH_1: THREE.Mesh;
+    BACK_WHEELS_MESH_2: THREE.Mesh;
+    BACK_WHEELS_MESH_3: THREE.Mesh;
+    BACK_WHEELS_MESH_4: THREE.Mesh;
   };
   materials: {
     Car_High: THREE.MeshBasicMaterial;
@@ -49,6 +51,7 @@ export type GLTFResult = GLTF & {
     Car_Wheel_Chrome_Shade: THREE.MeshBasicMaterial;
     Car_Wheel_Chrome_Shade_2: THREE.MeshBasicMaterial;
     Car_Wheel_Red: THREE.MeshBasicMaterial;
+    Car_Wheel_Rubber: THREE.MeshBasicMaterial;
   };
 };
 
@@ -98,6 +101,10 @@ const Wheels = forwardRef(
             geometry={nodes.FRONT_WHEELS_MESH_3.geometry}
             material={materials.Car_Wheel_Red}
           />
+          <mesh
+            geometry={nodes.FRONT_WHEELS_MESH_4.geometry}
+            material={materials.Car_Wheel_Rubber}
+          />
         </group>
         <group
           position={[0, 0.36, -1.53]}
@@ -120,8 +127,134 @@ const Wheels = forwardRef(
             geometry={nodes.BACK_WHEELS_MESH_3.geometry}
             material={materials.Car_Wheel_Red}
           />
+          <mesh
+            geometry={nodes.BACK_WHEELS_MESH_4.geometry}
+            material={materials.Car_Wheel_Rubber}
+          />
         </group>
       </>
+    );
+  }
+);
+
+const CarBody = forwardRef(
+  ({ nodes, materials }, ref: PlayerObjectReferences) => {
+    const carBodyRef = useRef();
+    const timeRef = useRef(0);
+
+    useFrame((_, delta) => {
+      if (!ref?.current?.rigidbody?.current) {
+        return;
+      }
+
+      // Update time
+      timeRef.current += delta;
+
+      // Oscillation effect using sine or cosine function
+      const oscillationSpeed = 5; // Speed of the oscillation
+      const oscillationMagnitude = 0.025; // Magnitude of the oscillation
+
+      const upDownOffset =
+        Math.sin(timeRef.current * oscillationSpeed) * oscillationMagnitude;
+      const frontBackOffset =
+        Math.cos(timeRef.current * oscillationSpeed) * oscillationMagnitude;
+
+      const sidesAxisSpeed = THREE.MathUtils.degToRad(
+        THREE.MathUtils.clamp(
+          ref?.current?.rigidbody?.current.linvel().x,
+          -3,
+          3
+        )
+      );
+
+      if (carBodyRef.current) {
+        carBodyRef.current.rotation.z = sidesAxisSpeed;
+        carBodyRef.current.position.y = 0.55 + upDownOffset;
+        carBodyRef.current.position.z = 2.05 + frontBackOffset;
+      }
+    });
+
+    return (
+      <group
+        position={[0, 0.55, 2.05]}
+        scale={[0.24, 0.32, 0.24]}
+        ref={carBodyRef}
+      >
+        <mesh
+          geometry={nodes.CAR_BODY_MESH.geometry}
+          material={materials.Car_High}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_1.geometry}
+          material={materials.Car_Base}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_2.geometry}
+          material={materials.Car_Plastic}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_3.geometry}
+          material={materials.Car_Shade}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_4.geometry}
+          material={materials.Car_Shade_2}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_5.geometry}
+          material={materials.Frontlight_1}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_6.geometry}
+          material={materials.Car_window}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_7.geometry}
+          material={materials.Car_Interior}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_8.geometry}
+          material={materials.Car_Window_Shade}
+        />
+        <mesh
+          geometry={nodes.CAR_BODY_MESH_9.geometry}
+          material={materials.Backlight}
+        />
+        <group
+          position={[0, -1.74, -8.63]}
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={[0.26, 0.26, 0.24]}
+        >
+          <mesh
+            geometry={nodes.MIRRORS_MESH.geometry}
+            material={materials.Car_window}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_1.geometry}
+            material={materials.Car_Base}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_2.geometry}
+            material={materials.Frontlight_1}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_3.geometry}
+            material={materials.Car_Plastic}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_4.geometry}
+            material={materials.Car_High}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_5.geometry}
+            material={materials.Car_Shade}
+          />
+          <mesh
+            geometry={nodes.MIRRORS_MESH_6.geometry}
+            material={materials.Car_Base}
+          />
+        </group>
+      </group>
     );
   }
 );
@@ -132,82 +265,7 @@ export const CarModel = memo(
 
     return (
       <group ref={ref.current.modelRef} dispose={null}>
-        <group position={[0, 0.55, 2.05]} scale={[0.24, 0.32, 0.24]}>
-          <mesh
-            geometry={nodes.CAR_BODY_MESH.geometry}
-            material={materials.Car_High}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_1.geometry}
-            material={materials.Car_Base}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_2.geometry}
-            material={materials.Car_Plastic}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_3.geometry}
-            material={materials.Car_Shade}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_4.geometry}
-            material={materials.Car_Shade_2}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_5.geometry}
-            material={materials.Frontlight_1}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_6.geometry}
-            material={materials.Car_window}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_7.geometry}
-            material={materials.Car_Interior}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_8.geometry}
-            material={materials.Car_Window_Shade}
-          />
-          <mesh
-            geometry={nodes.CAR_BODY_MESH_9.geometry}
-            material={materials.Backlight}
-          />
-          <group
-            position={[0, -1.74, -8.63]}
-            rotation={[Math.PI / 2, 0, 0]}
-            scale={[0.26, 0.26, 0.24]}
-          >
-            <mesh
-              geometry={nodes.MIRRORS_MESH.geometry}
-              material={materials.Car_window}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_1.geometry}
-              material={materials.Car_Base}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_2.geometry}
-              material={materials.Frontlight_1}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_3.geometry}
-              material={materials.Car_Plastic}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_4.geometry}
-              material={materials.Car_High}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_5.geometry}
-              material={materials.Car_Shade}
-            />
-            <mesh
-              geometry={nodes.MIRRORS_MESH_6.geometry}
-              material={materials.Car_Base}
-            />
-          </group>
-        </group>
+        <CarBody nodes={nodes} materials={materials} ref={ref} />
         <Wheels nodes={nodes} materials={materials} ref={ref} />
       </group>
     );

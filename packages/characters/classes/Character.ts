@@ -54,15 +54,18 @@ export class Character {
     this.defaultRotationSimulatorDamping = props.isCar ? 0.6 : 0.5;
     this.runSpeed = props.isCar ? 60 : 10;
     this.walkSpeed = props.isCar ? 40 : 7;
-
     this.playerObjectReferences = props.playerObjectReferences;
-    // this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(
-    //   1500,
-    //   new Vector3(0, 0, 6),
-    //   new Vector3(0, 0, 0),
-    //   new Quaternion(0, 0, 0, 0),
-    //   true
-    // );
+
+    if (props.isCar) {
+      const frontWheelsOrigin = 16;
+      this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(
+        1500,
+        new Vector3(0, 0, frontWheelsOrigin),
+        new Vector3(0, 0, 0),
+        new Quaternion(0, 0, 0, 0),
+        true
+      );
+    }
 
     this.camera = props.camera;
 
@@ -120,7 +123,7 @@ export class Character {
   }
 
   private updatePositionFromRigidbody() {
-    if (!this.playerObjectReferences.current?.rigidbody?.current) return;
+    if (!this.playerObjectReferences?.current?.rigidbody?.current) return;
     const { x, y, z } =
       this.playerObjectReferences.current.rigidbody.current.translation();
     this.position.set(x, y, z);
@@ -141,7 +144,7 @@ export class Character {
   shouldJump = false;
   jumping = 0;
   updateAirBro() {
-    if (!this.playerObjectReferences.current?.rigidbody?.current) return;
+    if (!this.playerObjectReferences?.current?.rigidbody?.current) return;
 
     const currentY =
       this.playerObjectReferences.current.rigidbody.current.linvel().y;
@@ -257,7 +260,7 @@ export class Character {
   readonly arcadeVelocity = new Vector3();
   readonly combinedVelocity = new Vector3();
   physicsPostStep(worldApi: WorldApi) {
-    if (!this.playerObjectReferences.current?.rigidbody?.current) return;
+    if (!this.playerObjectReferences?.current?.rigidbody?.current) return;
 
     const pos =
       this.playerObjectReferences.current.rigidbody.current.translation();

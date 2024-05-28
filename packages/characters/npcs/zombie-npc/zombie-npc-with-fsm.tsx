@@ -18,8 +18,12 @@ import { useMachine } from "@xstate/react";
 import { GLTFActions, GLTFResult } from "../models/zombie-3D-model";
 
 import { ENTITY } from "game-constants";
-import { Vector3 } from "three";
-import { IntersectionEnterPayload, RapierRigidBody } from "@react-three/rapier";
+import { MathUtils, Vector3 } from "three";
+import {
+  CollisionPayload,
+  IntersectionEnterPayload,
+  RapierRigidBody,
+} from "@react-three/rapier";
 import zombie3DMFile from "../../assets/models/Zombie_Male.glb";
 
 import { getVector3From } from "../../lib/getVector3From";
@@ -162,7 +166,7 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
   });
 
   const playerImpactHandler = useCallback(
-    (payload) => {
+    (payload: CollisionPayload) => {
       if (
         playerContext === "HUMAN" &&
         payload.other.rigidBodyObject.name === ENTITY.PLAYER
@@ -176,12 +180,17 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
           send({ type: USING_SKILL_3_EVENT });
         }
       }
-
+      const otherObjectSpeed = Math.abs(payload.other.rigidBody?.linvel().z);
       if (
         playerContext === "CAR" &&
         payload.other.rigidBodyObject.name === ENTITY.CAR &&
-        Math.abs(payload.rigidBody?.linvel().z!) > 2
+        otherObjectSpeed > 2
       ) {
+        console.log(otherObjectSpeed);
+        payload.target.rigidBody.setLinvel(
+          new Vector3(0, MathUtils.clamp(otherObjectSpeed, 0, 15), 0),
+          true
+        );
         if (collisionCallback) {
           collisionCallback();
         }

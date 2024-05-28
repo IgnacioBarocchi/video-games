@@ -34,7 +34,15 @@ export type CarGameState = {
 
 const useCarGameStore = create<CarGameState>((set) => ({
   loading: true,
-  setLoading: (value: boolean) => set({ loading: value }),
+  setLoading: (value: boolean) => {
+    set({ loading: value });
+    if (value) {
+      const ambience = new Audio(wind);
+      ambience.volume = 0.3;
+      ambience.loop = true;
+      ambience.play();
+    }
+  },
   gameStarted: true,
   setGameStarted: () => {
     const ambience = new Audio(wind);

@@ -13,6 +13,9 @@ importers:
       car-game-frontend:
         specifier: workspace:*
         version: link:../../packages/car-game-frontend
+      game-constants:
+        specifier: workspace:*
+        version: link:../../packages/game-constants
       hub-screen-frontend:
         specifier: workspace:*
         version: link:../../packages/hub-screen-frontend
@@ -283,7 +286,26 @@ importers:
         version: 5.2.2
 
   packages/game-constants:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
     devDependencies:
+      '@types/react':
+        specifier: ^18.2.66
+        version: 18.2.66
+      '@types/react-dom':
+        specifier: ^18.2.22
+        version: 18.2.22
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.2.0
+        version: 7.2.0(@typescript-eslint/parser@7.2.0)(eslint@8.57.0)(typescript@5.2.2)
+      '@typescript-eslint/parser':
+        specifier: ^7.2.0
+        version: 7.2.0(eslint@8.57.0)(typescript@5.2.2)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2

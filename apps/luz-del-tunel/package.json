@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "game-constants": "workspace:*",
     "car-game-frontend": "workspace:*",
     "hub-screen-frontend": "workspace:*",
     "shooting-level-frontend": "workspace:*",

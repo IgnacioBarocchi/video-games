@@ -1,4 +1,4 @@
-import { MutableRefObject, memo, useMemo, useRef } from "react";
+import { MutableRefObject, ReactNode, memo, useMemo, useRef } from "react";
 import { PositionalAudioProps, useFrame, useThree } from "@react-three/fiber";
 import { RapierRigidBody, useAfterPhysicsStep } from "@react-three/rapier";
 import {
@@ -16,12 +16,14 @@ import { CarModel } from "../models/CarModel";
 import { CarThirdPersonCamera } from "../../classes/CarThirdPersonCamera";
 import { CarRigidBody } from "../../physics/CarRigidBody";
 import { Attachments } from "./attachments";
+import { Rain } from "./enviroment";
 
 export type Props = {
   position?: Vector3Tuple;
   cameraPhi?: number;
   cameraTheta?: number;
   orientation?: Vector3Tuple;
+  isRaining?: boolean;
 };
 
 export type PlayerObjectReferences = MutableRefObject<{
@@ -35,6 +37,7 @@ export const CarPlayer = memo(
     cameraPhi = 20,
     cameraTheta = 15,
     orientation = [0, 0, 1],
+    isRaining,
   }: Props) => {
     const playerObjectReferences = useRef({
       rigidbody: useRef<RapierRigidBody>(null),
@@ -104,11 +107,10 @@ export const CarPlayer = memo(
       const carSpeed =
         playerObjectReferences.current.rigidbody.current.linvel().z;
 
-      console.log(carSpeed);
       const volume = MathUtils.clamp(
         Number(Math.abs(carSpeed).toFixed(2)),
         0,
-        10
+        20
       );
 
       audioRef.current!.setVolume(volume);
@@ -124,6 +126,7 @@ export const CarPlayer = memo(
           <CarModel ref={playerObjectReferences} />
           <Attachments ref={audioRef} />
         </CarRigidBody>
+        {isRaining && <Rain ref={playerObjectReferences.current.rigidbody} />}
       </>
     );
   }
