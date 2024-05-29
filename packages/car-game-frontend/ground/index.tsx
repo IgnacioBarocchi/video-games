@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import { Shop } from "./entities/shop";
-import { GroundModel } from "./GroundModel";
+import { Shop } from "../entities/shop";
+import { GroundModel } from "../GroundModel";
 import { ROAD_LENGTH } from "game-constants";
 import { MathUtils } from "three";
-import { Bank } from "./entities/shop/Bank";
+import { Bank } from "../entities/shop/Bank";
+import { Checkpoint } from "./parts/checkpoint";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 1;
@@ -67,11 +68,12 @@ export const HighWay = () => {
   );
 };
 
-export function Ground({ setWonTheGame }) {
+export function Ground() {
   return (
     <group>
       <HighWay />
       <Bank />
+      <Checkpoint />
       {/* <Shop setWonTheGame={setWonTheGame} /> */}
     </group>
   );

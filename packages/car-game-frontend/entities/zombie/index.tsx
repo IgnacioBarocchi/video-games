@@ -81,7 +81,7 @@ export const Zombie = memo(({ position = [0, h + 1, -300] }: Props) => {
       return;
     }
 
-    if (Math.abs(payload.rigidBody?.linvel().z!) > 2) {
+    if (Math.abs(payload.rigidBody?.linvel().z!) > 10) {
       send({ type: HIT_EVENT });
       setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
       subMoney(ZOMBIE_IMPACT_COST);

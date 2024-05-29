@@ -18,10 +18,10 @@ export interface CarRigidBodyProps {
 const Wheels = () => {
   return (
     <>
-      <BallCollider args={[0.25]} position={[0.85, 0.25, 1.5]} />
-      <BallCollider args={[0.25]} position={[0.85, 0.25, -1.5]} />
-      <BallCollider args={[0.25]} position={[-0.85, 0.25, 1.5]} />
-      <BallCollider args={[0.25]} position={[-0.85, 0.25, -1.5]} />
+      <BallCollider args={[0.25]} position={[0.75, 0.25, 1.5]} />
+      <BallCollider args={[0.25]} position={[0.75, 0.25, -1.5]} />
+      <BallCollider args={[0.25]} position={[-0.75, 0.25, 1.5]} />
+      <BallCollider args={[0.25]} position={[-0.75, 0.25, -1.5]} />
     </>
   );
 };

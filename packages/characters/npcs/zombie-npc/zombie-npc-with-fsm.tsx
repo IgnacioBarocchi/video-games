@@ -139,7 +139,7 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
       return;
     }
 
-    if (meleeRange && playerContext === "HUMAN") {
+    if (meleeRange /*&& playerContext === "HUMAN"*/) {
       send({ type: USING_SKILL_1_EVENT });
       return;
     }
@@ -184,7 +184,7 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
       if (
         playerContext === "CAR" &&
         payload.other.rigidBodyObject.name === ENTITY.CAR &&
-        otherObjectSpeed > 2
+        otherObjectSpeed > 10
       ) {
         console.log(otherObjectSpeed);
         payload.target.rigidBody.setLinvel(
@@ -204,23 +204,22 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
     // const attackChance = Math.random() < 0.75;
 
     // if (attackChance) {
-    send({ type: USING_SKILL_1_EVENT });
+    if (!meleeRange /* && playerContext === "HUMAN"*/) {
+      setMeleeRange(true);
+      send({ type: USING_SKILL_1_EVENT });
+      console.log("set to true");
+    }
     // TODO: ZOMBIE NEEDS ARM ATTACHMENT TO HIT THE PLAYER
     // playerActor?.send({ type: REACTING_TO_SKILL_1_EVENT });
     // } else {
     //   send({ type: USING_SKILL_3_EVENT });
     // }
-
-    if (!meleeRange && playerContext === "HUMAN") {
-      setMeleeRange(true);
-    }
   }, [meleeRange, send]);
 
   const chasePlayer = useCallback(() => {
-    send({ type: MOVE_EVENT });
-
-    if (meleeRange && playerContext === "HUMAN") {
+    if (meleeRange /* && playerContext === "HUMAN"*/) {
       setMeleeRange(false);
+      send({ type: MOVE_EVENT });
     }
   }, [meleeRange, send]);
 

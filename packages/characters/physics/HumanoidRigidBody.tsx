@@ -65,7 +65,7 @@ export const HumanoidRigidBody = forwardRef<
         <CylinderCollider
           sensor
           name="Proximity sensor"
-          args={[0.2, 2]}
+          args={[0.2, 0.7]}
           position={[0, 0.5, 0]}
           onIntersectionEnter={onSensorEnter}
           onIntersectionExit={onSensorExit}

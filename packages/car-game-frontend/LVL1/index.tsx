@@ -4,12 +4,12 @@ import { Barriers } from "../entities/barrier/Barriers";
 import { BurntCars } from "../entities/burnt/BurntCars";
 import { Ground } from "../ground";
 import useCarGameStore from "../store/store";
-import { memo, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { CarPlayer } from "characters";
 import React from "react";
-import { ZombieHorde } from "../zombie-horde/zombie-horde";
 import { ROAD_LENGTH } from "game-constants";
-import { Rain } from "../rain";
+import { ZombieHorde } from "../zombie-horde/zombie-horde";
+import { OrbitControls } from "three-stdlib";
 
 const Scenario = ({ setWonTheGame }) => {
   return (
@@ -37,7 +37,8 @@ export const LVL1 = ({ setWonTheGame }) => {
   return (
     <>
       <Scenario setWonTheGame={setWonTheGame} />
-      <CarPlayer position={[-5, 1.2, ROAD_LENGTH - 20]} isRaining={true} />
+      {/* position={[-5, 1.2, ROAD_LENGTH - 20]} */}
+      {/* <CarPlayer position={[-5, 1.2, 0]} isRaining={true} /> */}
     </>
   );
 };

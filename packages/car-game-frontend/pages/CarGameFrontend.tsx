@@ -1,39 +1,52 @@
 import React, { memo } from "react";
 import { World3D } from "../world-3d";
 import { CAMERA_FAR } from "game-constants";
-import { UILayer } from "../UILayer";
 import { Physics } from "@react-three/rapier";
 import { LVL1 } from "../LVL1";
 import { Perf } from "r3f-perf";
-import { Preload } from "@react-three/drei";
-import { FloatingNotification, LoadingScreen } from "ui";
+import { OrbitControls, Preload } from "@react-three/drei";
 import {
-  Clock,
+  BackToMenuPanel,
+  ClockPanel,
   EndGamePanel,
+  Filter2DOverlay,
   LoadingPanel,
-  MoneyLoss,
-} from "../gui-panels/panel";
-import useCarGameStore from "../store/store";
+  MoneyLossPanel,
+} from "../gui-panels";
 
-const M = memo(({ setWonTheGame }) => (
+const Experience3D = memo(() => (
   <World3D>
-    {/* <Perf position="top-right" /> */}
+    <OrbitControls makeDefault={true} enableDamping={true} />
+    <Perf position="top-right" />
     <Preload all={true} />
-    <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
+    <Physics debug={true} gravity={[0, -30, 0]} colliders={false}>
       <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
-      <LVL1 setWonTheGame={setWonTheGame} />
+      <LVL1 setWonTheGame={() => {}} />
     </Physics>
   </World3D>
 ));
 
-export const CarGameFrontend = ({ setWonTheGame }) => {
+const Experience2D = () => (
+  <div
+    style={{
+      pointerEvents: "none",
+    }}
+  >
+    <MoneyLossPanel />
+    <ClockPanel />
+    <LoadingPanel />
+    <EndGamePanel />
+    <BackToMenuPanel />
+  </div>
+);
+
+export const CarGameFrontend = () => {
   return (
     <>
-      <M setWonTheGame={setWonTheGame} />
-      <MoneyLoss />
-      <Clock />
-      <LoadingPanel />
-      <EndGamePanel />
+      <Filter2DOverlay>
+        <Experience3D />
+      </Filter2DOverlay>
+      <Experience2D />
     </>
   );
 };

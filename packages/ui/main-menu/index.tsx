@@ -47,7 +47,11 @@ export const MainMenu = ({
           justification="space-evenly"
           clickable={true}
         >
-          <Button detailed={true} onClick={onQuitClick}>
+          <Button
+            detailed={true}
+            onClick={onQuitClick}
+            onClick={() => window.close()}
+          >
             Salir
           </Button>
           <Button detailed={true} onClick={handleStart}>

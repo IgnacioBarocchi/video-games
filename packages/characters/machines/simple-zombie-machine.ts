@@ -148,6 +148,9 @@ export const simpleZombieMachine = createMachine(
           },
         ],
         on: {
+          [USING_SKILL_1_EVENT]: {
+            target: USING_SKILL_1_STATE,
+          },
           [MOVE_EVENT]: {
             target: MOVE_STATE,
           },

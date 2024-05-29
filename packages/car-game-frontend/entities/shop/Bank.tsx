@@ -1,8 +1,15 @@
-import React, { FC } from "react";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import React, { FC, useCallback } from "react";
+import {
+  CollisionPayload,
+  CuboidCollider,
+  RigidBody,
+} from "@react-three/rapier";
 import { Bank3DModel } from "./Bank3DModel";
-import { ROAD_LENGTH } from "game-constants";
-import { MathUtils } from "three";
+import { ENTITY, ROAD_LENGTH } from "game-constants";
+import { MathUtils, Vector3 } from "three";
+import { payloadIsThePlayer } from "../../lib/rigibBodyHelper";
+import useCarGameStore from "../../store/store";
+import moneyCounterSFX from "../../assets/audio/money-counter.mp3";
 
 const BANK_WIDTH = 25;
 const BANK_LENGTH = 13;
@@ -88,12 +95,49 @@ const Building = () => {
   );
 };
 
+function createOnceFunction(callback: Function) {
+  let hasBeenCalled = false;
+
+  return function (args) {
+    if (!hasBeenCalled) {
+      callback(args);
+      hasBeenCalled = true;
+    }
+  };
+}
+
 export const Bank = () => {
+  const setGameOver = useCarGameStore(
+    useCallback((state) => state.setGameOver, [])
+  );
+
+  const collisionCallback = createOnceFunction((payload: CollisionPayload) => {
+    try {
+      payload.other.rigidBody?.setLinvel(new Vector3(0, 0, 0), true);
+      setGameOver({ reason: "WON" });
+      new Audio(moneyCounterSFX).play();
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   return (
     <RigidBody type="fixed" position={[0, 0, -ROAD_LENGTH]} colliders={false}>
       <CuboidCollider
+        name="Floor"
         args={[BANK_WIDTH, 0, BANK_LENGTH]}
         position={[0, 0, -BANK_LENGTH]}
+      />
+      <CuboidCollider
+        name="Goal"
+        args={[3, 1, 6]}
+        position={[13, 0, -20]}
+        sensor
+        onIntersectionEnter={(payload) => {
+          if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
+            collisionCallback(payload);
+          }
+        }}
       />
       <RoadChunk side="right" />
       <RoadChunk side="left" />

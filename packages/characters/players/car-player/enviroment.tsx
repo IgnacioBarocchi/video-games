@@ -1,22 +1,26 @@
 import React, { forwardRef, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Cylinder, Plane, Sphere } from "@react-three/drei";
+import { Circle, Cylinder, Plane, Sphere } from "@react-three/drei";
+import { MathUtils } from "three";
+const rainHeight = 4.5;
 
 function RainDrop({ position }) {
   const ref = useRef();
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     ref.current.rotation.y = 0;
-    ref.current.position.y -= 0.2; // Adjust the speed of falling drops here
-    if (ref.current.position.y < -5) {
-      ref.current.position.y = 20; // Reset drop position when it falls out of view
+    ref.current.position.y -= delta * 5;
+    if (ref.current.position.y <= 0) {
+      ref.current.position.y = rainHeight;
     }
   });
 
   return (
-    <Plane ref={ref} args={[0.01, 0.1]} position={position}>
-      <meshBasicMaterial color="white" transparent opacity={0.5} />
-    </Plane>
+    <>
+      <Plane ref={ref} args={[0.01, 0.1]} position={position}>
+        <meshBasicMaterial color="white" transparent opacity={0.5} />
+      </Plane>
+    </>
   );
 }
 
@@ -35,13 +39,13 @@ export const Rain = forwardRef(({}, carRigidBodyReference) => {
   });
 
   return (
-    <group ref={ref}>
+    <group ref={ref} rotation={[0, 0, MathUtils.degToRad(30)]}>
       {Array.from({ length: numDrops }).map((_, index) => (
         <RainDrop
           key={index}
           position={[
             Math.random() * 30 - 5,
-            Math.random() * 20,
+            Math.random() * rainHeight * 2,
             Math.random() * 30 - 5,
           ]}
         />

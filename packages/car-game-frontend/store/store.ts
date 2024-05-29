@@ -7,7 +7,7 @@ import {
 } from "game-constants";
 
 export type CarNotification = {
-  type: "HIT ZOMBIE" | "HIT BARRIER";
+  type: "HIT ZOMBIE" | "HIT BARRIER" | "SPEED FEE";
   cost: number;
 };
 

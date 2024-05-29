@@ -8,7 +8,7 @@ const Money = styled.span<{ expended?: boolean }>`
   color: ${({ expended }) => (expended ? "red" : "#3e9c35")};
 `;
 
-export const Winning = ({ ARS, USD }) => {
+export const Winning = ({ ARS, USD, onEnd }) => {
   const [displayDollars, setDisplayDollars] = useState(false);
 
   return (
@@ -38,6 +38,7 @@ export const Winning = ({ ARS, USD }) => {
               duration={1}
               delay={0}
               decimals={2}
+              onEnd={onEnd}
             ></CountUp>
           </Money>
         ) : (

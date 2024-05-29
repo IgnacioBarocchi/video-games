@@ -57,7 +57,7 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
         <OrbitControls makeDefault={true} enableDamping={true} />
         <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics debug={true}>
+          <Physics debug={false}>
             <GroundModel onMissionPicked={onMissionPicked} />
             <HumanPlayer position={[-7, 0, -4]} />
             <ZombieNPCV2 position={[0, 0, 0]} playerContext="HUMAN" />
