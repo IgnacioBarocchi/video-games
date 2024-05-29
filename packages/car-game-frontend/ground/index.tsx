@@ -1,11 +1,18 @@
-import React, { FC } from "react";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
+import React, { FC, useCallback } from "react";
+import {
+  CollisionPayload,
+  CuboidCollider,
+  RigidBody,
+} from "@react-three/rapier";
 import { Shop } from "../entities/shop";
 import { GroundModel } from "../GroundModel";
-import { ROAD_LENGTH } from "game-constants";
-import { MathUtils } from "three";
+import { ENTITY, ROAD_LENGTH } from "game-constants";
+import { MathUtils, Vector3 } from "three";
 import { Bank } from "../entities/shop/Bank";
 import { Checkpoint } from "./parts/checkpoint";
+import useCarGameStore from "../store/store";
+import { Barrier } from "../entities/barrier";
+import { BarrierModel } from "../entities/barrier/model";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 1;
@@ -17,6 +24,17 @@ const SLOPE_POSITION_X = 10.7;
 const GRASS_POSITION_X = 18.5;
 const POSITION_Y = 1;
 const SLOPE_POSITION_Y = 0.5;
+
+function createOnceFunction(callback: Function) {
+  let hasBeenCalled = false;
+
+  return function () {
+    if (!hasBeenCalled) {
+      callback();
+      hasBeenCalled = true;
+    }
+  };
+}
 
 const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
   return (
@@ -53,6 +71,43 @@ const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
   );
 };
 
+const Barriers = () => {
+  return (
+    <>
+      <RigidBody
+        type="fixed"
+        position={[0, 0, ROAD_LENGTH - 20]}
+        colliders="cuboid"
+      >
+        <BarrierModel scale={new Vector3(10, 1, 1)} />
+      </RigidBody>
+    </>
+  );
+};
+
+const Alert = () => {
+  const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
+
+  const collisionCallback = createOnceFunction(() => {
+    setTitle("Entrando en zona de zombies");
+  });
+
+  return (
+    <CuboidCollider
+      sensor
+      // todo move to zombie horde
+      name="zombie alert"
+      args={[10, 0, 10]}
+      position={[0, 0, 1100]}
+      onIntersectionEnter={(payload) => {
+        if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
+          collisionCallback();
+        }
+      }}
+    />
+  );
+};
+
 export const HighWay = () => {
   return (
     <RigidBody type="fixed" name="Ground" colliders={false}>
@@ -61,6 +116,7 @@ export const HighWay = () => {
         args={[10, 0, ROAD_LENGTH]}
         position={[0, 0, 0]}
       />
+      <Alert />
       <Colliders side="left" />
       <Colliders side="right" />
       <GroundModel />
@@ -74,7 +130,7 @@ export function Ground() {
       <HighWay />
       <Bank />
       <Checkpoint />
-      {/* <Shop setWonTheGame={setWonTheGame} /> */}
+      <Barriers />
     </group>
   );
 }

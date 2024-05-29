@@ -68,8 +68,8 @@ const NotificationWrapper = styled.div<{
   overflow: hidden;
   ${({ position }) => positionStyles[position] || positionStyles["top-right"]};
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  animation: ${({ isVisible }) => (isVisible ? fadeIn : fadeOut)} 0.5s;
-  transition: opacity 0.5s;
+  animation: ${({ isVisible }) => (isVisible ? fadeIn : fadeOut)} 3s;
+  transition: opacity 3s;
   padding: 1em;
 `;
 

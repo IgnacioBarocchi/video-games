@@ -244,6 +244,29 @@ const Model = ({ playOpenGate }) => {
 };
 
 const SPEED_LIMIT = 30;
+const ALERT_DISTANCE = 500;
+
+const Alert = () => {
+  const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
+
+  const intersectionHandler = createOnceFunction(() => {
+    setTitle("Control de velocidad a " + ALERT_DISTANCE);
+  });
+
+  return (
+    <CuboidCollider
+      sensor
+      name="control title"
+      position={[0, 1.5, ALERT_DISTANCE]}
+      args={[10, 1.5, 1]}
+      onIntersectionEnter={(payload) => {
+        if (payload?.other?.rigidBodyObject?.name === ENTITY.CAR) {
+          intersectionHandler();
+        }
+      }}
+    />
+  );
+};
 export function Checkpoint() {
   const subMoney = useCarGameStore(useCallback((state) => state.subMoney, []));
   const setCarNotification = useCarGameStore(
@@ -251,8 +274,10 @@ export function Checkpoint() {
   );
   const [playOpenGate, setPlayOpenGate] = useState(false);
   const collisionCallback = createOnceFunction((payload: CollisionPayload) => {
+    console.log("paylaod", payload);
     setPlayOpenGate(true);
-    if (Math.abs(payload.other.rigidBody?.linvel().z) > SPEED_LIMIT) {
+    if (Math.abs(payload?.other?.rigidBody?.linvel().z!) > SPEED_LIMIT) {
+      console.log("SPEED FEE");
       setCarNotification({ type: "SPEED FEE", cost: SPEED_FEE_COST });
       subMoney(SPEED_FEE_COST);
     }
@@ -268,13 +293,14 @@ export function Checkpoint() {
         position={[0, 1.5, 0]}
         args={[10, 1.5, 0.5]}
         sensor
-        onCollisionEnter={(payload) => {
-          if (payload.other.rigidBodyObject.name === ENTITY.CAR) {
+        onIntersectionEnter={(payload) => {
+          if (payload?.other?.rigidBodyObject?.name === ENTITY.CAR) {
+            console.log("TRIGGERED");
             collisionCallback(payload);
           }
         }}
       />
-
+      <Alert />
       <CuboidCollider
         name="r col"
         position={[8.5, 1.5, 0]}

@@ -106,6 +106,28 @@ function createOnceFunction(callback: Function) {
   };
 }
 
+const Alert = () => {
+  const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
+
+  const collisionCallback = createOnceFunction(() => {
+    setTitle("Sucursal bancaria");
+  });
+
+  return (
+    <CuboidCollider
+      sensor
+      name="bank alert"
+      args={[10, 0, 10]}
+      position={[0, 0, 50]}
+      onIntersectionEnter={(payload) => {
+        if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
+          collisionCallback();
+        }
+      }}
+    />
+  );
+};
+
 export const Bank = () => {
   const setGameOver = useCarGameStore(
     useCallback((state) => state.setGameOver, [])
@@ -144,6 +166,7 @@ export const Bank = () => {
       <Border side="right" />
       <Border side="left" />
       <Building />
+      <Alert />
       <Bank3DModel />
     </RigidBody>
   );

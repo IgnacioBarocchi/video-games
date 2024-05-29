@@ -12,14 +12,15 @@ import {
   Filter2DOverlay,
   LoadingPanel,
   MoneyLossPanel,
+  TitlePanel,
 } from "../gui-panels";
 
 const Experience3D = memo(() => (
   <World3D>
-    <OrbitControls makeDefault={true} enableDamping={true} />
-    <Perf position="top-right" />
+    {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
+    {/* <Perf position="top-right" /> */}
     <Preload all={true} />
-    <Physics debug={true} gravity={[0, -30, 0]} colliders={false}>
+    <Physics gravity={[0, -30, 0]} colliders={false}>
       <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
       <LVL1 setWonTheGame={() => {}} />
     </Physics>
@@ -37,6 +38,7 @@ const Experience2D = () => (
     <LoadingPanel />
     <EndGamePanel />
     <BackToMenuPanel />
+    <TitlePanel />
   </div>
 );
 

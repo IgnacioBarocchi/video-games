@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { CountDown, FloatingNotification, LoadingScreen } from "ui";
-import { Text } from "ui/elements/Text";
+import { Text, Title } from "ui/elements/Text";
 import useCarGameStore from "../store/store";
 import { DOLLAR_RATE, LAST_SECONDS, TIME_LIMIT } from "game-constants";
 import tick from "../assets/audio/tick.mp3";
@@ -199,6 +199,27 @@ export const Filter2DOverlay = ({ children }) => {
   return <div style={containerStyle}>{children}</div>;
 };
 
+export const TitlePanel = () => {
+  const title = useCarGameStore((state) => state.title);
+
+  if (title) {
+    console.log("title!!! ", title);
+    return (
+      <FloatingNotification dismiss={false} position="top-center" width="75%">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Title>{title}</Title>
+        </div>
+      </FloatingNotification>
+    );
+  }
+
+  return null;
+};
 // if (gameOver.reason === "TIME OUT") {
 //   timeoutId = setTimeout(() => changeGameState("MAIN MENU"), 3000);
 // }

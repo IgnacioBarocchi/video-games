@@ -37,8 +37,8 @@ export const LVL1 = ({ setWonTheGame }) => {
   return (
     <>
       <Scenario setWonTheGame={setWonTheGame} />
-      {/* position={[-5, 1.2, ROAD_LENGTH - 20]} */}
-      {/* <CarPlayer position={[-5, 1.2, 0]} isRaining={true} /> */}
+      {/*  */}
+      <CarPlayer position={[-5, 1.2, ROAD_LENGTH - 50]} isRaining={true} />
     </>
   );
 };

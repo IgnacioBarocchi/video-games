@@ -114,6 +114,9 @@ export const CarPlayer = memo(
       );
 
       audioRef.current!.setVolume(volume);
+      console.log(
+        playerObjectReferences.current.rigidbody.current.translation().z
+      );
     });
 
     return (
