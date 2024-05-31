@@ -1,7 +1,8 @@
-import React, { forwardRef, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Circle, Cylinder, Plane, Sphere } from "@react-three/drei";
+import { forwardRef, useRef } from "react";
+
 import { MathUtils } from "three";
+import { Plane } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 const rainHeight = 4.5;
 
 function RainDrop({ position }) {

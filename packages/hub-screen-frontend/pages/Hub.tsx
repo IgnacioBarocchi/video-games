@@ -1,9 +1,12 @@
-import { Suspense } from "react";
 import { EffectComposer, Vignette } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
+
 import { AnimatedScene } from "../components/AnimatedScene";
+import { BlendFunction } from "postprocessing";
 import { Canvas } from "@react-three/fiber";
+import { Fisheye } from "@react-three/drei";
 import { MainMenu } from "ui";
+import React from "react";
+import { Suspense } from "react";
 
 const Effects = () => {
   return (
@@ -46,7 +49,9 @@ export const Hub = () => {
         }}
       >
         <Suspense fallback={null}>
+          {/* <Fisheye zoom={2}> */}
           <AnimatedScene />
+          {/* </Fisheye> */}
           <Effects />
         </Suspense>
       </Canvas>

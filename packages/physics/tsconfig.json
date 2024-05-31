@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-  "allowJs": true,
-  "esModuleInterop": true,
-  "allowSyntheticDefaultImports": true,
-  "module": "CommonJS",
-  "outDir": "./dist",
-  "lib": ["ES2020"],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "lib": ["ES2020"],
+    "jsx": "react-jsx"
   },
   "include": ["."],
-  "exclude": ["dist","node_modules","**/*.spec.ts"]
+  "exclude": ["dist", "node_modules", "**/*.spec.ts"]
 }

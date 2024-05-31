@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
 import { Panel, panelPadding } from "../elements/Panel";
-import { Title } from "../elements/Text";
-import { Button } from "../elements/Button";
+import { useEffect, useState } from "react";
+
 import { Box } from "../elements/Box";
+import { Button } from "../elements/Button";
+import { Title } from "../elements/Text";
+import { styled } from "styled-components";
 import useGameContext from "game-constants/hooks/use-game-context";
 
 export const MainMenu = ({
@@ -49,7 +50,7 @@ export const MainMenu = ({
         >
           <Button
             detailed={true}
-            onClick={onQuitClick}
+            // onClick={onQuitClick}
             onClick={() => window.close()}
           >
             Salir

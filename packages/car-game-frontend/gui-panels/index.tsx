@@ -203,7 +203,6 @@ export const TitlePanel = () => {
   const title = useCarGameStore((state) => state.title);
 
   if (title) {
-    console.log("title!!! ", title);
     return (
       <FloatingNotification dismiss={false} position="top-center" width="75%">
         <div

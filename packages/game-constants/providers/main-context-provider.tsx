@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 type Stages = "CAR GAME" | "SHOOTER GAME" | "MAIN MENU";
 export const MainContext = createContext({

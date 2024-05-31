@@ -1,10 +1,3 @@
-import React, { memo } from "react";
-import { World3D } from "../world-3d";
-import { CAMERA_FAR } from "game-constants";
-import { Physics } from "@react-three/rapier";
-import { LVL1 } from "../LVL1";
-import { Perf } from "r3f-perf";
-import { OrbitControls, Preload } from "@react-three/drei";
 import {
   BackToMenuPanel,
   ClockPanel,
@@ -14,15 +7,26 @@ import {
   MoneyLossPanel,
   TitlePanel,
 } from "../gui-panels";
+import { OrbitControls, Preload } from "@react-three/drei";
+import React, { memo } from "react";
+
+import { CAMERA_FAR } from "game-constants";
+import { EffectComposer } from "@react-three/postprocessing";
+import { Fisheye } from "@react-three/drei";
+import { LVL1 } from "../LVL1";
+import { Perf } from "r3f-perf";
+import { Physics } from "@react-three/rapier";
+import { World3D } from "../world-3d";
 
 const Experience3D = memo(() => (
   <World3D>
     {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
     {/* <Perf position="top-right" /> */}
     <Preload all={true} />
+
     <Physics gravity={[0, -30, 0]} colliders={false}>
       <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
-      <LVL1 setWonTheGame={() => {}} />
+      <LVL1 />
     </Physics>
   </World3D>
 ));
@@ -54,4 +58,3 @@ export const CarGameFrontend = () => {
 };
 
 /* <OrbitControls makeDefault={true} enableDamping={true} /> */
-/* <UILayer /> */

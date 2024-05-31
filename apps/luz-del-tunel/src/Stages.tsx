@@ -1,7 +1,8 @@
 import { CarGameFrontend } from "car-game-frontend";
-import useGameContext from "game-constants/hooks/use-game-context";
 import { Hub } from "hub-screen-frontend";
+import React from "react";
 import { Shooter3DScene } from "shooting-level-frontend";
+import useGameContext from "game-constants/hooks/use-game-context";
 
 export const Stages = () => {
   const { gameState } = useGameContext();

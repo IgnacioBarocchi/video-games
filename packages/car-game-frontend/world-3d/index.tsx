@@ -1,19 +1,19 @@
+// import { EffectComposer, SSAO } from "@react-three/postprocessing";
+// import { BlendFunction } from "postprocessing";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, SSAO } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 
-function Effects() {
-  return (
-    <EffectComposer>
-      <SSAO
-        blendFunction={BlendFunction.NORMAL} // Use NORMAL to see the effect
-        samples={31}
-        radius={5}
-        intensity={30}
-      />
-    </EffectComposer>
-  );
-}
+// function Effects() {
+//   return (
+//     <EffectComposer>
+//       <SSAO
+//         blendFunction={BlendFunction.NORMAL} // Use NORMAL to see the effect
+//         samples={31}
+//         radius={5}
+//         intensity={30}
+//       />
+//     </EffectComposer>
+//   );
+// }
 
 export const World3D = ({ children }) => {
   return (
@@ -37,7 +37,6 @@ export const World3D = ({ children }) => {
       }}
     >
       {children}
-      <Effects />
     </Canvas>
   );
 };

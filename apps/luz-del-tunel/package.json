@@ -11,7 +11,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "game-constants": "workspace:*",
+    "ui": "workspace:*",
     "car-game-frontend": "workspace:*",
     "hub-screen-frontend": "workspace:*",
     "shooting-level-frontend": "workspace:*",

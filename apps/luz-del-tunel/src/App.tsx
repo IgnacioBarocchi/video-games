@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { Hub } from "hub-screen-frontend";
-import { Shooter3DScene } from "shooting-level-frontend";
+import React, { useState } from "react";
+
 import { CarGameFrontend } from "car-game-frontend";
+import { CustomCursor } from "ui";
+import { Hub } from "hub-screen-frontend";
 import { MainProvider } from "game-constants";
+import { Shooter3DScene } from "shooting-level-frontend";
 import { Stages } from "./Stages";
 
 export default function App() {
@@ -18,6 +20,7 @@ export default function App() {
 
   return (
     <MainProvider>
+      <CustomCursor />
       <Stages />
       {/* <CarGameFrontend
         setWonTheGame={() => {

@@ -1,9 +1,10 @@
 import { styled } from "styled-components";
 
-export const Text = styled.div`
+export const Text = styled.div<{ hideStroke?: boolean }>`
   color: white;
   font-family: "Technor";
-  -webkit-text-stroke: 3px black;
+  -webkit-text-stroke: ${({ hideStroke }) =>
+    hideStroke ? "none" : "3px black"};
   font-size: 3em;
 `;
 

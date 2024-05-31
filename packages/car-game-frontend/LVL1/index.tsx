@@ -1,31 +1,22 @@
-import { Trees } from "../Trees";
-import { Signs } from "../entities/signs";
-import { Barriers } from "../entities/barrier/Barriers";
-import { BurntCars } from "../entities/burnt/BurntCars";
-import { Ground } from "../ground";
-import useCarGameStore from "../store/store";
 import { useCallback, useEffect } from "react";
-import { CarPlayer } from "characters";
-import React from "react";
-import { ROAD_LENGTH } from "game-constants";
-import { ZombieHorde } from "../zombie-horde/zombie-horde";
-import { OrbitControls } from "three-stdlib";
 
-const Scenario = ({ setWonTheGame }) => {
+import { CarPlayer } from "characters";
+// import { OrbitControls } from "three-stdlib";
+import { ROAD_LENGTH } from "game-constants";
+import { Terrain } from "../terrain";
+import { ZombieHorde } from "../zombie-horde/zombie-horde";
+import useCarGameStore from "../store/store";
+
+const Scenario = () => {
   return (
     <>
-      <Ground setWonTheGame={setWonTheGame} />
+      <Terrain />
       <ZombieHorde />
-      <Trees />
-      <Signs />
-      <Barriers />
-      {/* <BurntCars isOldVersion={isOldVersion} />
-       */}
     </>
   );
 };
 
-export const LVL1 = ({ setWonTheGame }) => {
+export const LVL1 = () => {
   const setLoading = useCarGameStore(
     useCallback((state) => state.setLoading, [])
   );
@@ -36,8 +27,7 @@ export const LVL1 = ({ setWonTheGame }) => {
 
   return (
     <>
-      <Scenario setWonTheGame={setWonTheGame} />
-      {/*  */}
+      <Scenario />
       <CarPlayer position={[-5, 1.2, ROAD_LENGTH - 50]} isRaining={true} />
     </>
   );
