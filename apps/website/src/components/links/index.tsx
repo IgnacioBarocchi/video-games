@@ -3,6 +3,10 @@ import { FlexButton } from "ui";
 import { TuxScene } from "../tux-scene";
 import { FC } from "react";
 import { BoxScene } from "../box-scene";
+import { CoinsScene } from "../coins-scene";
+import { BookScene } from "../book-scene";
+import { WindowsScene } from "../windows-scene";
+import { MacOScene } from "../mac-scene";
 
 export interface LinkProps {
   to: string;
@@ -18,6 +22,9 @@ const LinkContainer = styled.div`
 
 const ButtonWrapper = styled.div`
   width: fit-content;
+  & * {
+    cursor: none;
+  }
 `;
 
 const Link: FC<LinkProps> = ({ to, text, Scene }) => {
@@ -38,15 +45,15 @@ export const LinkToLinux = () => {
 };
 
 export const LinkToWindows = () => {
-  return <Link to="" text="Linux" Scene={() => <TuxScene />} />;
+  return <Link to="" text="Windows" Scene={() => <WindowsScene />} />;
 };
 
 export const LinkToMac = () => {
-  return <Link to="" text="Linux" Scene={() => <TuxScene />} />;
+  return <Link to="" text="MacOS" Scene={() => <MacOScene />} />;
 };
 
 export const LinkToLore = () => {
-  return <Link to="" text="Historia" Scene={() => <TuxScene />} />;
+  return <Link to="" text="Historia" Scene={() => <BookScene />} />;
 };
 
 export const LinkToArchive = () => {
@@ -54,5 +61,5 @@ export const LinkToArchive = () => {
 };
 
 export const LinkToDonations = () => {
-  return <Link to="" text="Donaciones" Scene={() => <TuxScene />} />;
+  return <Link to="" text="Donaciones" Scene={() => <CoinsScene />} />;
 };

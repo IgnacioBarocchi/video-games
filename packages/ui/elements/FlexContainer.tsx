@@ -7,19 +7,21 @@ export const FlexContainer = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
-  gap: 3em;
   width: ${({ width }) => (width ? width : "auto")};
   height: ${({ height }) => (height ? height : "auto")};
   justify-content: ${({ justifyContent }) =>
     justifyContent ? justifyContent : "auto"};
 `;
+// gap: 3em;
 
-export const FlexRow = styled.div`
+export const FlexRow = styled.div<{ height?: string }>`
   display: flex;
   justify-content: space-around;
   gap: 3em;
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 3em;
-  }
+  align-items: center;
+  height: ${({ height }) => (height ? height : "auto")};
 `;
+// @media (max-width: 768px) {
+//   flex-direction: column;
+//   gap: 3em;
+// }

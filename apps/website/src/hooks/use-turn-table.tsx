@@ -8,7 +8,8 @@ export const useTurnTable = () => {
     if (!group.current) {
       return;
     }
-    group.current.rotation.y += delta * 0.5;
+    const rotationSpeed = 0.5;
+    group.current.rotation.y += delta * rotationSpeed;
     // const target = group.current
     //   .getWorldPosition(group.current.position)
     //   .addVectors(new Vector3(0, 1, 0));
@@ -23,3 +24,7 @@ export const useTurnTable = () => {
 
   return { group };
 };
+
+// export const TurnTable = ({children}) =>{
+
+// }

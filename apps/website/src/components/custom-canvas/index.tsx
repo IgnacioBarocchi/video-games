@@ -1,8 +1,12 @@
 import { Canvas } from "@react-three/fiber";
+import { memo } from "react";
 
-export const CustomCanvas = ({ children }) => {
+export const CustomCanvas = memo(({ children }) => {
   return (
     <Canvas
+      style={{
+        pointerEvents: "none",
+      }}
       mode={"concurrent"}
       flat
       dpr={[0.2, 1]}
@@ -25,4 +29,4 @@ export const CustomCanvas = ({ children }) => {
       {children}
     </Canvas>
   );
-};
+});

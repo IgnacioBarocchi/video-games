@@ -12,8 +12,11 @@
   "dependencies": {
     "@react-three/drei": "^9.105.3",
     "@react-three/fiber": "^8.16.1",
+    "aos": "3.0.0-beta.6",
     "react": "^18.2.0",
+    "react-animated-3d-card": "1.0.2",
     "react-dom": "^18.2.0",
+    "react-parallax-scroll": "^0.1.1",
     "styled-components": "^6.1.8",
     "three": "^0.163.0",
     "ui": "workspace:*"

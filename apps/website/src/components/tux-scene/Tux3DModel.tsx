@@ -14,50 +14,57 @@ import { useTurnTable } from "../../hooks/use-turn-table";
 
 type GLTFResult = GLTF & {
   nodes: {
-    BODY: THREE.Mesh;
-    BELLY: THREE.Mesh;
-    FEET: THREE.Mesh;
-    ARMS: THREE.Mesh;
-    Plane006: THREE.Mesh;
-    Plane006_1: THREE.Mesh;
-    EYES_MESH: THREE.Mesh;
-    EYES_MESH_1: THREE.Mesh;
-    NOSTRILS: THREE.Mesh;
+    BODY_MESH: THREE.Mesh;
+    BODY_MESH_1: THREE.Mesh;
+    BODY_MESH_2: THREE.Mesh;
+    BODY_MESH_3: THREE.Mesh;
+    BODY_MESH_4: THREE.Mesh;
+    BODY_MESH_5: THREE.Mesh;
+    BODY_MESH_6: THREE.Mesh;
   };
   materials: {
-    Darkest: THREE.MeshBasicMaterial;
-    Concrete_2: THREE.MeshBasicMaterial;
-    Road_Props_Yellow_Signal: THREE.MeshBasicMaterial;
+    Zombie_Skin: THREE.MeshBasicMaterial;
+    Zombie_Skin_Shade2: THREE.MeshBasicMaterial;
+    Yellow_Skin: THREE.MeshBasicMaterial;
+    Blood: THREE.MeshBasicMaterial;
+    Eyes: THREE.MeshBasicMaterial;
+    Zombie_Skin_Light: THREE.MeshBasicMaterial;
+    Blood_Shade: THREE.MeshBasicMaterial;
   };
 };
-
 export function Tux3DModel(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF(tux3DModelFile) as GLTFResult;
   const { group } = useTurnTable();
 
   return (
     <group {...props} dispose={null} ref={group}>
-      <mesh geometry={nodes.BODY.geometry} material={materials.Darkest} />
-      <mesh geometry={nodes.BELLY.geometry} material={materials.Concrete_2} />
-      <mesh
-        geometry={nodes.FEET.geometry}
-        material={materials.Road_Props_Yellow_Signal}
-      />
-      <mesh geometry={nodes.ARMS.geometry} material={materials.Darkest} />
-      <mesh geometry={nodes.NOSTRILS.geometry} material={materials.Darkest} />
-      <mesh
-        geometry={nodes.Plane006.geometry}
-        material={materials.Road_Props_Yellow_Signal}
-      />
-      <mesh geometry={nodes.Plane006_1.geometry} material={materials.Darkest} />
-      <mesh
-        geometry={nodes.EYES_MESH.geometry}
-        material={materials.Concrete_2}
-      />
-      <mesh
-        geometry={nodes.EYES_MESH_1.geometry}
-        material={materials.Darkest}
-      />
+      <group position={[0, 0, -0.06]} scale={1.36}>
+        <mesh
+          geometry={nodes.BODY_MESH.geometry}
+          material={materials.Zombie_Skin}
+        />
+        <mesh
+          geometry={nodes.BODY_MESH_1.geometry}
+          material={materials.Zombie_Skin_Shade2}
+        />
+        <mesh
+          geometry={nodes.BODY_MESH_2.geometry}
+          material={materials.Yellow_Skin}
+        />
+        <mesh
+          geometry={nodes.BODY_MESH_3.geometry}
+          material={materials.Blood}
+        />
+        <mesh geometry={nodes.BODY_MESH_4.geometry} material={materials.Eyes} />
+        <mesh
+          geometry={nodes.BODY_MESH_5.geometry}
+          material={materials.Zombie_Skin_Light}
+        />
+        <mesh
+          geometry={nodes.BODY_MESH_6.geometry}
+          material={materials.Blood_Shade}
+        />
+      </group>
     </group>
   );
 }
