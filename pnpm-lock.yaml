@@ -92,6 +92,9 @@ importers:
       '@react-three/fiber':
         specifier: ^8.16.1
         version: 8.16.1(react-dom@18.2.0)(react@18.2.0)(three@0.163.0)
+      animate.css:
+        specifier: ^4.1.1
+        version: 4.1.1
       aos:
         specifier: 3.0.0-beta.6
         version: 3.0.0-beta.6
@@ -2548,6 +2551,10 @@ packages:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
     dev: true
+
+  /animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
+    dev: false
 
   /ansi-regex@2.1.1:
     resolution: {integrity: sha512-TIGnTpdo+E3+pCyAluZvtED5p5wCqLdezCyhPZzKPcxvFplEt4i+W7OONCKgeZFT3+y5NZZfOOS/Bdcanm1MYA==}

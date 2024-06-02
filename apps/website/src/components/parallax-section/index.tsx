@@ -12,7 +12,8 @@ export const Section: FC<{
   preset: "1" | "2" | "3";
   afterHeader?: boolean;
   beforeFooter?: boolean;
-}> = ({ children, preset = "1", afterHeader, beforeFooter }) => {
+  id?: string;
+}> = ({ children, preset = "1", afterHeader, beforeFooter, id }) => {
   const height = useMemo(() => {
     if (!afterHeader && !beforeFooter) {
       return "100vh";
@@ -22,8 +23,9 @@ export const Section: FC<{
 
   return (
     <div
+      id={id}
       style={{
-        background: `linear-gradient(0deg, ${Colors.richBlack} 80%, ${Colors.a} 100%)`,
+        background: `linear-gradient(0deg, ${Colors.richBlack} 80%, ${Colors.darkGrey} 100%)`,
       }}
     >
       <Layer className={`banner banner-${preset}`} settings={{ speed: 0.3 }}>

@@ -23,6 +23,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  font-family: "Supreme";
+}
+
 a:link {
   text-decoration: none;
 }
@@ -38,4 +42,25 @@ a:active {
 
 body {
   margin: 0;
+  overflow-x: hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #02111b;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #283d3b;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #efecca;
 }
