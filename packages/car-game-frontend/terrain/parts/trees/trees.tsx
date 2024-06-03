@@ -43,12 +43,7 @@ export function TreeModel(props: JSX.IntrinsicElements["group"]) {
 
   return (
     <>
-      <group
-        {...props}
-        dispose={null}
-        scale={0.5}
-        rotation={[0, THREE.MathUtils.degToRad(Math.random() * 180), 0]}
-      >
+      <group {...props} scale={0.5}>
         <group position={[0, 1.03, 0]}>
           <mesh
             geometry={nodes.BARK_MESH.geometry}
@@ -87,30 +82,33 @@ export function TreeModel(props: JSX.IntrinsicElements["group"]) {
 
 useGLTF.preload(treeModelFile);
 
+const MIN_X = 11;
+const MAX_X = 20;
+const MIN_Y = 0;
+const MAX_Y = 2;
 export const Trees = memo(() => {
-  // if (isOldVersion) {
   return (
     <group position={[0, 0, ROAD_LENGTH - 50]}>
       {[...Array(50)].map((_, i) => (
         <TreeModel
-          scale={Math.floor(Math.random() * (1.5 - 0.5) + 0.5)}
+          rotation={[0, THREE.MathUtils.degToRad(Math.random() * 180), 0]}
           dispose={null}
           key={i + "R"}
           position={[
-            Math.floor(Math.random() * (20 - 11) + 11),
-            Math.floor(Math.random() * (2 - 0) + 0),
+            Math.floor(Math.random() * (MAX_X - MIN_X) + MIN_X),
+            Math.floor(Math.random() * (MAX_Y - MIN_Y) + MIN_Y),
             i * -Math.floor(Math.random() * (100 - 50) + 50) - 2,
           ]}
         />
       ))}
       {[...Array(50)].map((_, i) => (
         <TreeModel
-          scale={Math.floor(Math.random() * (1.5 - 0.5) + 0.5)}
+          rotation={[0, THREE.MathUtils.degToRad(Math.random() * 180), 0]}
           dispose={null}
           key={i + "L"}
           position={[
-            -Math.floor(Math.random() * (20 - 11) + 11),
-            Math.floor(Math.random() * (2 - 0) + 0),
+            -Math.floor(Math.random() * (MAX_X - MIN_X) + MIN_X),
+            Math.floor(Math.random() * (MAX_Y - MIN_Y) + MIN_Y),
             i * -Math.floor(Math.random() * (100 - 50) + 50) - 2,
           ]}
         />
@@ -118,6 +116,7 @@ export const Trees = memo(() => {
     </group>
   );
   // }
+  // if (isOldVersion) {
 
   // return (
   //   <EntitiesRegion

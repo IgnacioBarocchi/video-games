@@ -38,3 +38,12 @@ export const CANVAS_CONFIG = {
     powerPreference: "high-performance",
   },
 };
+export const HIGHWAY_X_POSITIONS = {
+  FIRST_TRACK_X: -8.5,
+  SECOND_TRACK_X: -6,
+  THIRD_TRACK_X: -3,
+  MIDDLE_TRACK_X: 0,
+  FORTH_TRACK_X: 3,
+  FIFTH_TRACK_X: 6,
+  SIXTH_TRACK_X: 8.5,
+};

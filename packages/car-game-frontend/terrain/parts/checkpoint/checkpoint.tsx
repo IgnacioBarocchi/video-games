@@ -252,7 +252,7 @@ const Alert = () => {
   const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
 
   const intersectionHandler = createOnceFunction(() => {
-    setTitle("Control de velocidad a " + ALERT_DISTANCE);
+    setTitle("Control de velocidad a " + ALERT_DISTANCE + "m");
   });
 
   return (

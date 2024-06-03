@@ -4,6 +4,7 @@ import {
   ZombieNPCProps,
   ZombieNPCV2,
 } from "../npcs/zombie-npc/zombie-npc-with-fsm";
+import { HIGHWAY_X_POSITIONS } from "game-constants";
 
 export interface ZombieHordeProps {
   numberOfZombies: number;
@@ -26,7 +27,11 @@ export const NPCComposition = ({
   return (
     <>
       {[...Array(numberOfZombies)].map((_, i) => {
-        const xPos = Math.random() * 10 - 10;
+        const xPos =
+          Object.values(HIGHWAY_X_POSITIONS)[
+            Math.floor(Math.random() * Object.keys(HIGHWAY_X_POSITIONS).length)
+          ];
+
         const zPos = -Math.min(i * distributionFactor, Zend) - startZOffset;
 
         return <Component key={i} position={[xPos, 1, zPos]} />;

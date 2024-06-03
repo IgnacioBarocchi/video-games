@@ -160,7 +160,7 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
         targetPosition,
         sourceRigidBody,
         style: "LINEAR VELOCITY",
-        speed: 8000,
+        speed: 10,
       });
     }
   });

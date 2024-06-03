@@ -30,7 +30,8 @@ const Wheels = () => {
         name="Front Left"
         onContactForce={(payload) => {
           wheelsAttachmentReferences.current.frontLeft.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS;
+            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
+            Math.abs(payload.target.rigidBody.linvel().z) > 35;
         }}
         args={[0.25]}
         position={[0.75, 0.25, 1.5]}
@@ -44,7 +45,8 @@ const Wheels = () => {
         name="Back Left"
         onContactForce={(payload) => {
           wheelsAttachmentReferences.current.backLeft.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS;
+            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
+            Math.abs(payload.target.rigidBody.linvel().z) > 35;
         }}
         args={[0.25]}
         position={[0.75, 0.25, -1.5]}
@@ -59,7 +61,8 @@ const Wheels = () => {
         name="Front Right"
         onContactForce={(payload) => {
           wheelsAttachmentReferences.current.frontRight.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS;
+            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
+            Math.abs(payload.target.rigidBody.linvel().z) > 35;
         }}
         args={[0.25]}
         position={[-0.75, 0.25, 1.5]}
@@ -74,7 +77,8 @@ const Wheels = () => {
         name="Back Right"
         onContactForce={(payload) => {
           wheelsAttachmentReferences.current.backRight.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS;
+            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
+            Math.abs(payload.target.rigidBody.linvel().z) > 35;
         }}
         args={[0.25]}
         position={[-0.75, 0.25, -1.5]}

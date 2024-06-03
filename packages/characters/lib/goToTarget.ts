@@ -9,11 +9,11 @@ const linvelTowards = (params: {
   targetPosition: Vector3;
   speed: number;
 }) => {
-  const { sourceRigidBody, sourcePosition, targetPosition } = params;
+  const { sourceRigidBody, sourcePosition, targetPosition, speed } = params;
 
   const direction = targetPosition.clone().sub(sourcePosition).normalize();
   const linearVelocity = direction.multiplyScalar(1);
-  linearVelocity.multiplyScalar(2);
+  linearVelocity.multiplyScalar(speed);
 
   sourceRigidBody.setLinvel(linearVelocity, false);
 };

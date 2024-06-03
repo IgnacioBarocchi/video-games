@@ -80,7 +80,7 @@ export const ControlledZombieBody = forwardRef<
           sensor
           name="Region"
           position={[0, 1, 0]}
-          args={[1, 25]}
+          args={[1, 150]}
           onIntersectionEnter={(payload) => {
             if (!payloadIsThePlayer(payload)) {
               return;

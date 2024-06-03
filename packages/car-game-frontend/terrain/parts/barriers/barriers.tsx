@@ -2,10 +2,10 @@ import * as THREE from "three";
 
 import { FC, useEffect, useRef, useState } from "react";
 
-import { BARRIER_IMPACT_COST } from "game-constants";
+import { BARRIER_IMPACT_COST, HIGHWAY_X_POSITIONS } from "game-constants";
 import { GLTF } from "three-stdlib";
 import { PositionalAudio, useAnimations } from "@react-three/drei";
-import { RigidBody } from "@react-three/rapier";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import barrierModelFile from "../../../assets/models/Barrier/Barrier.glb";
 import concreteImpact from "../../../assets/audio/in-game-sfx/concrete-barrier/impact.m4a";
 import { payloadIsThePlayer } from "../../../lib/rigibBodyHelper";
@@ -220,11 +220,12 @@ export const Barrier: FC<{ position: [number, number, number] }> = ({
   return (
     <>
       <RigidBody
-        colliders={"cuboid"}
         position={position}
         onCollisionEnter={handleBarrierImpact}
         gravityScale={3}
+        colliders={false}
       >
+        <CuboidCollider position={[0, 0.5, 0]} args={[1, 0.5, 0.2]} />
         <BarrierModel playAnimation={shouldPlayAudio} />
       </RigidBody>
       {shouldPlayAudio && (
@@ -239,47 +240,49 @@ export const Barrier: FC<{ position: [number, number, number] }> = ({
   );
 };
 
-const getBarrierXPosition = () => {
-  const n = Math.random();
-  return n > 0.33 ? 6 : n > 66 ? 3 : 0;
-};
+const distance = 20;
+const positions = Object.values(HIGHWAY_X_POSITIONS);
 
-export const Barriers = () => {
+export const Barriers = ({ count = 100 }) => {
+  let selector = 0;
+  let positionZ = 0;
+  let offset = 1;
+
   return (
     <>
-      {[...Array(25)].map((_, i) => (
-        <Barrier
-          key={i}
-          position={[
-            getBarrierXPosition(),
-            0,
-            i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
-          ]}
-        />
-      ))}
-      {[...Array(25)].map((_, i) => (
-        <Barrier
-          key={i}
-          position={[
-            -getBarrierXPosition(),
-            0,
-            i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
-          ]}
-        />
-      ))}
+      {[...Array(count)].map((_, i) => {
+        selector > positions.length - 1 ? (selector = 0) : selector++;
+        positionZ = positionZ - offset * distance;
+        let positionX = positions[selector];
+
+        offset =
+          positionX === HIGHWAY_X_POSITIONS.MIDDLE_TRACK_X ? (offset = -1) : 1;
+        return <Barrier key={i} position={[positionX, 0, positionZ]} />;
+      })}
     </>
   );
-
-  // return (
-  //   <>
-  //     <EntitiesRegion
-  //       name="Barriers"
-  //       depth={2000}
-  //       ZOffset={400}
-  //       numberOfEntities={[10, 10]}
-  //       Entity={Barrier}
-  //       spaceBetween={{ x: [-15, 15], y: 0 }}
-  //     />
-  //   </>
-  // );
 };
+
+// return (
+//   <>
+//     <EntitiesRegion
+//       name="Barriers"
+//       depth={2000}
+//       ZOffset={400}
+//       numberOfEntities={[10, 10]}
+//       Entity={Barrier}
+//       spaceBetween={{ x: [-15, 15], y: 0 }}
+//     />
+//   </>
+// );
+
+/* {[...Array(25)].map((_, i) => (
+  <Barrier
+    key={i}
+    position={[
+      -getBarrierXPosition(),
+      0,
+      i * -Math.floor(Math.random() * (50 - 25) + 25) - 2,
+    ]}
+  />
+))} */

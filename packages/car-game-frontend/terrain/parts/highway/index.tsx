@@ -108,7 +108,7 @@ export const HighWay = () => {
         type="fixed"
         name={ENTITY.GRASS}
         colliders={false}
-        friction={100}
+        friction={120}
       >
         <CuboidCollider
           name="Grass Boulevard"
