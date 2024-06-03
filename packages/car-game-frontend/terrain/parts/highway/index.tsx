@@ -104,11 +104,28 @@ const Alert = () => {
 export const HighWay = () => {
   return (
     <>
-      <RigidBody type="fixed" name="Ground" colliders={false}>
+      <RigidBody
+        type="fixed"
+        name={ENTITY.GRASS}
+        colliders={false}
+        friction={100}
+      >
         <CuboidCollider
-          name="ground"
-          args={[10, 0, ROAD_LENGTH]}
+          name="Grass Boulevard"
+          args={[1.7, 0, ROAD_LENGTH]}
           position={[0, 0, 0]}
+        />
+      </RigidBody>
+      <RigidBody type="fixed" name={ENTITY.ASPHALT} colliders={false}>
+        <CuboidCollider
+          name="Asphalt left"
+          args={[4, 0, ROAD_LENGTH]}
+          position={[-5.55, 0, 0]}
+        />
+        <CuboidCollider
+          name="Asphalt right"
+          args={[4, 0, ROAD_LENGTH]}
+          position={[5.55, 0, 0]}
         />
         <Alert />
         <Colliders side="left" />

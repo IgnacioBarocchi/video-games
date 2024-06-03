@@ -155,7 +155,6 @@ export class Character {
     }
 
     if (this.falling !== isFalling) {
-      console.log(isFalling ? "Falling" : "Landed");
     }
     this.falling = isFalling;
   }
@@ -270,7 +269,6 @@ export class Character {
 
     const grounded = true; //* Boolean(result && result.collider);
     if (this.grounded !== grounded) {
-      console.log(grounded ? "Grounded" : "Not Grounded");
     }
     this.grounded = grounded;
 

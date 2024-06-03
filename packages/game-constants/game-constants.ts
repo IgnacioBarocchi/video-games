@@ -11,8 +11,11 @@ export const ENTITY = {
   BURNT_CAR: "BURNT_CAR",
   ZOMBIE: "ZOMBIE",
   CONCRETE_BARRIER: "CONCRETE_BARRIER",
+  ASPHALT: "ASPHALT",
+  GRAVEL: "GRAVEL",
+  GRASS: "GRASS",
 };
-export const TIME_LIMIT = 190; // 80;
+export const TIME_LIMIT = 90; // 80;
 export const LAST_SECONDS = 10;
 export const DOLLAR_RATE = 609283.0142;
 export const STARTING_ARS = DOLLAR_RATE * 100;

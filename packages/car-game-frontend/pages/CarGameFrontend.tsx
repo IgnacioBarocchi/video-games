@@ -20,12 +20,10 @@ import { World3D } from "../world-3d";
 
 const Experience3D = memo(() => (
   <World3D>
-    {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
-    {/* <Perf position="top-right" /> */}
+    <Perf position="top-right" />
     <Preload all={true} />
-
-    <Physics gravity={[0, -30, 0]} colliders={false}>
-      <fog attach="fog" args={["black", 5, CAMERA_FAR]} />
+    <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
+      <fog attach="fog" args={["#02111b", 5, CAMERA_FAR]} />
       <LVL1 />
     </Physics>
   </World3D>

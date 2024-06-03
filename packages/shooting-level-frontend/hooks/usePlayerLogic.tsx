@@ -57,7 +57,6 @@ export const usePlayerLogic = (params: {
     }
 
     if (actorCurrentState === "done") {
-      console.log("");
     }
     const keys = getKeys() as unknown as Keys;
 

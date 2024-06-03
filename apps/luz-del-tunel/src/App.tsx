@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import "./game.css";
+import { useState } from "react";
 import { CarGameFrontend } from "car-game-frontend";
 import { CustomCursor } from "ui";
 import { Hub } from "hub-screen-frontend";

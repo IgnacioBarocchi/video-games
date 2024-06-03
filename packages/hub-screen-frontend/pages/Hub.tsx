@@ -11,7 +11,7 @@ import { Suspense } from "react";
 const Effects = () => {
   return (
     <>
-      <fog attach="fog" args={["black", 1, 8.5]} />
+      <fog attach="fog" args={["#02111B", 1, 8.5]} />
       <EffectComposer>
         <Vignette
           offset={0.5} // vignette offset
@@ -28,6 +28,12 @@ export const Hub = () => {
   return (
     <>
       <Canvas
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "fixed",
+          top: 0,
+        }}
         fallback="Hub 3D Objects"
         mode={"concurrent"}
         flat
@@ -49,9 +55,7 @@ export const Hub = () => {
         }}
       >
         <Suspense fallback={null}>
-          {/* <Fisheye zoom={2}> */}
           <AnimatedScene />
-          {/* </Fisheye> */}
           <Effects />
         </Suspense>
       </Canvas>

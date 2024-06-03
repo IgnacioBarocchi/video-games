@@ -19,7 +19,14 @@ export const Header = () => {
   return (
     <Container>
       <Text hideStroke={true}>La Luz del Túnel</Text>
-      <div style={{ paddingRight: `calc(25px + ${scrollbar}px` }}>
+      <div
+        style={{
+          paddingRight: `calc(25px + ${scrollbar}px`,
+          position: "fixed",
+          right: 0,
+          zIndex: 50,
+        }}
+      >
         <Button
           style={{
             fontSize: "25px",

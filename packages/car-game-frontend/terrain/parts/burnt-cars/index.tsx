@@ -38,14 +38,14 @@ export const BurntCar: FC<{ position: [number, number, number] }> = ({
         args={[1.5, 1.1, 2.5]}
         position={[0, 1.1, 0.1]}
         restitution={0}
-        onContactForce={(payload) => {
-          if (
-            payload.other?.rigidBodyObject?.name === "Ground" &&
-            playHitSound
-          ) {
-            setPlayScrapeSound(true);
-          }
-        }}
+        // onContactForce={(payload) => {
+        //   if (
+        //     payload.other?.rigidBodyObject?.name === "Ground" &&
+        //     playHitSound
+        //   ) {
+        //     setPlayScrapeSound(true);
+        //   }
+        // }}
         onCollisionEnter={(payload) => {
           if (payloadIsThePlayer(payload)) {
             setPlayHitSound(true);

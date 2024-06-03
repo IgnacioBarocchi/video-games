@@ -90,7 +90,6 @@ export const EntitiesRegion: FC<EntitiesRegionProps> = ({
           }
         }}
         onIntersectionExit={(payload) => {
-          console.log("Enter?Exit");
           if (payloadIsThePlayer(payload)) {
             setDisplay(false);
           }

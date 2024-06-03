@@ -20,7 +20,8 @@
     "react-parallax-scroll": "^0.1.1",
     "styled-components": "^6.1.8",
     "three": "^0.163.0",
-    "ui": "workspace:*"
+    "ui": "workspace:*",
+    "video-react": "^0.16.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -11,6 +11,7 @@ import React, { useMemo, useRef } from "react";
 import signModelFile from "../../../assets/models/Sign/Sign.gltf";
 import { useGLTF } from "@react-three/drei";
 import { useGraph } from "@react-three/fiber";
+import { ROAD_LENGTH } from "game-constants";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -71,10 +72,10 @@ useGLTF.preload(signModelFile);
 
 export const Signs = () => {
   return (
-    <>
+    <group position={[0, 0, ROAD_LENGTH - 50]}>
       {[...Array(10)].map((_, i) => (
         <SignModel key={i} position={[0, 0, i * -500]} />
       ))}
-    </>
+    </group>
   );
 };

@@ -18,6 +18,13 @@ import { Canvas } from "@react-three/fiber";
 export const World3D = ({ children }) => {
   return (
     <Canvas
+      fallback="Car game"
+      style={{
+        height: "100vh",
+        width: "100vw",
+        position: "fixed",
+        top: 0,
+      }}
       mode={"concurrent"}
       flat
       dpr={[0.2, 1]}

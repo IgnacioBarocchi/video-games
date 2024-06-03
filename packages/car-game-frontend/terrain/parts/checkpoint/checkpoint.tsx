@@ -276,10 +276,8 @@ export function Checkpoint() {
   );
   const [playOpenGate, setPlayOpenGate] = useState(false);
   const collisionCallback = createOnceFunction((payload: CollisionPayload) => {
-    console.log("paylaod", payload);
     setPlayOpenGate(true);
     if (Math.abs(payload?.other?.rigidBody?.linvel().z!) > SPEED_LIMIT) {
-      console.log("SPEED FEE");
       setCarNotification({ type: "SPEED FEE", cost: SPEED_FEE_COST });
       subMoney(SPEED_FEE_COST);
     }

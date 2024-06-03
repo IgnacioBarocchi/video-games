@@ -26,7 +26,8 @@ export const MainMenu = ({
 
   const handleStart = () => {
     setShouldFade(true);
-    setTimeout(() => changeGameState("SHOOTER GAME"), 1500);
+    // setTimeout(() => changeGameState("SHOOTER GAME"), 1500);
+    setTimeout(() => changeGameState("CAR GAME"), 1500);
   };
 
   return (

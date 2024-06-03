@@ -14,7 +14,7 @@ import { HumanPlayer, PlayerActorProvider, ZombieNPCV2 } from "characters";
 const Effects = () => {
   return (
     <>
-      <fog attach="fog" args={["black", 1, 8.5]} />
+      <fog attach="fog" args={["#02111b", 1, 8.5]} />
       <EffectComposer>
         <Vignette
           offset={0.5}
@@ -33,6 +33,12 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
   return (
     <PlayerActorProvider>
       <Canvas
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "fixed",
+          top: 0,
+        }}
         fallback="Shooter 3D Scene"
         mode={"concurrent"}
         flat

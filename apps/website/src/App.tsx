@@ -42,7 +42,7 @@ const App = () => {
     <>
       <Main>
         <CustomCursor />
-        <Modal isOpen={modalIsOpen} onClose={() => {}}>
+        <Modal isOpen={false} onClose={() => {}}>
           <Text>Este proyecto necesita ayuda</Text>
           <p>
             * Si conocés a alguien que pueda aportar sonido, música, arte 2D/3D,

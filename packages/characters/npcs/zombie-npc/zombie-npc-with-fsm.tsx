@@ -186,7 +186,6 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
         payload.other.rigidBodyObject.name === ENTITY.CAR &&
         otherObjectSpeed > 10
       ) {
-        console.log(otherObjectSpeed);
         payload.target.rigidBody.setLinvel(
           new Vector3(0, MathUtils.clamp(otherObjectSpeed, 0, 15), 0),
           true
