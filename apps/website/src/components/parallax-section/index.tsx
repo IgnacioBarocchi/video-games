@@ -5,32 +5,32 @@ import { FC, ReactNode, useMemo } from "react";
 import { styled } from "styled-components";
 import { Colors, FOOTER_HEIGHT, HEADER_HEIGHT } from "../../constants";
 
-const Row = styled(FlexRow)``;
+const Container = styled.section<{
+  heights: { desktop: string; mobile: string };
+}>`
+  height: ${({ heights }) => heights.desktop};
+  background: linear-gradient(
+    0deg,
+    ${Colors.richBlack} 80%,
+    ${Colors.darkGrey} 100%
+  );
+
+  @media (max-width: 768px) {
+    height: ${({ heights }) => heights.mobile};
+  }
+`;
 
 export const Section: FC<{
-  children: ReactNode[];
+  children: ReactNode | ReactNode[] | FC;
   preset: "1" | "2" | "3";
-  afterHeader?: boolean;
-  beforeFooter?: boolean;
   id?: string;
-}> = ({ children, preset = "1", afterHeader, beforeFooter, id }) => {
-  const height = useMemo(() => {
-    if (!afterHeader && !beforeFooter) {
-      return "100vh";
-    }
-    return `calc(100vh - ${afterHeader ? HEADER_HEIGHT : FOOTER_HEIGHT}px)`;
-  }, [afterHeader, beforeFooter]);
-
+  heights: { desktop: string; mobile: string };
+}> = ({ children, preset = "1", id, heights }) => {
   return (
-    <div
-      id={id}
-      style={{
-        background: `linear-gradient(0deg, ${Colors.richBlack} 80%, ${Colors.darkGrey} 100%)`,
-      }}
-    >
+    <Container id={id} heights={heights}>
       <Layer className={`banner banner-${preset}`} settings={{ speed: 0.3 }}>
-        <Row height={height}>{children}</Row>
+        {children}
       </Layer>
-    </div>
+    </Container>
   );
 };

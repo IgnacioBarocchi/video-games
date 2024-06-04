@@ -230,7 +230,7 @@ export const Barrier: FC<{ position: [number, number, number] }> = ({
       </RigidBody>
       {shouldPlayAudio && (
         <PositionalAudio
-          distance={20}
+          distance={60}
           loop={false}
           url={concreteImpact}
           autoplay

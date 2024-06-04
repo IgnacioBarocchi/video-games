@@ -17,6 +17,9 @@ import { Button } from "ui/elements/Button";
 export const BackToMenuPanel = () => {
   const { changeGameState } = useGameContext();
   const gameOver = useCarGameStore((state) => state.gameOver);
+  const resetState = useCarGameStore(
+    useCallback((state) => state.resetState, [])
+  );
 
   if (gameOver) {
     return (
@@ -34,6 +37,7 @@ export const BackToMenuPanel = () => {
         >
           <Button
             onClick={() => {
+              resetState();
               changeGameState("MAIN MENU");
             }}
           >

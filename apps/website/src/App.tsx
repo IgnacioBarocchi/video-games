@@ -24,6 +24,10 @@ import { CoinsScene } from "./components/coins-scene";
 import { Modal } from "./components/modal";
 import { LandingContent } from "./components/landing-content";
 import { useEffect, useState } from "react";
+import { Landing } from "./components/views/landing";
+import { FaDownload } from "react-icons/fa";
+import { Downloads } from "./components/views/downloads";
+import { Info } from "./components/views/info";
 
 const App = () => {
   const [modalIsOpen, setmodalIsOpen] = useState(false);
@@ -59,40 +63,11 @@ const App = () => {
         <Header />
         <Parallax>
           <FlexContainer>
-            <Section preset="3" afterHeader={true}>
-              <LandingContent />
-            </Section>
-            <Section preset="1" id="downloads">
-              <CustomCard
-                releaseMetaData={{ date: "01/06/2024", releaseID: "0.0.5" }}
-                topText="descarga"
-                title="Para Linux"
-                Scene={() => <TuxScene />}
-              />
-              <CustomCard
-                releaseMetaData={{ date: "01/06/2024", releaseID: "0.0.3" }}
-                topText="descarga"
-                title="Para Windows"
-                Scene={() => <WindowsScene />}
-              />
-              <CustomCard
-                releaseMetaData={{ date: "01/06/2024", releaseID: "0.0.3" }}
-                topText="descarga"
-                title="Para MacOS"
-                Scene={() => <MacOScene />}
-              />
-            </Section>
-
-            <Section preset="2" beforeFooter={true}>
-              <CustomCard title="Historia" Scene={() => <BookScene />} />
-              <CustomCard title="Archivo" Scene={() => <BoxScene />} />
-              <CustomCard title="Donaciones" Scene={() => <CoinsScene />} />
-            </Section>
+            <Landing />
+            <Downloads />
+            <Info />
           </FlexContainer>
         </Parallax>
-        <Footer>
-          <Text hideStroke={true}>Creado por Ignacio Barocchi</Text>
-        </Footer>
       </Main>
     </>
   );

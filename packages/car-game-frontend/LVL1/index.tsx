@@ -11,7 +11,7 @@ const Scenario = () => {
   return (
     <>
       <Terrain />
-      <ZombieHorde />
+      {/* <ZombieHorde /> */}
     </>
   );
 };

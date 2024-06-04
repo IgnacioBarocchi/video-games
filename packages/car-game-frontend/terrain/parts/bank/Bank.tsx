@@ -7,6 +7,7 @@ import { ENTITY, ROAD_LENGTH } from "game-constants";
 import { MathUtils, Vector3 } from "three";
 import React, { FC, useCallback } from "react";
 
+import { Arrow3DModel } from "./Arrow3DModel";
 import { Bank3DModel } from "./Bank3DModel";
 import moneyCounterSFX from "../../../assets/audio/money-counter.mp3";
 import { payloadIsThePlayer } from "../../../lib/rigibBodyHelper";
@@ -169,6 +170,7 @@ export const Bank = () => {
       <Building />
       <Alert />
       <Bank3DModel />
+      <Arrow3DModel position={[12, 1, -18]} />
     </RigidBody>
   );
 };

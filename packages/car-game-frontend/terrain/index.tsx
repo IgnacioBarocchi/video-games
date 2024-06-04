@@ -29,7 +29,7 @@ export const Terrain = () => {
     <group>
       <HighWay />
       <Entities />
-      <Doodads />
+      {/* <Doodads /> */}
     </group>
   );
 };

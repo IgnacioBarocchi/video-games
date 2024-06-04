@@ -26,7 +26,7 @@ export const Attachments = ({ isDead }) => {
     return (
       <>
         <PositionalAudio
-          distance={10}
+          distance={5}
           url={getZombieHitAudio()}
           autoplay={true}
           loop={false}
