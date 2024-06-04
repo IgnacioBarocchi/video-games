@@ -28,6 +28,7 @@ import { Landing } from "./components/views/landing";
 import { FaDownload } from "react-icons/fa";
 import { Downloads } from "./components/views/downloads";
 import { Info } from "./components/views/info";
+import { ViewTrailer } from "./components/views/vew-trailer";
 
 const App = () => {
   const [modalIsOpen, setmodalIsOpen] = useState(false);
@@ -64,6 +65,7 @@ const App = () => {
         <Parallax>
           <FlexContainer>
             <Landing />
+            <ViewTrailer />
             <Downloads />
             <Info />
           </FlexContainer>

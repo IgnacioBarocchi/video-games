@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Text } from "ui/elements/Text";
 import picture from "../../assets/images/BG4.png";
-import { Colors } from "../../constants";
+import { Colors } from "game-constants";
 import { useEffect } from "react";
 import video2 from "../../assets/video/demo.mp4";
 

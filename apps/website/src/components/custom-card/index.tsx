@@ -2,10 +2,9 @@ import Parallax, { Layer } from "react-parallax-scroll";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Card from "react-animated-3d-card";
-import { FC, useEffect, useState } from "react";
-import { Colors } from "../../constants";
+import { FC, useEffect } from "react";
 import { styled } from "styled-components";
-import { CoinsScene } from "../coins-scene";
+import { Colors } from "game-constants";
 
 const TitleLabel = styled.label<{ position: "R" | "L" }>`
   color: white;
@@ -94,7 +93,7 @@ export const CustomCard: FC<CustomCardProps> = ({
   return (
     <Parallax>
       <Layer settings={{ speed: 0.2, type: "translateY" }}>
-        <MainWrapper data-aos="fade-up">
+        <MainWrapper data-aos="fade-up" as="a" href="">
           {/* this is my foreground */}
           <SceneWrapper>
             <Scene />

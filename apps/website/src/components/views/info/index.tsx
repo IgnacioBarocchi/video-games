@@ -13,6 +13,11 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+const FooterText = styled(Text)`
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
+`;
 export const Info = () => {
   return (
     <Container>
@@ -24,7 +29,7 @@ export const Info = () => {
         </FlexRow>
       </Section>
       <Footer>
-        <Text hideStroke={true}>Creado por Ignacio Barocchi</Text>
+        <FooterText hideStroke={true}>Creado por Ignacio Barocchi</FooterText>
       </Footer>
     </Container>
   );

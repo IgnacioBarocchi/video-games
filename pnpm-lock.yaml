@@ -98,6 +98,9 @@ importers:
       aos:
         specifier: 3.0.0-beta.6
         version: 3.0.0-beta.6
+      game-constants:
+        specifier: workspace:*
+        version: link:../../packages/game-constants
       react:
         specifier: ^18.2.0
         version: 18.2.0

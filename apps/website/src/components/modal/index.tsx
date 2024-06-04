@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Colors } from "../../constants";
+import { Colors } from "game-constants";
 
 const ModalContainer = styled.div`
   position: fixed;

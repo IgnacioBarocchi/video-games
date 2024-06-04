@@ -4,13 +4,13 @@ import { MacOScene } from "../../mac-scene";
 import { Section } from "../../parallax-section";
 import { TuxScene } from "../../tux-scene";
 import { WindowsScene } from "../../windows-scene";
-import { PiFileZipBold } from "react-icons/pi";
 import { FlexRow } from "ui";
+import { FaDownload } from "react-icons/fa";
 
 const DownloadLabel = () => {
   return (
     <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-      <PiFileZipBold />
+      <FaDownload />
       Archivos
     </div>
   );

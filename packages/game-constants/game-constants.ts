@@ -47,3 +47,12 @@ export const HIGHWAY_X_POSITIONS = {
   FIFTH_TRACK_X: 6,
   SIXTH_TRACK_X: 8.5,
 };
+export const Colors = {
+  richBlack: "#02111B",
+  battleShipGrey: "#33202A",
+  darkGrey: "#283D3B",
+  mintCream: "#EFECCA", //"#F1FFFA",
+  white: "#F1FFFA",
+  l: "#778F9E",
+  d: "#052337",
+};

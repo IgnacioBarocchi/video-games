@@ -1,7 +1,8 @@
+import { Layer } from "react-parallax-scroll";
 import demo from "../../../assets/video/demo.mp4";
 import poster from "../../../assets/images/BG4.png";
 import { styled } from "styled-components";
-import { Colors, FOOTER_HEIGHT } from "../../../constants";
+import { FOOTER_HEIGHT } from "../../../constants";
 import { useRef, useState } from "react";
 import { FaLinux } from "react-icons/fa";
 import { FaApple } from "react-icons/fa";
@@ -10,6 +11,8 @@ import { FaPlayCircle } from "react-icons/fa";
 import { FaPauseCircle } from "react-icons/fa";
 import { Button } from "ui";
 import { Section } from "../../parallax-section";
+import wheelImageFile from "../../../../public/Wheel.png";
+import { Colors } from "game-constants";
 
 const Container = styled.div`
   width: 100vw;
@@ -95,6 +98,8 @@ const MainTextContainer = styled.div`
 
 const Logo = styled.div`
   font-size: 60px;
+  font-family: Technor;
+  z-index: 5;
   @media (max-width: 768px) {
     top: 40px;
   }
@@ -105,6 +110,12 @@ const Slogan = styled.div`
   @media (max-width: 768px) {
     top: 20px;
   }
+`;
+
+const ImageLogo = styled.img`
+  position: absolute;
+  width: 150px;
+  top: -25px;
 `;
 
 export const Landing = () => {
@@ -136,7 +147,10 @@ export const Landing = () => {
         </FullScreenVideo>
         <VignetteOverlay />
         <MainTextContainer>
-          <Logo>LldT</Logo>
+          <Layer settings={{ speed: 0.2, type: "rotate" }}>
+            <ImageLogo src={wheelImageFile} />
+          </Layer>
+          <Logo>La Luz del Túnel</Logo>
           <Slogan>No tenés futuro</Slogan>
           <Button
             style={{
@@ -162,15 +176,15 @@ export const Landing = () => {
             {isPlaying ? <FaPauseCircle /> : <FaPlayCircle />}
           </PausePlayToggle>
           <OSLabels>
-            <OSLabel>
+            <OSLabel as="a" href={""}>
               <FaLinux />
               <span>Linux</span>
             </OSLabel>
-            <OSLabel>
+            <OSLabel as="a" href={""}>
               <FaWindows />
               <span>Windows</span>
             </OSLabel>
-            <OSLabel>
+            <OSLabel as="a" href={""}>
               <FaApple />
               <span>macOS</span>
             </OSLabel>

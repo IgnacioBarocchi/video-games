@@ -1,7 +1,8 @@
 import { styled } from "styled-components";
-import { Colors, HEADER_HEIGHT } from "../../constants";
+import { HEADER_HEIGHT } from "../../constants";
 import { Text } from "ui/elements/Text";
 import { Button } from "ui";
+import { Colors } from "game-constants";
 
 const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
@@ -46,7 +47,7 @@ export const Header = () => {
             fontSize: "25px",
             height: "50px",
             borderRadius: "6px",
-            background: "#F1FFFA",
+            background: Colors.white,
             color: Colors.richBlack,
             cursor: "none",
           }}

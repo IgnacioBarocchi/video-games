@@ -131,6 +131,8 @@ const Alert = () => {
 };
 
 export const Bank = () => {
+  const gameOver = useCarGameStore((state) => state.gameOver);
+
   const setGameOver = useCarGameStore(
     useCallback((state) => state.setGameOver, [])
   );
@@ -158,6 +160,9 @@ export const Bank = () => {
         position={[13, 0, -20]}
         sensor
         onIntersectionEnter={(payload) => {
+          if (gameOver) {
+            return;
+          }
           if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
             collisionCallback(payload);
           }
@@ -170,7 +175,7 @@ export const Bank = () => {
       <Building />
       <Alert />
       <Bank3DModel />
-      <Arrow3DModel position={[12, 1, -18]} />
+      <Arrow3DModel position={[12, 1, -18]} visible={!gameOver} />
     </RigidBody>
   );
 };

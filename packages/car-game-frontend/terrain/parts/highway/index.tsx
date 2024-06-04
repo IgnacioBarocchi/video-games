@@ -1,11 +1,12 @@
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ENTITY, ROAD_LENGTH } from "game-constants";
-import { FC, useCallback } from "react";
+import { FC, useCallback, useRef } from "react";
 import { MathUtils, Vector3 } from "three";
 
-import { BarrierModel } from "../barriers/barriers";
+// import { BarrierModel } from "../barriers/barriers";
 import { GroundModel } from "./GroundModel";
 import useCarGameStore from "../../../store/store";
+import { BarrierLowRes3DModel } from "../barriers/barrier-low-res-3D-model";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 1;
@@ -72,7 +73,7 @@ const TerrainLimitBarriers = () => {
         position={[0, 0, ROAD_LENGTH - 20]}
         colliders="cuboid"
       >
-        <BarrierModel scale={new Vector3(10, 1, 1)} />
+        <BarrierLowRes3DModel scale={new Vector3(10, 1, 1)} />
       </RigidBody>
     </>
   );
@@ -102,6 +103,8 @@ const Alert = () => {
 };
 
 export const HighWay = () => {
+  const deviation = useRef(0);
+
   return (
     <>
       <RigidBody
@@ -114,6 +117,19 @@ export const HighWay = () => {
           name="Grass Boulevard"
           args={[1.7, 0, ROAD_LENGTH]}
           position={[0, 0, 0]}
+          onContactForce={(payload) => {
+            if (payload.other.rigidBodyObject?.name !== ENTITY.CAR) {
+              return;
+            }
+
+            deviation.current += 0.1;
+            console.log(Math.sin(deviation.current));
+            const { x, y, z } = payload.other.rigidBody.linvel();
+            payload.other.rigidBody.setLinvel(
+              { x: x + Math.sin(deviation.current), y, z },
+              true
+            );
+          }}
         />
       </RigidBody>
       <RigidBody type="fixed" name={ENTITY.ASPHALT} colliders={false}>

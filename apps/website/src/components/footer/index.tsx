@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
-import { Colors, FOOTER_HEIGHT } from "../../constants";
+import { FOOTER_HEIGHT } from "../../constants";
+import { Colors } from "game-constants";
 
 export const Footer = styled.footer`
   height: ${FOOTER_HEIGHT}px;

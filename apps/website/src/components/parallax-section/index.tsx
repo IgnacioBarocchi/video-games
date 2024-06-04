@@ -3,7 +3,7 @@ import { FlexRow } from "ui";
 import "./styles.css";
 import { FC, ReactNode, useMemo } from "react";
 import { styled } from "styled-components";
-import { Colors, FOOTER_HEIGHT, HEADER_HEIGHT } from "../../constants";
+import { Colors } from "game-constants";
 
 const Container = styled.section<{
   heights: { desktop: string; mobile: string };
