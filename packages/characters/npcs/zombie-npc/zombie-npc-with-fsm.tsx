@@ -6,9 +6,10 @@ import {
   FC,
   useState,
   useCallback,
+  Suspense,
 } from "react";
 import { GroupProps, useFrame, useGraph } from "@react-three/fiber";
-import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGLTF, useAnimations, Box } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
 import { ActionName, Zombie3DModel } from "../models/zombie-3D-model";
 import { complexZombieMachine } from "../../machines/complex-zombie-machine";
@@ -252,12 +253,14 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
       playerImpactHandler={playerImpactHandler}
       isDead={state.matches(DEATH_STATE)}
       Zombie3DModelVariant={() => (
-        <Zombie3DModel
-          ref={group}
-          nodes={nodes}
-          materials={materials}
-          actions={actions}
-        />
+        <Suspense fallback={<Box />}>
+          <Zombie3DModel
+            ref={group}
+            nodes={nodes}
+            materials={materials}
+            actions={actions}
+          />
+        </Suspense>
       )}
     >
       <Attachments isDead={state.matches(DEATH_STATE)} />

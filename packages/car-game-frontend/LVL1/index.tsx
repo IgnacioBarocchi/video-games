@@ -11,7 +11,7 @@ const Scenario = () => {
   return (
     <>
       <Terrain />
-      {/* <ZombieHorde /> */}
+      <ZombieHorde />
     </>
   );
 };
@@ -28,7 +28,7 @@ export const LVL1 = () => {
   return (
     <>
       <Scenario />
-      <CarPlayer position={[-5, 1.2, 0]} isRaining={true} />
+      <CarPlayer position={[0, 0.1, ROAD_LENGTH - 50]} isRaining={true} />
     </>
   );
 };

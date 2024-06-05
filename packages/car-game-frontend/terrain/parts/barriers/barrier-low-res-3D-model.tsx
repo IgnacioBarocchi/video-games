@@ -4,10 +4,12 @@ Command: npx gltfjsx@6.1.11 assets/models/Barrier/Barrier_lr.glb -t -r public
 */
 
 import * as THREE from "three";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import barrierLowRes from "../../../assets/models/Barrier/Barrier_lr.glb";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph } from "@react-three/fiber";
 type GLTFResult = GLTF & {
   nodes: {
     BARRIER_MESH: THREE.Mesh;
@@ -24,7 +26,9 @@ type GLTFResult = GLTF & {
 };
 
 export function BarrierLowRes3DModel(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF(barrierLowRes) as GLTFResult;
+  const { scene, materials } = useGLTF(barrierLowRes) as GLTFResult;
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
   return (
     <group {...props} dispose={null}>
       <group scale={[1, 0.59, 1]}>

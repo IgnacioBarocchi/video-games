@@ -7,9 +7,10 @@ import { MathUtils, Vector3 } from "three";
 import { GroundModel } from "./GroundModel";
 import useCarGameStore from "../../../store/store";
 import { BarrierLowRes3DModel } from "../barriers/barrier-low-res-3D-model";
+import { SparksAttachment3DModel } from "./SparksAttachment3DModel";
 
 const BARRIER_WIDTH = 0.05;
-const BARRIER_HEIGHT = 1;
+const BARRIER_HEIGHT = 10;
 const SLOPE_HEIGHT = 1;
 const SLOPE_ROTATION_ANGLE = -60;
 const GRASS_WIDTH = 7;
@@ -31,16 +32,62 @@ function createOnceFunction(callback: Function) {
 }
 
 const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
+  // const visible = useRef(null);
+  // const z = useRef(0);
+  const group = useRef(null);
   return (
     <>
       <CuboidCollider
+        name="roof"
+        restitution={2}
+        args={[10, 0, ROAD_LENGTH]}
+        position={[0, 5, 0]}
+      />
+
+      <CuboidCollider
+        friction={200}
+        restitution={0.5}
         name={`barrier ${side}`}
         args={[BARRIER_WIDTH, BARRIER_HEIGHT, ROAD_LENGTH]}
         position={[
           (side === "left" ? -1 : 1) * BARRIER_POSITION_X,
-          POSITION_Y,
+          BARRIER_HEIGHT,
           0,
         ]}
+        onContactForce={(payload) => {
+          if (payload?.other?.rigidBodyObject?.name !== ENTITY.CAR) {
+            return;
+          }
+
+          //
+          // z.current = payload.other.rigidBody.translation().z;
+
+          // console.log(z.current);
+          group.current.position.z =
+            payload.other.rigidBody.translation().z - 2;
+        }}
+        onCollisionEnter={(payload) => {
+          if (payload?.other?.rigidBodyObject?.name !== ENTITY.CAR) {
+            return;
+          }
+
+          group.current.visible = true;
+        }}
+        onCollisionExit={(payload) => {
+          if (payload?.other?.rigidBodyObject?.name !== ENTITY.CAR) {
+            return;
+          }
+
+          group.current.visible = false;
+        }}
+      />
+      <SparksAttachment3DModel
+        ref={group}
+        position={
+          new Vector3((side === "left" ? -1 : 1) * BARRIER_POSITION_X, 0.65, 0)
+        }
+        rotation={[0, side === "left" ? MathUtils.degToRad(180) : 0, 0]}
+        visible={false}
       />
       <CuboidCollider
         name={`slope ${side}`}
@@ -72,6 +119,7 @@ const TerrainLimitBarriers = () => {
         type="fixed"
         position={[0, 0, ROAD_LENGTH - 20]}
         colliders="cuboid"
+        restitution={5}
       >
         <BarrierLowRes3DModel scale={new Vector3(10, 1, 1)} />
       </RigidBody>
@@ -117,19 +165,41 @@ export const HighWay = () => {
           name="Grass Boulevard"
           args={[1.7, 0, ROAD_LENGTH]}
           position={[0, 0, 0]}
-          onContactForce={(payload) => {
-            if (payload.other.rigidBodyObject?.name !== ENTITY.CAR) {
-              return;
-            }
+          // onContactForce={(payload) => {
+          //   if (
+          //     payload.other.rigidBodyObject?.name !== ENTITY.CAR &&
+          //     Math.abs(payload.other.rigidBody.linvel().z) < 35
+          //   ) {
+          //     return;
+          //   }
 
-            deviation.current += 0.1;
-            console.log(Math.sin(deviation.current));
-            const { x, y, z } = payload.other.rigidBody.linvel();
-            payload.other.rigidBody.setLinvel(
-              { x: x + Math.sin(deviation.current), y, z },
-              true
-            );
-          }}
+          //   deviation.current += 0.1;
+
+          //   const clampedValue = (Math.round(deviation.current * 1) % 2) - 1;
+          //   console.log(clampedValue);
+
+          //   const { y, z } = payload.other.rigidBody.linvel();
+          //   payload.other.rigidBody.setLinvel(
+          //     {
+          //       x: clampedValue,
+          //       y,
+          //       z,
+          //     },
+          //     true
+          //   );
+
+          //   // const { x, z, w } = payload.other.rigidBody.rotation();
+          //   // const newY = MathUtils.degToRad(clampedValue);
+          //   // payload.other.rigidBody.setRotation(
+          //   //   {
+          //   //     x,
+          //   //     y: newY,
+          //   //     z,
+          //   //     w,
+          //   //   },
+          //   //   true
+          //   // );
+          // }}
         />
       </RigidBody>
       <RigidBody type="fixed" name={ENTITY.ASPHALT} colliders={false}>

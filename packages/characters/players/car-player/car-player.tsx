@@ -1,4 +1,11 @@
-import { MutableRefObject, ReactNode, memo, useMemo, useRef } from "react";
+import {
+  MutableRefObject,
+  ReactNode,
+  Suspense,
+  memo,
+  useMemo,
+  useRef,
+} from "react";
 import { PositionalAudioProps, useFrame, useThree } from "@react-three/fiber";
 import { RapierRigidBody, useAfterPhysicsStep } from "@react-three/rapier";
 import {
@@ -17,6 +24,7 @@ import { CarThirdPersonCamera } from "../../classes/CarThirdPersonCamera";
 import { CarRigidBody } from "../../physics/CarRigidBody";
 import { Attachments } from "./attachments";
 import { Rain } from "./enviroment";
+import { Box } from "@react-three/drei";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -81,7 +89,7 @@ export const CarPlayer = memo(
           playerObjectReferences,
           isCar: true,
         }),
-      [playerObjectReferences, camera, orientation]
+      [playerObjectReferences?.current?.rigidbody?.current, camera, orientation]
     );
 
     useAfterPhysicsStep((api) => {
@@ -123,8 +131,10 @@ export const CarPlayer = memo(
           position={position}
           ref={playerObjectReferences.current.rigidbody}
         >
-          <CarModel ref={playerObjectReferences} />
-          <Attachments ref={audioRef} />
+          <Suspense fallback={<Box />}>
+            <CarModel ref={playerObjectReferences} />
+            <Attachments ref={audioRef} />
+          </Suspense>
         </CarRigidBody>
         {isRaining && <Rain ref={playerObjectReferences.current.rigidbody} />}
       </>

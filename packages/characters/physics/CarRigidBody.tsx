@@ -5,7 +5,7 @@ import {
   RapierRigidBody,
   RigidBody,
 } from "@react-three/rapier";
-import { Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 import { ENTITY } from "game-constants";
 import { WaterAttachment3DModel } from "../players/car-player/water-attachment-3D-model";
 
@@ -24,67 +24,70 @@ const Wheels = () => {
     backRight: useRef(),
   });
 
+  const createHandler =
+    (referenceID: "frontLeft" | "frontRight" | "backLeft" | "backRight") =>
+    (payload) => {
+      console.log(
+        referenceID,
+        "touching " + payload.other.rigidBodyObject.name
+      );
+      const isOnGrass = payload.other.rigidBodyObject.name === ENTITY.GRASS;
+      const inSpeedThreshold =
+        Math.abs(payload.target.rigidBody.linvel().z) > 35;
+      // console.table({ inSpeedThreshold, isOnGrass });
+      wheelsAttachmentReferences.current[referenceID].current.visible =
+        inSpeedThreshold && isOnGrass;
+    };
+
   return (
     <>
       <BallCollider
         name="Front Left"
-        onContactForce={(payload) => {
-          wheelsAttachmentReferences.current.frontLeft.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
-            Math.abs(payload.target.rigidBody.linvel().z) > 35;
-        }}
+        onContactForce={createHandler("frontLeft")}
         args={[0.25]}
         position={[0.75, 0.25, 1.5]}
       />
       <WaterAttachment3DModel
         name="Front Left"
+        visible={false}
         ref={wheelsAttachmentReferences.current.frontLeft}
         position={[0, 0, 1.5]}
       />
       <BallCollider
         name="Back Left"
-        onContactForce={(payload) => {
-          wheelsAttachmentReferences.current.backLeft.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
-            Math.abs(payload.target.rigidBody.linvel().z) > 35;
-        }}
+        onContactForce={createHandler("backLeft")}
         args={[0.25]}
         position={[0.75, 0.25, -1.5]}
       />
       <WaterAttachment3DModel
         name="Back Left"
+        visible={false}
         ref={wheelsAttachmentReferences.current.backLeft}
         position={[0, 0, -1.5]}
       />
 
       <BallCollider
         name="Front Right"
-        onContactForce={(payload) => {
-          wheelsAttachmentReferences.current.frontRight.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
-            Math.abs(payload.target.rigidBody.linvel().z) > 35;
-        }}
+        onContactForce={createHandler("frontRight")}
         args={[0.25]}
         position={[-0.75, 0.25, 1.5]}
       />
       <WaterAttachment3DModel
         name="Front Right"
+        visible={false}
         ref={wheelsAttachmentReferences.current.frontRight}
         position={[0, 0, 1.5]}
         scale={new Vector3(-1, 1, 1)}
       />
       <BallCollider
         name="Back Right"
-        onContactForce={(payload) => {
-          wheelsAttachmentReferences.current.backRight.current.visible =
-            payload.other.rigidBodyObject.name === ENTITY.GRASS &&
-            Math.abs(payload.target.rigidBody.linvel().z) > 35;
-        }}
+        onContactForce={createHandler("backRight")}
         args={[0.25]}
         position={[-0.75, 0.25, -1.5]}
       />
       <WaterAttachment3DModel
         name="Back Right"
+        visible={false}
         ref={wheelsAttachmentReferences.current.backRight}
         position={[0, 0, -1.5]}
         scale={new Vector3(-1, 1, 1)}
@@ -180,6 +183,7 @@ const Wheels = () => {
   // );
 };
 
+const frontWheelsOrigin = 1.5;
 export const CarRigidBody = forwardRef<
   RapierRigidBody,
   Omit<CarRigidBodyProps, "playerRigidBodyReference">
@@ -190,10 +194,15 @@ export const CarRigidBody = forwardRef<
       ref={ref}
       position={position}
       lockRotations
-      mass={2000}
-      density={1500}
       friction={5}
       restitution={0.1}
+      enabledTranslations={[true, true, true]}
+      massProperties={{
+        mass: 1500,
+        centerOfMass: new Vector3(0, 0, frontWheelsOrigin),
+        principalAngularInertia: new Vector3(0, 0, 0),
+        angularInertiaLocalFrame: new Quaternion(0, 0, 0, 0),
+      }}
     >
       <CuboidCollider
         name="Front"

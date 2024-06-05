@@ -4,7 +4,7 @@ import React, { useMemo, useRef } from "react";
 
 import { EntitiesRegion } from "../../../EntitiesRegion";
 import { GLTF } from "three-stdlib";
-import { SkeletonUtils } from "three/examples/jsm/Addons.js";
+import { SkeletonUtils } from "three-stdlib";
 import { memo } from "react";
 import treeModelFile from "../../../assets/models/Tree/Tree.glb";
 import { useGLTF } from "@react-three/drei";

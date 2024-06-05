@@ -2,7 +2,9 @@ import barrierModelFile from "../../../assets/models/Barrier/Barrier.glb";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { SkeletonUtils } from "three-stdlib";
+import { useGraph } from "@react-three/fiber";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -52,9 +54,12 @@ export const BarrierStandardRes3DModel: FC<{
   scale;
 }> = ({ playAnimation, scale = new THREE.Vector3(1, 1, 1) }) => {
   const group = useRef<THREE.Group>();
-  const { nodes, materials, animations } = useGLTF(
+  const { scene, materials, animations } = useGLTF(
     barrierModelFile
   ) as GLTFResult;
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+
   const { actions } = useAnimations<GLTFActions>(animations, group);
 
   useEffect(() => {

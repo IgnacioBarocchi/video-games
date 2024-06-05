@@ -15,6 +15,7 @@ import {
   lerpVectors,
 } from "./helpers";
 import { input } from "../controls/input";
+import { PlayerObjectReferences } from "../players/car-player/car-player";
 
 export class Character {
   velocity = new Vector3();
@@ -55,17 +56,6 @@ export class Character {
     this.runSpeed = props.isCar ? 60 : 10;
     this.walkSpeed = props.isCar ? 40 : 7;
     this.playerObjectReferences = props.playerObjectReferences;
-
-    if (props.isCar) {
-      const frontWheelsOrigin = 16;
-      this.playerObjectReferences.current?.rigidbody?.current?.setAdditionalMassProperties(
-        1500,
-        new Vector3(0, 0, frontWheelsOrigin),
-        new Vector3(0, 0, 0),
-        new Quaternion(0, 0, 0, 0),
-        true
-      );
-    }
 
     this.camera = props.camera;
 
@@ -115,7 +105,7 @@ export class Character {
     this.updatePositionFromRigidbody();
     this.updateViewVector();
     this.updateOrientationTarget();
-    //! this.updateAirBro();
+    this.updateAirBro();
     this.updateMoveSpeed();
     this.updateMovementSpring(timeStep);
     this.updateRotationSpring(timeStep);
@@ -144,19 +134,30 @@ export class Character {
   shouldJump = false;
   jumping = 0;
   updateAirBro() {
-    if (!this.playerObjectReferences?.current?.rigidbody?.current) return;
+    const { x, y, z } =
+      this.playerObjectReferences.current.rigidbody.current.translation();
 
-    const currentY =
-      this.playerObjectReferences.current.rigidbody.current.linvel().y;
-    const isFalling = currentY < -3.16;
+    if (y !== 0 || y > 1) {
+      console.log("clamp");
 
-    if (this.jumping === 2 && this.falling && !isFalling) {
-      this.jumping = 0;
+      this.playerObjectReferences.current.rigidbody.current.setTranslation(
+        {
+          x,
+          y: 0,
+          z,
+        },
+        true
+      );
     }
+    // const isFalling = currentY < -3.16;
 
-    if (this.falling !== isFalling) {
-    }
-    this.falling = isFalling;
+    // if (this.jumping === 2 && this.falling && !isFalling) {
+    //   this.jumping = 0;
+    // }
+
+    // if (this.falling !== isFalling) {
+    // }
+    // this.falling = isFalling;
   }
 
   updateMovementSpring(timeStep: number) {
