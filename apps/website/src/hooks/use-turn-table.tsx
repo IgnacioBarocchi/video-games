@@ -4,7 +4,7 @@ import { useRef } from "react";
 export const useTurnTable = () => {
   const group = useRef<GroupProps>();
 
-  useFrame((rootState, delta) => {
+  useFrame((_rootState, delta) => {
     if (!group.current) {
       return;
     }

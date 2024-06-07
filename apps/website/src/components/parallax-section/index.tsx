@@ -22,13 +22,19 @@ const Container = styled.section<{
 
 export const Section: FC<{
   children: ReactNode | ReactNode[] | FC;
-  preset: "1" | "2" | "3";
   id?: string;
+  image: string;
   heights: { desktop: string; mobile: string };
-}> = ({ children, preset = "1", id, heights }) => {
+}> = ({ children, id, heights, image }) => {
   return (
     <Container id={id} heights={heights}>
-      <Layer className={`banner banner-${preset}`} settings={{ speed: 0.3 }}>
+      <Layer
+        style={{
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+        }}
+        settings={{ speed: 0.3 }}
+      >
         {children}
       </Layer>
     </Container>

@@ -1,9 +1,13 @@
-import { Layer } from "react-parallax-scroll";
 import demo from "../../../assets/video/demo.mp4";
 import poster from "../../../assets/images/BG4.png";
 import { styled } from "styled-components";
-import { FOOTER_HEIGHT } from "../../../constants";
-import { useRef, useState } from "react";
+import {
+  FOOTER_HEIGHT,
+  LINUX_LINK,
+  MAC_LINK,
+  WINDOWS_LINK,
+} from "../../../constants";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaLinux } from "react-icons/fa";
 import { FaApple } from "react-icons/fa";
 import { FaWindows } from "react-icons/fa";
@@ -13,6 +17,10 @@ import { Button } from "ui";
 import { Section } from "../../parallax-section";
 import wheelImageFile from "../../../../public/Wheel.png";
 import { Colors } from "game-constants";
+import image from "../../../assets/images/BG3.png";
+import useReleaseData from "../../../hooks/use-release-data";
+import { Loading } from "../../loading/loading";
+import { HTTPError } from "../../error/error";
 
 const Container = styled.div`
   width: 100vw;
@@ -42,16 +50,31 @@ const VignetteOverlay = styled.div`
 
 const Footer = styled.footer`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   position: absolute;
-  width: calc(100% - 50px - 10px);
   height: ${FOOTER_HEIGHT}px;
-  bottom: 25px;
+  bottom: 200px;
   left: 25px;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    left: 0;
+    width: 100%;
+  }
+`;
+
+const Buttons = styled.div`
+  display: flex;
   align-items: center;
   justify-content: center;
   justify-content: space-between;
+  width: calc(100% - 50px - 10px);
+
   @media (max-width: 768px) {
+    height: content-fit;
     width: 100%;
+    flex-direction: column;
   }
 `;
 
@@ -60,22 +83,34 @@ const PausePlayToggle = styled.button`
   border: 0;
   outline: none;
   background: transparent;
-  cursor: none;
 `;
+// cursor: none;
 
 const OSLabels = styled.div`
   display: flex;
   width: 50%;
   align-items: center;
   justify-content: space-evenly;
+  @media (max-width: 768px) {
+    font-size: 30px;
+    width: 100%;
+  }
 `;
 
 const OSLabel = styled.label`
   display: flex;
   gap: 16px;
   font-size: 40px;
-  color: white;
   align-items: center;
+  &:hover {
+    text-shadow: 0px 0px 18px ${Colors.white};
+    // text-shadow:box-shadow: 0px 0px 18px 6px ${Colors.white};
+    & > svg {
+      // box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073,
+      //   0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+    }
+  }
+
   @media (max-width: 768px) {
     font-size: 30px;
   }
@@ -91,7 +126,7 @@ const MainTextContainer = styled.div`
   align-items: center;
   gap: 16px;
   @media (max-width: 768px) {
-    top: 10%;
+    top: 20%;
     width: 100%;
   }
 `;
@@ -102,23 +137,114 @@ const Logo = styled.div`
   z-index: 5;
   @media (max-width: 768px) {
     top: 40px;
+    font-size: 50px;
   }
 `;
 
 const Slogan = styled.div`
+  font-family: Tanker;
   font-size: 48px;
   @media (max-width: 768px) {
     top: 20px;
   }
 `;
 
-const ImageLogo = styled.img`
-  position: absolute;
-  width: 150px;
-  top: -25px;
+// const ImageLogo = styled.img`
+//   position: absolute;
+//   width: 150px;
+//   top: -25px;
+// `;
+
+const Quote = styled.div`
+  font-family: Tanker;
+  font-size: 50px;
+  text-transform: uppercase;
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
 `;
 
+const Author = styled.div`
+  font-family: Supreme;
+  font-size: 25px;
+`;
+
+const OSText = styled.span`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const Quotes = () => {
+  const [quotesIndex, setQuotesIndex] = useState(0);
+  const quotes = useMemo(
+    () => [
+      {
+        quote: "Está re bueno el ruidito de cuando pisa al zombie",
+        author: "Un amigo",
+      },
+      {
+        quote: "Los gráficos no son importantes si el juego es bueno",
+        author: "Otro amigo",
+      },
+      {
+        quote: "Los controles y la física se sienten bien",
+        author: "Otro amigo",
+      },
+      {
+        quote: "Me anda bastante bug jeje",
+        author: "Otro amigo",
+      },
+      {
+        quote: "El juego está muy bueno",
+        author: "Chat GPT",
+      },
+      {
+        quote: "Jajaja corte Carmageddon",
+        author: "Otro amigo",
+      },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setQuotesIndex((prev) => {
+        const next = prev + 1;
+        if (next >= quotes.length) {
+          return 0;
+        }
+        return next;
+      });
+    }, 5000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [quotes.length]); // Ensure effect runs only once by providing quotes.length
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "calc(100% - 50px)",
+        padding: "25px 0",
+      }}
+    >
+      <Quote>"{quotes[quotesIndex].quote}"</Quote>
+      <Author>-{quotes[quotesIndex].author}</Author>
+    </div>
+  );
+};
+
 export const Landing = () => {
+  const {
+    data: { windows, linux, mac },
+    error,
+    loading,
+  } = useReleaseData();
+
   const [isPlaying, setIsPlaying] = useState(true);
   const videRef = useRef();
 
@@ -129,8 +255,20 @@ export const Landing = () => {
     setIsPlaying((prev) => !prev);
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <HTTPError />;
+  }
+
   return (
-    <Section preset="3" heights={{ desktop: "100vh", mobile: "100vh" }}>
+    <Section
+      image={image}
+      preset="3"
+      heights={{ desktop: "100vh", mobile: "100vh" }}
+    >
       <Container>
         <FullScreenVideo
           ref={videRef}
@@ -147,11 +285,8 @@ export const Landing = () => {
         </FullScreenVideo>
         <VignetteOverlay />
         <MainTextContainer>
-          <Layer settings={{ speed: 0.2, type: "rotate" }}>
-            <ImageLogo src={wheelImageFile} />
-          </Layer>
-          <Logo>La Luz del Túnel</Logo>
-          <Slogan>No tenés futuro</Slogan>
+          <Logo>LA LUZ DEL TÚNEL</Logo>
+          <Slogan>NO TENÉS FUTURO</Slogan>
           <Button
             style={{
               fontSize: "25px",
@@ -160,7 +295,7 @@ export const Landing = () => {
               background: Colors.richBlack,
               border: "1px solid " + Colors.darkGrey,
               color: "#F1FFFA",
-              cursor: "none",
+              // cursor: "none",
             }}
             onClick={() => {
               document
@@ -172,24 +307,29 @@ export const Landing = () => {
           </Button>
         </MainTextContainer>
         <Footer>
-          <PausePlayToggle onClick={togglePlay}>
-            {isPlaying ? <FaPauseCircle /> : <FaPlayCircle />}
-          </PausePlayToggle>
-          <OSLabels>
-            <OSLabel as="a" href={""}>
-              <FaLinux />
-              <span>Linux</span>
-            </OSLabel>
-            <OSLabel as="a" href={""}>
-              <FaWindows />
-              <span>Windows</span>
-            </OSLabel>
-            <OSLabel as="a" href={""}>
-              <FaApple />
-              <span>macOS</span>
-            </OSLabel>
-          </OSLabels>
-          <div style={{ width: "50px", height: "50px" }}></div>
+          <Buttons>
+            <PausePlayToggle onClick={togglePlay}>
+              {isPlaying ? <FaPauseCircle /> : <FaPlayCircle />}
+            </PausePlayToggle>
+            <OSLabels>
+              <OSLabel as="a" href={linux.endpoint ?? ""} target="_blank">
+                <FaLinux />
+                <OSText>Linux</OSText>
+              </OSLabel>
+              <OSLabel as="a" href={windows.endpoint ?? ""} target="_blank">
+                <FaWindows />
+                <OSText>Windows</OSText>
+              </OSLabel>
+              <OSLabel as="a" href={mac.endpoint ?? ""} target="_blank">
+                <FaApple />
+                <OSText>macOS</OSText>
+              </OSLabel>
+            </OSLabels>
+            <div
+              style={{ width: "50px", height: "50px", visibility: "hidden" }}
+            ></div>
+          </Buttons>
+          <Quotes />
         </Footer>
       </Container>
     </Section>

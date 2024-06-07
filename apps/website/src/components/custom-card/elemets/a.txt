@@ -1,0 +1,85 @@
+import Card from "react-animated-3d-card";
+import Parallax, { Layer } from "react-parallax-scroll";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { FC, useEffect } from "react";
+import { styled } from "styled-components";
+import { Colors } from "game-constants";
+import { Foreground3D, ReleaseMetaData } from "./elemets";
+
+const MainWrapper = styled.div`
+  position: relative;
+`;
+
+const Card3D = ({ releaseMetaData, children }) => {
+  return (
+    <Card
+      cursorPointer={false}
+      shineStrength={0.75}
+      styled={{
+        border: `1px solid ${Colors.darkGrey}`,
+        background: `linear-gradient(to right, ${Colors.d}, ${Colors.l}, ${Colors.d})`,
+        height: releaseMetaData ? "400px" : "300px",
+        width: "300px",
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        pointerEvents: "all",
+        opacity: "0.8",
+      }}
+    >
+      {children}
+    </Card>
+  );
+};
+
+export interface CustomCardProps {
+  title: string;
+  topText?: string;
+  Scene: FC;
+  releaseMetaData?: { date: string; releaseID: string };
+}
+
+export const CustomCard: FC<CustomCardProps> = ({
+  title,
+  topText,
+  Scene,
+  releaseMetaData,
+}) => {
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  return (
+    <Parallax>
+      <Layer settings={{ speed: 0.2, type: "translateY" }}>
+        {/* data-aos="fade-up" */}
+        <MainWrapper>
+          <Foreground3D Scene={Scene} />
+          <Card3D releaseMetaData={releaseMetaData}>
+            <p style={{ paddingLeft: "25px" }}>{topText}</p>
+            <div
+              style={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "30px",
+                  color: "white",
+                }}
+              >
+                {title}
+              </div>
+            </div>
+            <ReleaseMetaData releaseMetaData={releaseMetaData} />
+          </Card3D>
+        </MainWrapper>
+      </Layer>
+    </Parallax>
+  );
+};

@@ -2,7 +2,7 @@ import Parallax, { Layer } from "react-parallax-scroll";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Card from "react-animated-3d-card";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { styled } from "styled-components";
 import { Colors } from "game-constants";
 
@@ -33,20 +33,17 @@ const SceneWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 4;
+  z-index: 1000;
   pointer-events: none;
-  width: 40%;
-  height: 40%;
+  width: 100%;
+  height: 50%;
 `;
 
-const CardWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  pointer-events: all;
-  opacity: 0.8;
+const TopText = styled.p`
+  position: absolute;
+  height: object-fit;
+  left: 25px;
 `;
-
 const MainWrapper = styled.div`
   position: relative;
 `;
@@ -80,60 +77,107 @@ const ReleaseMetaData: FC<Pick<CustomCardProps, "releaseMetaData">> = ({
   );
 };
 
+export const Foreground3D: FC<
+  Pick<CustomCardProps, "Scene"> & { text: string }
+> = ({ Scene, text }) => (
+  <SceneWrapper>
+    <Scene />
+    <div
+      style={{
+        position: "absolute",
+        zIndex: 4,
+        bottom: 0,
+        fontSize: "30px",
+      }}
+    >
+      {text}
+    </div>
+  </SceneWrapper>
+);
+
+const DynamicCard = ({ children, isMobile, releaseMetaData }) => {
+  const styles = useMemo(
+    () => ({
+      background: `linear-gradient(to right, ${Colors.d}, ${Colors.l}, ${Colors.d})`,
+      width: isMobile ? "calc(100vw - 50px)" : "300px",
+      height: isMobile
+        ? releaseMetaData
+          ? "300px"
+          : "200px"
+        : releaseMetaData
+        ? "400px"
+        : "300px",
+      border: `1px solid ${Colors.darkGrey}`,
+      position: "relative",
+      display: "flex",
+      justifyContent: "center",
+      alignContent: "center",
+      pointerEvents: isMobile ? "none" : "all",
+      opacity: "0.8",
+      placeContent: "none",
+      transform: "none",
+    }),
+    [isMobile]
+  );
+
+  if (isMobile) {
+    return <div style={styles}>{children}</div>;
+  }
+
+  return (
+    <Card
+      style={styles}
+      cursorPointer={false}
+      shineStrength={0.75}
+      isStatic={isMobile}
+    >
+      {children}
+    </Card>
+  );
+};
+
 export const CustomCard: FC<CustomCardProps> = ({
   title,
   topText,
   Scene,
   releaseMetaData,
 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  const checkIfMobile = () => {
+    const mobile = window.innerWidth <= 768;
+    setIsMobile(mobile);
+  };
+
   useEffect(() => {
     AOS.init();
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
   }, []);
+
+  if (isMobile) {
+    return (
+      <MainWrapper data-aos={isMobile ? "none" : "fade-up"}>
+        <Foreground3D Scene={Scene} text={title} />
+        <DynamicCard isMobile={isMobile} releaseMetaData={releaseMetaData}>
+          <TopText>{topText}</TopText>
+          <ReleaseMetaData releaseMetaData={releaseMetaData} />
+        </DynamicCard>
+      </MainWrapper>
+    );
+  }
 
   return (
     <Parallax>
       <Layer settings={{ speed: 0.2, type: "translateY" }}>
-        <MainWrapper data-aos="fade-up" as="a" href="">
-          {/* this is my foreground */}
-          <SceneWrapper>
-            <Scene />
-          </SceneWrapper>
-          {/* this is my background */}
-          <CardWrapper>
-            <Card
-              cursorPointer={false}
-              shineStrength={0.75}
-              style={{
-                background: `linear-gradient(to right, ${Colors.d}, ${Colors.l}, ${Colors.d})`,
-                width: "300px",
-                height: releaseMetaData ? "400px" : "300px",
-                border: `1px solid ${Colors.darkGrey}`,
-                position: "relative",
-              }}
-              onClick={() => console.log("Link to...")}
-            >
-              <p style={{ paddingLeft: "25px" }}>{topText}</p>
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "30px",
-                    color: "white",
-                  }}
-                  onClick={console.log("test")}
-                >
-                  {title}
-                </div>
-              </div>
-              <ReleaseMetaData releaseMetaData={releaseMetaData} />
-            </Card>
-          </CardWrapper>
+        <MainWrapper data-aos={isMobile ? "none" : "fade-up"}>
+          <Foreground3D Scene={Scene} text={title} />
+          <DynamicCard isMobile={isMobile} releaseMetaData={releaseMetaData}>
+            <TopText>{topText}</TopText>
+            <ReleaseMetaData releaseMetaData={releaseMetaData} />
+          </DynamicCard>
         </MainWrapper>
       </Layer>
     </Parallax>

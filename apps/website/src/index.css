@@ -8,6 +8,15 @@
   src: url("./assets/fonts/Supreme-Regular.otf");
 }
 
+@font-face {
+  font-family: "Tanker";
+  src: url("./assets/fonts/Tanker-Regular.otf");
+}
+
+html {
+  width: 100vw;
+}
+
 :root {
   font-family: "Supreme";
   line-height: 1.5;
@@ -15,21 +24,23 @@
 
   color-scheme: light dark;
   color: #f1fffa;
-  background-color: #ff0404;
+  background-color: black;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  width: 100vw;
 }
 
 p {
   font-family: "Supreme";
 }
 
-a {
+/* a {
   cursor: none;
-}
+} */
 a:link {
   text-decoration: none;
 }

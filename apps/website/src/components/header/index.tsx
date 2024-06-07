@@ -1,8 +1,15 @@
 import { styled } from "styled-components";
 import { HEADER_HEIGHT } from "../../constants";
-import { Text } from "ui/elements/Text";
 import { Button } from "ui";
 import { Colors } from "game-constants";
+
+const HeaderText = styled.div`
+  font-family: Technor;
+  font-size: 50px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+`;
 
 const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
@@ -15,10 +22,9 @@ const Container = styled.header`
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  z-index: 5;
+  z-index: 10;
   top: 10px;
   left: 25px;
-
   background: rgba(40, 61, 59, 0.25);
   box-shadow: 0 8px 32px 0 rgba(80, 72, 93, 0.37);
   backdrop-filter: blur(20px);
@@ -26,15 +32,30 @@ const Container = styled.header`
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   @media (max-width: 768px) {
-    display: none;
+    width: 300px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 `;
+
+const DownloadButton = styled(Button)`
+  font-size: 25px;
+  height: 50px;
+  border-radius: 6px;
+  background: ${Colors.white};
+  color: ${Colors.richBlack};
+  @media (max-width: 768px) {
+    height: 30px;
+    font-size: 15px;
+  }
+`;
+
 const scrollbar = 10;
 
 export const Header = () => {
   return (
     <Container>
-      <Text hideStroke={true}>La Luz del Túnel</Text>
+      <HeaderText>LA LUZ DEL TÚNEL</HeaderText>
       <div
         style={{
           paddingRight: `calc(25px + ${scrollbar}px`,
@@ -42,15 +63,7 @@ export const Header = () => {
           zIndex: 50,
         }}
       >
-        <Button
-          style={{
-            fontSize: "25px",
-            height: "50px",
-            borderRadius: "6px",
-            background: Colors.white,
-            color: Colors.richBlack,
-            cursor: "none",
-          }}
+        <DownloadButton
           onClick={() => {
             document
               .querySelector("#downloads")
@@ -58,7 +71,7 @@ export const Header = () => {
           }}
         >
           Descargar
-        </Button>
+        </DownloadButton>
       </div>
     </Container>
   );

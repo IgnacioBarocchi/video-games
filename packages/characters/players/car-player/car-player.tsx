@@ -32,6 +32,7 @@ export type Props = {
   cameraTheta?: number;
   orientation?: Vector3Tuple;
   isRaining?: boolean;
+  controlled?: boolean;
 };
 
 export type PlayerObjectReferences = MutableRefObject<{
@@ -46,6 +47,7 @@ export const CarPlayer = memo(
     cameraTheta = 15,
     orientation = [0, 0, 1],
     isRaining,
+    controlled = true,
   }: Props) => {
     const playerObjectReferences = useRef({
       rigidbody: useRef<RapierRigidBody>(null),

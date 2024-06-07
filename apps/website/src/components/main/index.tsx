@@ -3,5 +3,10 @@ import { Colors } from "game-constants";
 
 export const Main = styled.main`
   background: ${Colors.richBlack};
-  cursor: none;
+  color: ${Colors.white};
+  overflow-x: hidden;
+  & a {
+    color: ${Colors.white};
+  }
 `;
+// cursor: none;

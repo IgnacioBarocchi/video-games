@@ -17,6 +17,7 @@ const Scenario = () => {
 };
 
 export const LVL1 = () => {
+  const gameOver = useCarGameStore((state) => state.gameOver);
   const setLoading = useCarGameStore(
     useCallback((state) => state.setLoading, [])
   );
@@ -28,7 +29,11 @@ export const LVL1 = () => {
   return (
     <>
       <Scenario />
-      <CarPlayer position={[0, 0.1, ROAD_LENGTH - 50]} isRaining={true} />
+      <CarPlayer
+        position={[0, 0.1, ROAD_LENGTH - 50]}
+        isRaining={true}
+        controlled={!gameOver}
+      />
     </>
   );
 };

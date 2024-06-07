@@ -1,33 +1,117 @@
 import { styled } from "styled-components";
 import { Section } from "../../parallax-section";
-import { Colors } from "game-constants";
-const Aa = styled.div`
-  width: 50%;
-  height: 500px;
-  border: 1px solid ${Colors.mintCream};
+import imageCarPart from "../../../assets/images/CAR_PART.png";
+import imageZombiePart from "../../../assets/images/ZOMBIE_PART.png";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+
+const AboutTitle = styled.h1`
+  font-family: Tanker;
+  font-size: 50px;
+`;
+
+const AboutText = styled.div`
   font-size: 30px;
 `;
 
+const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  height: 100%;
+  align-items: center;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+const Block = styled.div`
+  z-index: 5;
+  width: 50%;
+  box-shadow: 0 8px 32px 0 rgba(80, 72, 93, 0.37);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  margin-right: 25px;
+  @media (max-width: 768px) {
+    margin-right: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const VideoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+`;
+
+const ZombieImagePart = styled.div`
+  position: absolute;
+  top: 0;
+  left: 5%;
+  height: 100vh;
+  width: 500px;
+  background-image: url(${imageZombiePart});
+  background-size: cover;
+  background-position-y: center;
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100vw;
+  }
+`;
+
+const Boxes = () => (
+  <ContentWrapper>
+    {/* <Block style={{ visibility: "hidden" }}>
+      <VideoWrapper data-aos="fade-up">
+        <div>video</div>
+        <div>cubo</div>
+      </VideoWrapper>
+    </Block> */}
+    <Block>
+      <VideoWrapper data-aos="fade-right">
+        <AboutTitle>YA FUE, NO TENÉS FUTURO</AboutTitle>
+        <AboutText>
+          En un mundo devastado por un apocalipsis zombie, tu misión es simple
+          pero desafiante: ¡sobrevivir! Viaja a través de la provincia de Buenos
+          Aires enfrentando peligros en cada esquina. Tu vehículo es tu mayor
+          aliado y deberás cuidarlo como a tu propia vida.
+        </AboutText>
+        <AboutText>-Chat GPT</AboutText>
+      </VideoWrapper>
+    </Block>
+  </ContentWrapper>
+);
+
+const Wrapper = styled.div`
+  height: 100vh;
+  position: relative;
+  top: 0;
+`;
+
 export const ViewTrailer = () => {
+  useEffect(() => {
+    AOS.init({
+      offset: 500,
+      delay: 0,
+      duration: 3000,
+      easing: "ease",
+      once: false,
+      anchorPlacement: "top-bottom",
+    });
+  }, []);
+
   return (
-    <Section preset="3" heights={{ desktop: "100vh", mobile: "100vh" }}>
-      <div style={{ height: "100vh" }}>
-        <Aa>
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-          ab illo inventore veritatis et quasi architecto beatae vitae dicta
-          sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-          aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
-          qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui
-          dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed
-          quia non numquam eius modi tempora incidunt ut labore et dolore magnam
-          aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-          exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex
-          ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in
-          ea voluptate velit esse quam nihil molestiae consequatur, vel illum
-          qui dolorem eum fugiat quo voluptas nulla pariatur?
-        </Aa>
-      </div>
-    </Section>
+    <div style={{ position: "relative" }}>
+      <Section
+        image={imageCarPart}
+        heights={{ desktop: "100vh", mobile: "100vh" }}
+      >
+        <Wrapper>
+          <Boxes />
+          <ZombieImagePart data-aos="fade-left" />
+        </Wrapper>
+      </Section>
+    </div>
   );
 };

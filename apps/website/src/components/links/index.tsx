@@ -22,10 +22,10 @@ const LinkContainer = styled.div`
 
 const ButtonWrapper = styled.div`
   width: fit-content;
-  & * {
-    cursor: none;
-  }
 `;
+// & * {
+//   cursor: none;
+// }
 
 const Link: FC<LinkProps> = ({ to, text, Scene }) => {
   return (

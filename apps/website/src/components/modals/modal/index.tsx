@@ -1,38 +1,47 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Colors } from "game-constants";
+import { IoMdCloseCircle } from "react-icons/io";
 
 const ModalContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(25px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(${Colors.richBlack}, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(80, 72, 93, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 `;
 
-const ModalContent = styled.dialog`
+const Dialog = styled.dialog`
   background-color: ${Colors.richBlack};
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 25%;
   border: 1px solid ${Colors.darkGrey};
 `;
 
 const CloseButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   font-size: 50px;
   position: absolute;
   top: 10px;
   right: 10px;
   cursor: pointer;
-  border: 1px solid ${Colors.darkGrey};
   background: transparent;
+  border: none;
+  outline: none;
 `;
 
 export interface ModalProps {
@@ -59,12 +68,14 @@ export const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <>
       {showModal && (
-        <ModalContainer>
-          <ModalContent open={isOpen}>
-            <CloseButton onClick={handleClose}>&times;</CloseButton>
+        <Dialog open={isOpen}>
+          <ModalContainer>
+            <CloseButton onClick={handleClose}>
+              <IoMdCloseCircle />
+            </CloseButton>
             {children}
-          </ModalContent>
-        </ModalContainer>
+          </ModalContainer>
+        </Dialog>
       )}
     </>
   );
