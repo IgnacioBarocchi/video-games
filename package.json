@@ -2,9 +2,7 @@
   "name": "sobreviviendo-al-apocalipsis",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "build": "cd /apps/website & pnpm run build"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC"
