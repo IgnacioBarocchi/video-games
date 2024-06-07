@@ -48,7 +48,10 @@ export const CollaborateModal = () => {
               lectron, React, TypeScript, Three-Fiber-Drei y Rapier.
             </P>
             <P>* Para el contenido gráfico se usó Blender y Mixamo.</P>
-            <P>* Los sonidos utilizados son gratuitos y de diversas fuentes.</P>
+            <P>
+              * Los sonidos utilizados son dominio público y de diversas
+              fuentes.
+            </P>
           </div>
         </Modal>,
         document.body

@@ -20,7 +20,7 @@ import { World3D } from "../world-3d";
 
 const Experience3D = memo(() => (
   <World3D>
-    <OrbitControls makeDefault={true} enableDamping={true} />
+    {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
     {/* <Perf position="top-right" /> */}
     <Preload all={true} />
     <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>

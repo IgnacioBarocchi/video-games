@@ -2,14 +2,12 @@ import { Layer } from "react-parallax-scroll";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Text } from "ui/elements/Text";
-import picture from "../../assets/images/BG4.png";
 import { Colors } from "game-constants";
 import { useEffect } from "react";
 import video2 from "../../assets/video/demo.mp4";
 
 const CONTAINER_WIDTH = 1648;
 const VIDEO_WIDTH = CONTAINER_WIDTH / 1.25;
-const IMAGE_WIDTH = CONTAINER_WIDTH - VIDEO_WIDTH;
 const ASPECT_RATIO = 1.55 / 1; // 16 / 9;
 const CONTAINER_HEIGHT = VIDEO_WIDTH / ASPECT_RATIO;
 
@@ -35,45 +33,6 @@ const CopyText = () => {
   );
 };
 
-// height: " calc(100% + 25px + 25px)",
-
-const Image = () => (
-  <div
-    style={{
-      position: "relative",
-      height: "100%",
-      width: `${IMAGE_WIDTH}px`,
-    }}
-  >
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        zIndex: 50,
-        background: `linear-gradient(0deg, #630B0F 1%, rgba(255,255,255, 0) 20%)`,
-      }}
-    ></div>
-    <Layer
-      settings={{ speed: 0.3, type: "backgroundY" }}
-      data-aos-delay="5000"
-      data-aos="fade-up"
-      style={{
-        background: "#370508",
-        display: "flex",
-        alignItems: "flex-end",
-        width: "100%",
-        height: "100%",
-        backgroundImage: `url("${picture}")`,
-        backgroundSize: "120%",
-        position: "absolute",
-        top: 0,
-      }}
-    />
-  </div>
-);
-
 export const LandingContent = () => {
   useEffect(() => {
     AOS.init({
@@ -95,7 +54,6 @@ export const LandingContent = () => {
         border: `1px solid ${Colors.darkGrey}`,
       }}
     >
-      <Image />
       <div
         data-aos="fade-down"
         data-aos-delay="5000"
