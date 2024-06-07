@@ -6,6 +6,12 @@ import { styled } from "styled-components";
 const Title = styled.h1`
   font-size: 75px;
   font-family: Technor;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     font-size: 50px;
   }
@@ -14,6 +20,12 @@ const Title = styled.h1`
 const P = styled.p`
   font-size: 25px;
   font-family: Supreme;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     font-size: 20px;
   }

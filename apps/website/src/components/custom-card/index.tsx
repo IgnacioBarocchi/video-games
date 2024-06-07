@@ -5,21 +5,19 @@ import Card from "react-animated-3d-card";
 import { FC, useEffect, useMemo, useState } from "react";
 import { styled } from "styled-components";
 import { Colors } from "game-constants";
+import { Label, Paragraph, Span } from "../responsive-text-content";
 
-const TitleLabel = styled.label<{ position: "R" | "L" }>`
-  color: white;
+const TitleLabel = styled(Paragraph)<{ position: "R" | "L" }>`
   position: absolute;
   bottom: 60px;
   opacity: 0.5;
   ${({ position }) => (position === "R" ? "right: " : "left: ")}25px;
 `;
 
-const TextLabel = styled.label<{ position: "R" | "L" }>`
-  color: white;
+const TextLabel = styled(Span)<{ position: "R" | "L" }>`
   position: absolute;
   bottom: 25px;
   opacity: 1;
-  font-size: 25px;
   ${({ position }) => (position === "R" ? "right: " : "left: ")}25px;
 `;
 
@@ -82,7 +80,7 @@ export const Foreground3D: FC<
 > = ({ Scene, text }) => (
   <SceneWrapper>
     <Scene />
-    <div
+    <Label
       style={{
         position: "absolute",
         zIndex: 4,
@@ -91,7 +89,7 @@ export const Foreground3D: FC<
       }}
     >
       {text}
-    </div>
+    </Label>
   </SceneWrapper>
 );
 
@@ -110,12 +108,13 @@ const DynamicCard = ({ children, isMobile, releaseMetaData }) => {
       border: `1px solid ${Colors.darkGrey}`,
       position: "relative",
       display: "flex",
-      justifyContent: "center",
+      justifyContent: isMobile ? "flex-start" : "center",
       alignContent: "center",
       pointerEvents: isMobile ? "none" : "all",
       opacity: "0.8",
       placeContent: "none",
       transform: "none",
+      padding: "25px",
     }),
     [isMobile]
   );
@@ -162,7 +161,7 @@ export const CustomCard: FC<CustomCardProps> = ({
       <MainWrapper data-aos={isMobile ? "none" : "fade-up"}>
         <Foreground3D Scene={Scene} text={title} />
         <DynamicCard isMobile={isMobile} releaseMetaData={releaseMetaData}>
-          <TopText>{topText}</TopText>
+          <Label>{topText}</Label>
           <ReleaseMetaData releaseMetaData={releaseMetaData} />
         </DynamicCard>
       </MainWrapper>

@@ -7,8 +7,8 @@ import * as THREE from "three";
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import windows3DModel from "../../assets/models/windows/Windows.glb";
-import { useTurnTable } from "../../hooks/use-turn-table";
+import windows3DModel from "../../../assets/models/windows/Windows.glb";
+import { useTurnTable } from "../../../hooks/use-turn-table";
 
 type GLTFResult = GLTF & {
   nodes: {

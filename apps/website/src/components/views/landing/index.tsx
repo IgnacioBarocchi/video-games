@@ -1,12 +1,12 @@
 import { styled } from "styled-components";
 import { FOOTER_HEIGHT } from "../../../constants";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 
-import { Button } from "ui";
 import { Section } from "../../parallax-section";
-import { Colors } from "game-constants";
 import image from "../../../assets/images/BG3.png";
 import { BackgroundVideo, OSButtons, Quotes } from "./elements";
+import { Heading1, Heading2 } from "../../responsive-text-content";
+import { Button } from "../../button";
 
 const Container = styled.div`
   width: 100vw;
@@ -19,49 +19,46 @@ const Footer = styled.footer`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
   height: ${FOOTER_HEIGHT}px;
-  bottom: 200px;
-  left: 25px;
   width: 100%;
+  height: 100%;
+  justify-content: center;
 
-  @media (max-width: 768px) {
-    left: 0;
-    width: 100%;
-  }
+  // // position: absolute;
+  // // bottom: 15%;
+  // // left: 25px;
+
+  // @media (max-width: 576px) {
+  // }
+  // @media (max-width: 992px) {
+  // }
+  // @media (max-width: 1200px) {
+  // }
+  // @media (max-width: 768px) {
+  //   left: 0;
+  //   width: 100%;
+  // }
 `;
 
 const MainTextContainer = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
+  // position: absolute;
+  // top: 25%;
+  // left: 50%;
+  // transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  @media (max-width: 768px) {
-    top: 20%;
-    width: 100%;
-  }
-`;
-
-const Logo = styled.div`
-  font-size: 60px;
-  font-family: Technor;
-  z-index: 5;
-  @media (max-width: 768px) {
-    top: 40px;
-    font-size: 50px;
-  }
-`;
-
-const Slogan = styled.div`
-  font-family: Tanker;
-  font-size: 48px;
-  @media (max-width: 768px) {
-    top: 20px;
-  }
+  // @media (max-width: 576px) {
+  // }
+  // @media (max-width: 992px) {
+  // }
+  // @media (max-width: 1200px) {
+  // }
+  // @media (max-width: 768px) {
+  //   top: 20%;
+  //   width: 100%;
+  // }
 `;
 
 export const Landing = () => {
@@ -69,28 +66,24 @@ export const Landing = () => {
 
   return (
     <Section image={image} heights={{ desktop: "100vh", mobile: "100vh" }}>
+      <BackgroundVideo ref={videoRef} />
       <Container>
-        <BackgroundVideo ref={videoRef} />
         <MainTextContainer>
-          <Logo>LA LUZ DEL TÚNEL</Logo>
-          <Slogan>NO TENÉS FUTURO</Slogan>
+          <Heading1
+            style={{ width: "100vw", textAlign: "center", marginTop: "100px" }}
+          >
+            LA LUZ DEL TÚNEL
+          </Heading1>
+          <Heading2 font="Tanker">NO TENÉS FUTURO</Heading2>
           <Button
-            style={{
-              fontSize: "25px",
-              height: "50px",
-              borderRadius: "6px",
-              background: Colors.richBlack,
-              border: "1px solid " + Colors.darkGrey,
-              color: "#F1FFFA",
-            }}
             onClick={() => {
               document
                 .querySelector("#downloads")
                 ?.scrollIntoView({ behavior: "smooth" });
             }}
-          >
-            Descargar
-          </Button>
+            label="Descargar"
+            skin="dark"
+          />
         </MainTextContainer>
         <Footer>
           <OSButtons ref={videoRef} />

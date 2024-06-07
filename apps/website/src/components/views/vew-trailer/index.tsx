@@ -5,6 +5,7 @@ import imageZombiePart from "../../../assets/images/ZOMBIE_PART.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import { Heading2, Paragraph, Span } from "../../responsive-text-content";
 
 const AboutTitle = styled.h1`
   font-family: Tanker;
@@ -20,6 +21,12 @@ const ContentWrapper = styled.div`
   justify-content: flex-end;
   height: 100%;
   align-items: center;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     justify-content: center;
   }
@@ -32,6 +39,12 @@ const Block = styled.div`
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   margin-right: 25px;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     margin-right: 0;
     width: 100%;
@@ -54,6 +67,12 @@ const ZombieImagePart = styled.div`
   background-image: url(${imageZombiePart});
   background-size: cover;
   background-position-y: center;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     margin-left: 0;
     width: 100vw;
@@ -70,14 +89,14 @@ const Boxes = () => (
     </Block> */}
     <Block>
       <VideoWrapper data-aos="fade-right">
-        <AboutTitle>YA FUE, NO TENÉS FUTURO</AboutTitle>
-        <AboutText>
+        <Heading2 font="Tanker">YA FUE, NO TENÉS FUTURO</Heading2>
+        <Paragraph>
           En un mundo devastado por un apocalipsis zombie, tu misión es simple
           pero desafiante: ¡sobrevivir! Viaja a través de la provincia de Buenos
           Aires enfrentando peligros en cada esquina. Tu vehículo es tu mayor
           aliado y deberás cuidarlo como a tu propia vida.
-        </AboutText>
-        <AboutText>-Chat GPT</AboutText>
+        </Paragraph>
+        <Span>-Chat GPT</Span>
       </VideoWrapper>
     </Block>
   </ContentWrapper>

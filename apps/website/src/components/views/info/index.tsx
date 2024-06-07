@@ -1,7 +1,4 @@
-import { Text } from "ui/elements/Text";
-import { BookScene } from "../../book-scene";
-import { BoxScene } from "../../box-scene";
-import { CoinsScene } from "../../coins-scene";
+import { BoxScene } from "../../scene-3d/box-scene";
 import { CustomCard } from "../../custom-card";
 import { Footer } from "../../footer";
 import { Section } from "../../parallax-section";
@@ -11,6 +8,9 @@ import image from "../../../assets/images/BG2.png";
 import { Modal } from "../../modals/modal";
 import { createPortal } from "react-dom";
 import { useReducer } from "react";
+import { BookScene } from "../../scene-3d/book-scene";
+import { CoinsScene } from "../../scene-3d/coins-scene";
+import { Heading3 } from "../../responsive-text-content";
 
 const Container = styled.div`
   display: flex;
@@ -21,6 +21,12 @@ const FooterText = styled.div`
   font-family: Technor;
   font-size: 50px;
   margin-left: 25px;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     font-size: 30px;
     margin-left: 0;
@@ -35,6 +41,12 @@ const InfoSection = styled(Section)`
 `;
 
 const CustomRow = styled(FlexRow)`
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     height: ${({ heights }) => heights.mobile};
     flex-direction: column;
@@ -105,7 +117,7 @@ export const Info = () => {
         </CustomRow>
       </InfoSection>
       <Footer>
-        <FooterText hideStroke={true}>Creado por Ignacio Barocchi</FooterText>
+        <Heading3>Creado por Ignacio Barocchi</Heading3>
       </Footer>
       {createPortal(
         <Modal

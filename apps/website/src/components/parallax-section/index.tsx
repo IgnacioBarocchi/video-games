@@ -15,6 +15,12 @@ const Container = styled.section<{
     ${Colors.darkGrey} 100%
   );
 
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     height: ${({ heights }) => heights.mobile};
   }

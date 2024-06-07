@@ -10,9 +10,9 @@ export const Footer = styled.footer`
   padding-left: 1rem;
   display: flex;
   align-items: center;
-  @media (max-width: 768px) {
-    padding-left: 0;
-    justify-content: center;
-  }
+  @media  (max-width: 768px) {
+      padding-left: 0;
+      justify-content: center;
+    }
 }
 `;

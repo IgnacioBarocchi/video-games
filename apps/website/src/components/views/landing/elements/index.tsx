@@ -11,6 +11,7 @@ import { Suspense, forwardRef, useEffect, useMemo, useState } from "react";
 import useReleaseData from "../../../../hooks/use-release-data";
 import { Loading } from "../../../loading/loading";
 import { HTTPError } from "../../../error/error";
+import { Heading3, Label, Paragraph } from "../../../responsive-text-content";
 
 const FullScreenVideo = styled.video`
   width: 100%;
@@ -65,6 +66,12 @@ const Buttons = styled.div`
   justify-content: space-between;
   width: calc(100% - 50px - 10px);
 
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     height: content-fit;
     width: 100%;
@@ -85,6 +92,12 @@ const OSLabels = styled.div`
   width: 50%;
   align-items: center;
   justify-content: space-evenly;
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     font-size: 30px;
     width: 100%;
@@ -105,14 +118,14 @@ const OSLabel = styled.label`
     }
   }
 
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     font-size: 30px;
-  }
-`;
-
-const OSText = styled.span`
-  @media (max-width: 768px) {
-    display: none;
   }
 `;
 
@@ -147,15 +160,15 @@ export const OSButtons = forwardRef(({}, ref) => {
       <OSLabels>
         <OSLabel as="a" href={linux.endpoint ?? ""} target="_blank">
           <FaLinux />
-          <OSText>Linux</OSText>
+          <Label>Linux</Label>
         </OSLabel>
         <OSLabel as="a" href={windows.endpoint ?? ""} target="_blank">
           <FaWindows />
-          <OSText>Windows</OSText>
+          <Label>Windows</Label>
         </OSLabel>
         <OSLabel as="a" href={mac.endpoint ?? ""} target="_blank">
           <FaApple />
-          <OSText>macOS</OSText>
+          <Label>macOS</Label>
         </OSLabel>
       </OSLabels>
       <div
@@ -164,20 +177,6 @@ export const OSButtons = forwardRef(({}, ref) => {
     </Buttons>
   );
 });
-
-const Quote = styled.div`
-  font-family: Tanker;
-  font-size: 50px;
-  text-transform: uppercase;
-  @media (max-width: 768px) {
-    font-size: 30px;
-  }
-`;
-
-const Author = styled.div`
-  font-family: Supreme;
-  font-size: 25px;
-`;
 
 export const Quotes = () => {
   const [quotesIndex, setQuotesIndex] = useState(0);
@@ -232,12 +231,12 @@ export const Quotes = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "calc(100% - 50px)",
+        width: "calc(100vw - 50px)",
         padding: "25px 0",
       }}
     >
-      <Quote>"{quotes[quotesIndex].quote}"</Quote>
-      <Author>-{quotes[quotesIndex].author}</Author>
+      <Heading3 font="Tanker">"{quotes[quotesIndex].quote}"</Heading3>
+      <Paragraph font="Supreme">-{quotes[quotesIndex].author}</Paragraph>
     </div>
   );
 };

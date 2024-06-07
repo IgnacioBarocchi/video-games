@@ -1,9 +1,5 @@
 import { styled } from "styled-components";
 import { CustomCard } from "../../custom-card";
-import { MacOScene } from "../../mac-scene";
-import { Section } from "../../parallax-section";
-import { TuxScene } from "../../tux-scene";
-import { WindowsScene } from "../../windows-scene";
 import { FlexRow } from "ui";
 import { FaDownload } from "react-icons/fa";
 import { LINUX_LINK, MAC_LINK, WINDOWS_LINK } from "../../../constants";
@@ -12,23 +8,40 @@ import { useEffect } from "react";
 import useReleaseData from "../../../hooks/use-release-data";
 import { HTTPError } from "../../error/error";
 import { Loading } from "../../loading/loading";
+import { MacOScene } from "../../scene-3d/mac-scene";
+import { TuxScene } from "../../scene-3d/tux-scene";
+import { WindowsScene } from "../../scene-3d/windows-scene";
+import { Section } from "../../parallax-section";
+import { Paragraph } from "../../responsive-text-content";
 
 const DownloadLabel = () => {
   return (
-    <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+    <Paragraph style={{ display: "flex", gap: "16px", alignItems: "center" }}>
       <FaDownload />
       Archivos
-    </div>
+    </Paragraph>
   );
 };
 
 const DownloadsSection = styled(Section)`
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     padding: 100px 0;
   }
 `;
 
 const CustomRow = styled(FlexRow)`
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     height: ${({ heights }) => heights.mobile};
     flex-direction: column;

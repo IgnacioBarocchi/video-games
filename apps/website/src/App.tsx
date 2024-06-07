@@ -13,7 +13,7 @@ const App = () => {
     <>
       <Overlay />
       <Main>
-        <CollaborateModal />
+        {/* <CollaborateModal /> */}
         <Header />
         <Parallax>
           <FlexContainer>

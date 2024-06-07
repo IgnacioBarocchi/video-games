@@ -29,4 +29,16 @@ export const Main = styled.main`
   & a {
     color: ${Colors.white};
   }
+  & svg {
+    fill: ${Colors.white};
+  }
+  // & p {
+  //   color: ${Colors.white};
+  // }
+  // & span {
+  //   color: ${Colors.white};
+  // }
+  // & h1 {
+  //   color: ${Colors.white};
+  // }
 `;

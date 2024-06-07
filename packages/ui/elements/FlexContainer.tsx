@@ -21,13 +21,20 @@ export const FlexRow = styled.div<{
   gap: 3em;
   align-items: center;
   height: ${({ heights }) => heights.desktop};
+  @media (max-width: 576px) {
+  }
+  @media (max-width: 992px) {
+  }
+  @media (max-width: 1200px) {
+  }
   @media (max-width: 768px) {
     height: ${({ heights }) => heights.mobile};
     flex-direction: column;
     gap: 3em;
   }
 `;
-// @media (max-width: 768px) {
+// @media (max-width: 576px) {}
+
 //   flex-direction: column;
 //   gap: 3em;
 // }

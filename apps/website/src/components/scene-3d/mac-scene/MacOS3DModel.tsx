@@ -7,8 +7,8 @@ import * as THREE from "three";
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import macOS3DFile from "../../assets/models/mac/MacOS.glb";
-import { useTurnTable } from "../../hooks/use-turn-table";
+import macOS3DFile from "../../../assets/models/mac/MacOS.glb";
+import { useTurnTable } from "../../../hooks/use-turn-table";
 
 type GLTFResult = GLTF & {
   nodes: {

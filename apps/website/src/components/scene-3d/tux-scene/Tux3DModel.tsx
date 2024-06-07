@@ -7,10 +7,8 @@ import * as THREE from "three";
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import tux3DModelFile from "../../assets/models/linux/Tux.glb";
-import { GroupProps, useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
-import { useTurnTable } from "../../hooks/use-turn-table";
+import tux3DModelFile from "../../../assets/models/linux/Tux.glb";
+import { useTurnTable } from "../../../hooks/use-turn-table";
 
 type GLTFResult = GLTF & {
   nodes: {
