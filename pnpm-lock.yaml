@@ -1220,10 +1220,7 @@ packages:
       - supports-color
     dev: true
 
-  /@media (max-width: 576px) {} 
-@media (max-width: 992px) {} 
-@media (max-width: 1200px) {} 
-@media pipe/tasks-vision@0.10.8:
+  /@media pipe/tasks-vision@0.10.8:
     resolution: {integrity: sha512-Rp7ll8BHrKB3wXaRFKhrltwZl1CiXGdibPxuWXvqGnKTnv8fqa/nvftYNuSbf+pbJWKYCXdBtYTITdAUTGGh0Q==}
     dev: false
 
