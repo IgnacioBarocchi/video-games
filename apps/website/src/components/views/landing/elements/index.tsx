@@ -11,7 +11,12 @@ import { Suspense, forwardRef, useEffect, useMemo, useState } from "react";
 import useReleaseData from "../../../../hooks/use-release-data";
 import { Loading } from "../../../loading/loading";
 import { HTTPError } from "../../../error/error";
-import { Heading3, Label, Paragraph } from "../../../responsive-text-content";
+import {
+  Heading3,
+  Label,
+  Paragraph,
+  devices,
+} from "../../../responsive-text-content";
 
 const FullScreenVideo = styled.video`
   width: 100%;
@@ -129,6 +134,12 @@ const OSLabel = styled.label`
   }
 `;
 
+const OSName = styled(Label)`
+  @media only screen and ${devices.sm} {
+    display: none;
+  }
+`;
+
 export const OSButtons = forwardRef(({}, ref) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const {
@@ -160,15 +171,15 @@ export const OSButtons = forwardRef(({}, ref) => {
       <OSLabels>
         <OSLabel as="a" href={linux.endpoint ?? ""} target="_blank">
           <FaLinux />
-          <Label>Linux</Label>
+          <OSName>Linux</OSName>
         </OSLabel>
         <OSLabel as="a" href={windows.endpoint ?? ""} target="_blank">
           <FaWindows />
-          <Label>Windows</Label>
+          <OSName>Windows</OSName>
         </OSLabel>
         <OSLabel as="a" href={mac.endpoint ?? ""} target="_blank">
           <FaApple />
-          <Label>macOS</Label>
+          <OSName>macOS</OSName>
         </OSLabel>
       </OSLabels>
       <div

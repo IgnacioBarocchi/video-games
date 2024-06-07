@@ -10,7 +10,7 @@ const breakpoints = {
   "2xl": "1536px",
 };
 
-const devices = {
+export const devices = {
   xs: `(max-width: ${breakpoints.xs})`,
   sm: `(max-width: ${breakpoints.sm})`,
   md: `(max-width: ${breakpoints.md})`,
