@@ -1,6 +1,13 @@
-// import { EffectComposer, SSAO } from "@react-three/postprocessing";
+//docs.pmnd.rs/react-three-fiber/advanced/pitfalls#%E2%9C%85-or-react-spring// import { EffectComposer, SSAO } from "@react-three/postprocessing";
 // import { BlendFunction } from "postprocessing";
-import { Canvas } from "@react-three/fiber";
+//https: import { Box, CameraShake, Preload, View } from "@react-three/drei";
+import { Canvas } from "@react-three/offscreen";
+import { Physics } from "@react-three/rapier";
+import { CAMERA_FAR } from "game-constants";
+import { Perf } from "r3f-perf";
+import { lazy } from "react";
+import { LVL1 } from "../LVL1";
+// import { LVL1 } from "../LVL1";
 
 // function Effects() {
 //   return (
@@ -15,10 +22,15 @@ import { Canvas } from "@react-three/fiber";
 //   );
 // }
 
-export const World3D = ({ children }) => {
+const worker = new Worker(new URL("../workers/worker.jsx", import.meta.url), {
+  type: "module",
+});
+
+// const LVL1 = lazy(() => import("../LVL1"));
+
+export const World3D = () => {
   return (
     <Canvas
-      fallback="Car game"
       style={{
         height: "100vh",
         width: "100vw",
@@ -42,8 +54,8 @@ export const World3D = ({ children }) => {
         far: 200,
         position: [10, 10, 20],
       }}
-    >
-      {children}
-    </Canvas>
+      fallback={<LVL1 />}
+      worker={worker}
+    ></Canvas>
   );
 };

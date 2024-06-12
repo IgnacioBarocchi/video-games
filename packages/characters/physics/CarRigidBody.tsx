@@ -27,10 +27,10 @@ const Wheels = () => {
   const createHandler =
     (referenceID: "frontLeft" | "frontRight" | "backLeft" | "backRight") =>
     (payload) => {
-      console.log(
-        referenceID,
-        "touching " + payload.other.rigidBodyObject.name
-      );
+      // console.log(
+      //   referenceID,
+      //   "touching " + payload.other.rigidBodyObject.name
+      // );
       const isOnGrass = payload.other.rigidBodyObject.name === ENTITY.GRASS;
       const inSpeedThreshold =
         Math.abs(payload.target.rigidBody.linvel().z) > 35;

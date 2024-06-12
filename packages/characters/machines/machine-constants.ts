@@ -18,6 +18,7 @@ export const IDLE_EVENT = "IDLE_EVENT";
 export const MOVE_EVENT = "MOVE_EVENT";
 export const DEATH_EVENT = "DEATH_EVENT";
 export const INACTIVE_EVENT = "INACTIVE_EVENT";
+export const SET_CONTEXT = "SET_CONTEXT";
 
 export const FSMSkillStates = [
   USING_SKILL_1_STATE,
@@ -34,3 +35,11 @@ export type FSMStates =
   | typeof REACTING_TO_SKILL_1_STATE
   | typeof REACTING_TO_SKILL_2_STATE
   | typeof DEATH_STATE;
+
+// TODO: car state
+export const STOP_STATE = "STOP_STATE";
+export const RUNNING_STATE = "RUNNING_STATE";
+export const ACCELERATING_STATE = "ACCELERATING_STATE";
+export const STOP_EVENT = "STOP_EVENT";
+export const RUNNING_EVENT = "RUNNING_EVENT";
+export const ACCELERATING_EVENT = "ACCELERATING_EVENT";

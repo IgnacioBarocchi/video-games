@@ -7,8 +7,7 @@ import {
   USING_SKILL_2_STATE,
 } from "../machines/createBaseFSMInput";
 import { useSelector } from "@xstate/react";
-import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import useGameStore from "../store/store";
+import { CuboidCollider } from "@react-three/rapier";
 
 const usingMaulSkillSelector = (state) => {
   return state.value === USING_SKILL_2_STATE;
@@ -22,9 +21,7 @@ export const Attachments = ({ nodes }) => {
   const playerActor = useContext(Context);
   const maulIsHanded = useSelector(playerActor, usingMaulSkillSelector);
   const isShooting = useSelector(playerActor, usingRifleSelector);
-  const playerPickedBackpack = useGameStore(
-    (state) => state.playerPickedBackpack
-  );
+
   const updateMaulPosition = (isHanded: boolean) => {
     const {
       HANDED_MAUL_MESH,
@@ -53,29 +50,11 @@ export const Attachments = ({ nodes }) => {
     BULLET_TRAIL_MESH_1.visible = isShooting;
   };
 
-  const updateBackpack = (playerPickedBackpack: boolean) => {
-    const {
-      BACKPACK_MESH,
-      BACKPACK_MESH_1,
-      BACKPACK_MESH_2,
-      BACKPACK_MESH_3,
-      BACKPACK_MESH_4,
-    } = nodes;
-    BACKPACK_MESH.visible = playerPickedBackpack;
-    BACKPACK_MESH_1.visible = playerPickedBackpack;
-    BACKPACK_MESH_2.visible = playerPickedBackpack;
-    BACKPACK_MESH_3.visible = playerPickedBackpack;
-    BACKPACK_MESH_4.visible = playerPickedBackpack;
-  };
-
   useEffect(() => {
-    // alert(playerPickedBackpack);
-
     let timeoutID = 0;
 
     updateMaulPosition(maulIsHanded);
     updateBulletTrail(false);
-    updateBackpack(playerPickedBackpack);
 
     if (isShooting) {
       updateBulletTrail(isShooting);
@@ -85,7 +64,7 @@ export const Attachments = ({ nodes }) => {
     }
 
     return () => clearTimeout(timeoutID);
-  }, [maulIsHanded, isShooting, playerPickedBackpack]);
+  }, [maulIsHanded, isShooting]);
 
   if (isShooting) {
     return (

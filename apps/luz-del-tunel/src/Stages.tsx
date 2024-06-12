@@ -1,6 +1,5 @@
 import { CarGameFrontend } from "car-game-frontend";
 import { Hub } from "hub-screen-frontend";
-import React from "react";
 import { Shooter3DScene } from "shooting-level-frontend";
 import useGameContext from "game-constants/hooks/use-game-context";
 

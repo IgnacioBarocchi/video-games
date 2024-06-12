@@ -2,9 +2,11 @@ import { styled } from "styled-components";
 import { HEADER_HEIGHT } from "../../constants";
 // import { Button } from "ui";
 import { Colors } from "game-constants";
-import { Heading2, Heading3 } from "../responsive-text-content";
+import { Heading2, Heading3, Label } from "../responsive-text-content";
 import { Button } from "../button";
 import { useEffect, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { devices } from "../responsive-text-content";
 
 const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
@@ -26,6 +28,22 @@ const Container = styled.header`
   -webkit-backdrop-filter: blur(20px);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
+`;
+
+const ContributeLink = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  @media only screen and ${devices.sm} {
+    display: none;
+  }
+`;
+
+const ContributeLabel = styled(Label)`
+  @media only screen and ${devices.md} {
+    display: none;
+  }
 `;
 
 export const Header = () => {
@@ -50,15 +68,21 @@ export const Header = () => {
       ) : (
         <Heading2>LA LUZ DEL TÚNEL</Heading2>
       )}
-      <Button
-        skin="light"
-        label="Descargar"
-        onClick={() => {
-          document
-            .querySelector("#downloads")
-            ?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <div style={{ display: "flex", alignItems: "center", gap: "25px" }}>
+        <ContributeLink href="https://github.com/IgnacioBarocchi/video-games">
+          <FaGithub size={35} />
+          <ContributeLabel>Contribuir</ContributeLabel>
+        </ContributeLink>
+        <Button
+          skin="light"
+          label="Descargar"
+          onClick={() => {
+            document
+              .querySelector("#downloads")
+              ?.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </div>
     </Container>
   );
 };

@@ -1,28 +1,8 @@
 import { Group, AnimationAction, AnimationClip } from "three";
-import {
-  MutableReference,
-  forwardRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { GLTF, SkeletonUtils } from "three-stdlib";
+import { MutableRefObject, forwardRef } from "react";
+import { useGLTF } from "@react-three/drei";
 import character3DModelFile from "../assets/models/Male_Character.glb";
-import { useGraph } from "@react-three/fiber";
-import {
-  IDLE_STATE,
-  MOVE_STATE,
-  USING_SKILL_1_STATE,
-  USING_SKILL_2_STATE,
-  USING_SKILL_3_STATE,
-  REACTING_TO_SKILL_1_STATE,
-  REACTING_TO_SKILL_2_STATE,
-  DEATH_STATE,
-} from "../machines/createBaseFSMInput";
-import { Context } from "../providers/player-context-provider";
-import { useActor } from "@xstate/react";
+
 import { Mesh, SkinnedMesh, Bone, MeshBasicMaterial } from "three";
 export type GLTFResult = GLTF & {
   nodes: {
@@ -85,7 +65,7 @@ export type GLTFActions = Record<ActionName, AnimationAction> & AnimationClip;
 
 export const MaleCharacter3DModel = forwardRef<{
   props: JSX.IntrinsicElements["group"];
-  group: MutableReference<Group>;
+  group: MutableRefObject<Group>;
 }>((props, group) => {
   return (
     <group ref={group} {...props} dispose={null}>

@@ -83,6 +83,9 @@ const useCarGameStore = create<CarGameState>((set) => ({
   subMoney: (amount: number) =>
     set((state) => ({ money: state.money - amount })),
   resetState: () => set(initialState),
+  // playerRigidBody = null,
+  // setPlayerRigidBody: (amount: number) =>
+  //   set((state) => ({ money: state.money - amount })),
 }));
 
 export default useCarGameStore;

@@ -1,8 +1,9 @@
 import {
   MutableRefObject,
-  ReactNode,
   Suspense,
   memo,
+  useContext,
+  useEffect,
   useMemo,
   useRef,
 } from "react";
@@ -15,8 +16,7 @@ import {
   Object3DEventMap,
   MathUtils,
 } from "three";
-import { Character } from "../../classes/Character";
-import { InputControls } from "../../controls/input";
+
 import { usePointerLockControls } from "../../controls/usePointerLockControls";
 import { CAMERA_FAR } from "game-constants";
 import { CarModel } from "../models/CarModel";
@@ -25,6 +25,9 @@ import { CarRigidBody } from "../../physics/CarRigidBody";
 import { Attachments } from "./attachments";
 import { Rain } from "./enviroment";
 import { Box } from "@react-three/drei";
+import { CarCharacter } from "../../classes/Character/CarCharacter";
+import { SET_CONTEXT, STOP_EVENT } from "../../machines/machine-constants";
+import { CarPlayerContext } from "../../providers/car-player-actor-provider";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -47,14 +50,17 @@ export const CarPlayer = memo(
     cameraTheta = 15,
     orientation = [0, 0, 1],
     isRaining,
-    controlled = true,
   }: Props) => {
+    // const lastTimeRef = useRef(performance.ncar-plaow());
+    // const frameCountRef = useRef(0);
+
     const playerObjectReferences = useRef({
       rigidbody: useRef<RapierRigidBody>(null),
       modelRef: useRef<Object3D>(null),
     });
 
     const audioRef = useRef<PositionalAudioProps>(null);
+    const playerActor = useContext(CarPlayerContext);
 
     const camera = useThree((s) => {
       const cam = s.camera;
@@ -85,11 +91,10 @@ export const CarPlayer = memo(
 
     const character = useMemo(
       () =>
-        new Character({
+        new CarCharacter({
           orientation,
           camera,
           playerObjectReferences,
-          isCar: true,
         }),
       [playerObjectReferences?.current?.rigidbody?.current, camera, orientation]
     );
@@ -97,6 +102,46 @@ export const CarPlayer = memo(
     useAfterPhysicsStep((api) => {
       character.physicsPostStep(api);
     });
+
+    useEffect(() => {
+      console.log(playerObjectReferences);
+      console.log(playerActor);
+      if (!playerObjectReferences?.current?.rigidbody?.current) {
+        console.log("rigidbody", "false");
+        return;
+      }
+      // if (!playerObjectReferences?.current?.modelRef?.current) {
+      //   console.log("model", "false");
+
+      //   return;
+      // }
+
+      if (!playerActor) {
+        console.log("actor", "false");
+
+        return;
+      }
+
+      playerActor.send({
+        type: SET_CONTEXT,
+        mesh: playerObjectReferences?.current?.modelRef?.current,
+        rigidBody: playerObjectReferences?.current?.rigidbody?.current,
+      });
+      playerActor.start();
+      playerActor.send({ type: STOP_EVENT });
+
+      try {
+        const s = playerActor.getSnapshot();
+        console.log(playerActor);
+        console.log(s);
+        console.log(
+          "Z",
+          playerActor.getSnapshot()?.context?.rigidBody?.linvel()?.z
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }, [playerObjectReferences?.current?.modelRef?.current]);
 
     useFrame((_, delta) => {
       if (!playerObjectReferences?.current?.rigidbody?.current) {
@@ -111,7 +156,17 @@ export const CarPlayer = memo(
         return;
       }
 
-      character.update(delta);
+      // const currentTime = performance.now();
+      // frameCountRef.current++;
+      // if (currentTime - lastTimeRef.current >= 1000) {
+      //   frameCountRef.current = 0;
+      //   lastTimeRef.current = currentTime;
+      // }
+
+      // const fps = frameCountRef.current > 60 ? 120 : 60;
+      // console.log(fps);
+      character.update(delta, 60);
+
       cameraOperator.update(playerObjectReferences?.current?.modelRef?.current);
 
       const carSpeed =
@@ -128,7 +183,6 @@ export const CarPlayer = memo(
 
     return (
       <>
-        <InputControls />
         <CarRigidBody
           position={position}
           ref={playerObjectReferences.current.rigidbody}

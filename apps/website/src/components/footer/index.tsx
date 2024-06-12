@@ -10,6 +10,7 @@ export const Footer = styled.footer`
   padding-left: 1rem;
   display: flex;
   align-items: center;
+  gap: 16px;
   @media  (max-width: 768px) {
       padding-left: 0;
       justify-content: center;

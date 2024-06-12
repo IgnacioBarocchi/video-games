@@ -22,14 +22,6 @@ export default function App() {
     <MainProvider>
       <CustomCursor />
       <Stages />
-      {/* <CarGameFrontend
-        setWonTheGame={() => {
-          setTimeout(() => {
-            setWonTheGame(true);
-            restartMissions();
-          }, 10000);
-        }}
-      /> */}
     </MainProvider>
   );
 

@@ -19,13 +19,13 @@ const usingRifleSelector = (state) => {
   return state.value === USING_SKILL_1_STATE;
 };
 
-export const Attachments = ({ nodes }) => {
+export const Attachments = ({ nodes, playerPickedBackpack }) => {
   const playerActor = useContext(Context);
   const maulIsHanded = useSelector(playerActor, usingMaulSkillSelector);
   const isShooting = useSelector(playerActor, usingRifleSelector);
-  const playerPickedBackpack = useGameStore(
-    (state) => state.playerPickedBackpack
-  );
+  // const playerPickedBackpack  = useGameStore(
+  //   (state) => state.playerPickedBackpack
+  // );
   const updateMaulPosition = (isHanded: boolean) => {
     const {
       HANDED_MAUL_MESH,

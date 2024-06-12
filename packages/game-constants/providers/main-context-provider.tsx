@@ -1,13 +1,14 @@
 import React, { createContext, useState } from "react";
 
+const startingStage = "CAR GAME";
 type Stages = "CAR GAME" | "SHOOTER GAME" | "MAIN MENU";
 export const MainContext = createContext({
-  gameState: "MAIN MENU",
+  gameState: startingStage,
   changeGameState: (_newState: Stages) => {},
 });
 
 export const MainProvider = ({ children }) => {
-  const [gameState, setGameState] = useState("MAIN MENU");
+  const [gameState, setGameState] = useState(startingStage);
   const changeGameState = (newState: Stages) => {
     setGameState(newState);
   };
@@ -17,7 +18,3 @@ export const MainProvider = ({ children }) => {
     </MainContext.Provider>
   );
 };
-
-/* <button onClick={() => changeGameState('CAR GAME')}>Switch to Car Game</button>
-<button onClick={() => changeGameState('SHOOTER GAME')}>Switch to Shooter Game</button>
-<button onClick={() => changeGameState('MAIN MENU')}>Back to Main Menu</button> */

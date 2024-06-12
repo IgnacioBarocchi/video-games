@@ -7,28 +7,23 @@ import {
   Vector3Tuple,
 } from "three";
 import { Ray } from "@dimforge/rapier3d-compat";
-import { RelativeSpringSimulator } from "../physics";
-import { VectorSpringSimulator } from "../physics";
+import { RelativeSpringSimulator } from "../../physics";
+import { VectorSpringSimulator } from "../../physics";
 import {
   applyVectorMatrixXZ,
   getSignedAngleBetweenVectors,
   lerpVectors,
-} from "./helpers";
-import { input } from "../controls/input";
-import { PlayerObjectReferences } from "../players/car-player/car-player";
+} from "../helpers";
+import { input } from "../../controls/input";
+import { PlayerObjectReferences } from "../../players/car-player/car-player";
 
-export class Character {
+// Abstract class Character
+export abstract class Character {
   velocity = new Vector3();
   arcadeVelocityInfluence = new Vector3(1, 0, 1);
   arcadeVelocityTarget = new Vector3();
   velocitySimulator: VectorSpringSimulator;
   rotationSimulator: RelativeSpringSimulator;
-  defaultVelocitySimulatorMass = 80; // Average mass of an adult male in kg
-  defaultVelocitySimulatorDamping = 0.7; // Slightly less damping to allow for more realistic human motion
-  defaultRotationSimulatorMass = 10; // Reduced mass for rotational movement to reflect human agility
-  defaultRotationSimulatorDamping = 0.5;
-  runSpeed;
-  walkSpeed;
   grounded = false;
   footShape = new Ray({ x: 0, y: 0, z: 0 }, { x: 0, y: -1, z: 0 });
   gravityLimit = -30;
@@ -47,16 +42,8 @@ export class Character {
     orientation?: Vector3Tuple;
     camera: Camera;
     playerObjectReferences: PlayerObjectReferences;
-    isCar?: boolean;
   }) {
-    this.defaultVelocitySimulatorMass = props.isCar ? 1000 : 80; // Average mass of an adult male in kg
-    this.defaultVelocitySimulatorDamping = props.isCar ? 0.9 : 0.7; // Slightly less damping to allow for more realistic human motion
-    this.defaultRotationSimulatorMass = props.isCar ? 200 : 10; // Reduced mass for rotational movement to reflect human agility
-    this.defaultRotationSimulatorDamping = props.isCar ? 0.6 : 0.5;
-    this.runSpeed = props.isCar ? 60 : 10;
-    this.walkSpeed = props.isCar ? 40 : 7;
     this.playerObjectReferences = props.playerObjectReferences;
-
     this.camera = props.camera;
 
     const orientation = props.orientation ?? [0, 0, 1];
@@ -83,6 +70,13 @@ export class Character {
     );
   }
 
+  protected abstract get defaultVelocitySimulatorMass(): number;
+  protected abstract get defaultVelocitySimulatorDamping(): number;
+  protected abstract get defaultRotationSimulatorMass(): number;
+  protected abstract get defaultRotationSimulatorDamping(): number;
+  protected abstract get runSpeed(): number;
+  protected abstract get walkSpeed(): number;
+
   setArcadeVelocityInfluence(x: number, y: number = x, z: number = x): void {
     this.arcadeVelocityInfluence.set(x, y, z);
   }
@@ -97,11 +91,25 @@ export class Character {
     this.orientationTarget.copy(this.lookVector);
   }
 
+  updateSimulators(frameRate) {
+    this.velocitySimulator = new VectorSpringSimulator(
+      frameRate,
+      this.defaultVelocitySimulatorMass,
+      this.defaultVelocitySimulatorDamping
+    );
+    this.rotationSimulator = new RelativeSpringSimulator(
+      frameRate,
+      this.defaultRotationSimulatorMass,
+      this.defaultRotationSimulatorDamping
+    );
+  }
+
   updateViewVector() {
     this.viewVector.subVectors(this.position, this.camera.position);
   }
 
-  update(timeStep: number) {
+  update(timeStep: number, frameRate: number = 60) {
+    // this.updateSimulators(frameRate);
     this.updatePositionFromRigidbody();
     this.updateViewVector();
     this.updateOrientationTarget();
@@ -138,8 +146,6 @@ export class Character {
       this.playerObjectReferences.current.rigidbody.current.translation();
 
     if (y !== 0 || y > 1) {
-      // console.log("clamp");
-
       this.playerObjectReferences.current.rigidbody.current.setTranslation(
         {
           x,
@@ -149,15 +155,6 @@ export class Character {
         true
       );
     }
-    // const isFalling = currentY < -3.16;
-
-    // if (this.jumping === 2 && this.falling && !isFalling) {
-    //   this.jumping = 0;
-    // }
-
-    // if (this.falling !== isFalling) {
-    // }
-    // this.falling = isFalling;
   }
 
   updateMovementSpring(timeStep: number) {
@@ -288,7 +285,6 @@ export class Character {
     );
 
     if (this.jumping === 1) {
-      // this.simulatedVelocity.y += jumpSpeed;
       this.jumping = 2;
     }
     if (this.shouldJump) {
@@ -323,3 +319,40 @@ export class Character {
     );
   }
 }
+
+// Derived class HumanCharacter
+export class HumanCharacter extends Character {
+  protected get defaultVelocitySimulatorMass(): number {
+    return 80;
+  }
+
+  protected get defaultVelocitySimulatorDamping(): number {
+    return 0.7;
+  }
+
+  protected get defaultRotationSimulatorMass(): number {
+    return 10;
+  }
+
+  protected get defaultRotationSimulatorDamping(): number {
+    return 0.5;
+  }
+
+  protected get runSpeed(): number {
+    return 10;
+  }
+
+  protected get walkSpeed(): number {
+    return 7;
+  }
+
+  constructor(props: {
+    orientation?: Vector3Tuple;
+    camera: Camera;
+    playerObjectReferences: PlayerObjectReferences;
+  }) {
+    super(props);
+  }
+}
+
+// Derived class CarCharacter

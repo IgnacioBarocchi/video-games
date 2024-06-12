@@ -1,9 +1,12 @@
 import React, {
   CSSProperties,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  useTransition,
 } from "react";
 import { CountDown, FloatingNotification, LoadingScreen } from "ui";
 import { Text, Title } from "ui/elements/Text";
@@ -13,6 +16,10 @@ import tick from "../assets/audio/tick.mp3";
 import useGameContext from "game-constants/hooks/use-game-context";
 import { Winning } from "ui/end-game-screen/screens/winning";
 import { Button } from "ui/elements/Button";
+import { useFrame } from "@react-three/fiber";
+import { CarPlayerContext } from "characters";
+import { waitFor } from "xstate";
+import { useActor, useActorRef, useSelector } from "@xstate/react";
 
 export const BackToMenuPanel = () => {
   const { changeGameState } = useGameContext();
@@ -52,12 +59,14 @@ export const BackToMenuPanel = () => {
   return null;
 };
 export const ClockPanel = () => {
+  const loading = useCarGameStore((state) => state.loading);
+
   const gameOver = useCarGameStore((state) => state.gameOver);
   const setGameOver = useCarGameStore(
     useCallback((state) => state.setGameOver, [])
   );
 
-  if (gameOver) {
+  if (gameOver || loading) {
     return null;
   }
 
@@ -223,6 +232,208 @@ export const TitlePanel = () => {
 
   return null;
 };
-// if (gameOver.reason === "TIME OUT") {
-//   timeoutId = setTimeout(() => changeGameState("MAIN MENU"), 3000);
-// }
+// https://github.com/pmndrs/react-three-offscreen
+
+export const KMPanel = () => {
+  const [speed, setSpeed] = useState(0);
+  const loading = useCarGameStore((state) => state.loading);
+  const actor = useContext(CarPlayerContext);
+
+  // Refs for animation frame and previous time
+  const requestRef = useRef();
+  const previousTimeRef = useRef();
+
+  const animate = (time) => {
+    if (previousTimeRef.current != undefined) {
+      const deltaTime = time - previousTimeRef.current;
+
+      // Assuming snapshot.context.rigidBody.linvel().z gives the current speed
+      const currentSpeed =
+        Math.abs(actor?.getSnapshot()?.context?.rigidBody?.linvel()?.z).toFixed(
+          0
+        ) || 0;
+
+      // Update the speed state
+      setSpeed(currentSpeed);
+    }
+    previousTimeRef.current = time;
+    requestRef.current = requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
+    if (!loading && actor) {
+      requestRef.current = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(requestRef.current);
+    }
+  }, [loading, actor]);
+
+  if (!actor || loading) {
+    return null;
+  }
+
+  return (
+    <FloatingNotification dismiss={false} position="bottom-right" width="75%">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Text>{speed} Km/h</Text>
+      </div>
+    </FloatingNotification>
+  );
+};
+
+// const selectIsActive = (snapshot) => snapshot.matches("active");
+// console.log(actor.ref);
+// // const actorRef = useActorRef(actor.logic);
+// const rigidBody = useSelector(actor.ref, selectSpeed);
+// const isActive = useSelector(actor.ref, selectIsActive);
+// https://codesandbox.io/p/sandbox/view-tracking-bp6tmc?file=%2Fsrc%2FApp.js%3A3%2C10-3%2C14
+// export const KMPanel = () => {
+//   const [speed, setSpeed] = useState(0);
+//   const loading = useCarGameStore((state) => state.loading);
+
+//   const actor = useContext(CarPlayerContext);
+
+//   useEffect(() => {
+
+//     use snapshot.context.rigidBody?.linvel()?.z || 0 to get the current speed
+//     and set itusing setSpeed every frame
+//   }, []);
+
+//   if (!actor || loading) {
+//     return null;
+//   }
+
+//   return (
+//     <FloatingNotification dismiss={false} position="bottom-right" width="75%">
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "flex-end",
+//         }}
+//       >
+//         <Text>{speed} Km/h</Text>
+//       </div>
+//     </FloatingNotification>
+//   );
+//   // if (isActive) {
+//   // }
+//   // return null;
+
+//   // useEffect(() => {
+//   //   console.log(rigidBody);
+//   // }, [rigidBody]);
+
+//   // return (
+//   //   <FloatingNotification dismiss={false} position="bottom-right" width="75%">
+//   //     <div
+//   //       style={{
+//   //         display: "flex",
+//   //         justifyContent: "flex-end",
+//   //       }}
+//   //     >
+//   //       <Text>{0} Km/h</Text>
+//   //     </div>
+//   //   </FloatingNotification>
+//   // );
+//   // const actor = useContext(CarPlayerContext);
+
+//   // useEffect(() => {
+//   //   const fetchContext = async () => {
+//   //     let snapshot;
+//   //     try {
+//   //       snapshot = await waitFor(
+//   //         actor,
+//   //         (snapshot) => {
+//   //           console.log(snapshot);
+//   //           return snapshot.context.mesh && snapshot.context.rigidbody;
+//   //         },
+//   //         {
+//   //           timeout: 20_000, // 10 seconds (10,000 milliseconds)
+//   //         }
+//   //       );
+
+//   //       if (snapshot?.context?.rigidbody?.linvel()?.z !== undefined) {
+//   //         console.log("S", snapshot.context.rigidbody.linvel().z);
+//   //       }
+//   //     } catch (error) {
+//   //       console.error("Failed to fetch context:", error);
+//   //     }
+//   //   };
+
+//   //   fetchContext();
+//   // }, [actor]);
+
+//   // return (
+//   //   <FloatingNotification dismiss={false} position="bottom-right" width="75%">
+//   //     <div
+//   //       style={{
+//   //         display: "flex",
+//   //         justifyContent: "flex-end",
+//   //       }}
+//   //     >
+//   //       <Text>{0} Km/h</Text>
+//   //     </div>
+//   //   </FloatingNotification>
+//   // );
+// };
+// const subscription = actor.subscribe({
+//   next(snapshot) {
+//     console.log(snapshot);
+//   },
+//   error(err) {
+//     // ...
+//   },
+//   complete() {
+//     // ...
+//   },
+// });
+
+// const [speed, setSpeed] = useState(0);
+
+// useEffect(() => {
+//   setTimeout(() => {
+//     console.log(actor.getSnapshot().context);
+//   }, 10_000);
+//   // console.log(actor?.snapshot);
+
+//   // console.log(actor.getSnapshot());
+//   // let prevContext;
+
+//   // const sub = actor.subscribe((s) => {
+//   //   alert("A");
+//   //   console.log(s.context, prevContext);
+//   //   prevContext = s.context;
+//   // });
+
+//   // return sub.unsubscribe;
+// }, [actor]);
+
+// useEffect(() => {
+//   const fetchContext = async () => {
+//     try {
+//       // Polling until rigidBody and mesh are available
+//       const interval = setInterval(() => {
+//         console.log(actor);
+//         console.log(actor.getSnapshot());
+//         // if (state.context.rigidbody && state.context.mesh) {
+//         //   clearInterval(interval);
+//         //   const linvelZ = state.context.rigidbody.linvel()?.z || 0;
+//         //   setSpeed(linvelZ);
+//         // }
+//       }, 1000); // Poll every second
+
+//       // Timeout after 10 seconds
+//       setTimeout(() => {
+//         clearInterval(interval);
+//       }, 10000);
+//     } catch (error) {
+//       console.error("Failed to fetch context:", error);
+//     }
+//   };
+
+//   fetchContext();
+// }, []);

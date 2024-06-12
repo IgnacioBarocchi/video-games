@@ -7,14 +7,22 @@ export enum Controls {
   RIGHT = "RIGHT",
   SPRINT = "SPRINT",
   TOGGLE_CAR = "TOGGLE_CAR",
+  USE_SKILL_1 = "USE_SKILL_1",
+  USE_SKILL_2 = "USE_SKILL_2",
+  USE_SKILL_3 = "USE_SKILL_3",
 }
 
 const keymap = [
-  { name: Controls.FORWARD, keys: ["ArrowUp", "W", "w", "I", "i"] },
-  { name: Controls.BACKWARD, keys: ["ArrowDown", "S", "s", "K", "k"] },
-  { name: Controls.LEFT, keys: ["ArrowLeft", "A", "a", "J", "j"] },
-  { name: Controls.RIGHT, keys: ["ArrowRight", "D", "d", "L", "l"] },
-  { name: Controls.SPRINT, keys: ["ShiftLeft", "ShiftRight"] },
+  { name: Controls.SPRINT, keys: ["Shift", "Shift"] },
+  { name: Controls.FORWARD, keys: ["W", "w"] },
+  { name: Controls.BACKWARD, keys: ["S", "s"] },
+  { name: Controls.LEFT, keys: ["A", "a"] },
+  { name: Controls.RIGHT, keys: ["D", "d"] },
+  { name: Controls.FORWARD, keys: ["W", "w"] },
+  { name: Controls.BACKWARD, keys: ["S", "s"] },
+  { name: Controls.USE_SKILL_1, keys: ["KeyJ", "J", "j"] },
+  { name: Controls.USE_SKILL_2, keys: ["KeyK", "K", "k"] },
+  { name: Controls.USE_SKILL_3, keys: ["KeyL", "L", "l"] },
   { name: Controls.TOGGLE_CAR, keys: ["F", "f"] },
 ];
 

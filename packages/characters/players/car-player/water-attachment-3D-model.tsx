@@ -9,6 +9,7 @@ import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import waterAttachment3DModel from "../../assets/models/Water_Attachment.glb";
+import { nanoid } from "nanoid";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -71,6 +72,7 @@ export const WaterAttachment3DModel = forwardRef(
         {[...Array(6)].map((_, i) => {
           return (
             <group
+              key={nanoid(15) + " " + i}
               ref={
                 [
                   water1Ref,

@@ -5,11 +5,11 @@ import { Canvas } from "@react-three/fiber";
 import { PlayerContextProvider } from "../providers/player-context-provider";
 import { Player } from "../player";
 import { Physics } from "@react-three/rapier";
-import { GroundModel } from "../components/Ground";
+import { GroundModel } from "../components/scenario/Ground";
 import { OrbitControls, Preload } from "@react-three/drei";
 import { NPC } from "../npc";
-import { Backpack } from "../components/Backpack";
 import { HumanPlayer, PlayerActorProvider, ZombieNPCV2 } from "characters";
+import { Scenario } from "../components/scenario";
 
 const Effects = () => {
   return (
@@ -27,9 +27,7 @@ const Effects = () => {
   );
 };
 
-export const Shooter3DScene = ({ onMissionPicked }) => {
-  const [playerIsLoaded, setPlayerIsLoaded] = useState(false);
-
+export const Shooter3DScene = () => {
   return (
     <PlayerActorProvider>
       <Canvas
@@ -60,17 +58,13 @@ export const Shooter3DScene = ({ onMissionPicked }) => {
           rotation: [0, 0, 0],
         }}
       >
-        <OrbitControls makeDefault={true} enableDamping={true} />
+        {/* <OrbitControls makeDefault={true} enableDamping={true} /> */}
         <Preload all={true} />
         <Suspense fallback={null}>
-          <Physics debug={false}>
-            <GroundModel onMissionPicked={onMissionPicked} />
+          <Physics debug={true}>
+            <Scenario />
             <HumanPlayer position={[-7, 0, -4]} />
-            <ZombieNPCV2 position={[0, 0, 0]} playerContext="HUMAN" />
-            {/* <ZombieNPC position={[0, 0, 0]} /> */}
-            {/* <Backpack position={[-6, 0, -3]} /> */}
-            {/* <Player onLoad={() => setPlayerIsLoaded(true)} /> */}
-            {/* {playerIsLoaded && <NPC />} */}
+            {/* <ZombieNPCV2 position={[0, 0, 0]} playerContext="HUMAN" /> */}
           </Physics>
           <Effects />
         </Suspense>
