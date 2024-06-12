@@ -7,7 +7,7 @@ const props = {
   velocityDimmer: 0.9,
   rotationMass: 200,
   rotationDimmer: 0.6,
-  maxSpeed: 260,
+  maxSpeed: 120,
   normalSpeed: 40,
 };
 

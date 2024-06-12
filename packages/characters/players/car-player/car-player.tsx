@@ -192,7 +192,7 @@ export const CarPlayer = memo(
             <Attachments ref={audioRef} />
           </Suspense>
         </CarRigidBody>
-        {isRaining && <Rain ref={playerObjectReferences.current.rigidbody} />}
+        {/* {isRaining && <Rain ref={playerObjectReferences.current.rigidbody} />} */}
       </>
     );
   }

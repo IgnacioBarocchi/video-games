@@ -1,6 +1,6 @@
 import { forwardRef, memo, useRef } from "react";
 import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
+import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import carModelFile from "../../assets/models/Car.glb";
 import { useFrame } from "@react-three/fiber";
@@ -264,10 +264,18 @@ export const CarModel = memo(
     const { nodes, materials } = useGLTF(carModelFile) as GLTFResult;
 
     return (
-      <group ref={ref.current.modelRef} dispose={null}>
-        <CarBody nodes={nodes} materials={materials} ref={ref} />
-        <Wheels nodes={nodes} materials={materials} ref={ref} />
-      </group>
+      <>
+        {/* <Html distanceFactor={10}>
+          <div>
+            hello <br />
+            world
+          </div>
+        </Html> */}
+        <group ref={ref.current.modelRef} dispose={null}>
+          <CarBody nodes={nodes} materials={materials} ref={ref} />
+          <Wheels nodes={nodes} materials={materials} ref={ref} />
+        </group>
+      </>
     );
   })
 );

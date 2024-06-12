@@ -20,6 +20,7 @@ import { useFrame } from "@react-three/fiber";
 import { CarPlayerContext } from "characters";
 import { waitFor } from "xstate";
 import { useActor, useActorRef, useSelector } from "@xstate/react";
+import { block } from "million/react";
 
 export const BackToMenuPanel = () => {
   const { changeGameState } = useGameContext();
@@ -233,57 +234,6 @@ export const TitlePanel = () => {
   return null;
 };
 // https://github.com/pmndrs/react-three-offscreen
-
-export const KMPanel = () => {
-  const [speed, setSpeed] = useState(0);
-  const loading = useCarGameStore((state) => state.loading);
-  const actor = useContext(CarPlayerContext);
-
-  // Refs for animation frame and previous time
-  const requestRef = useRef();
-  const previousTimeRef = useRef();
-
-  const animate = (time) => {
-    if (previousTimeRef.current != undefined) {
-      const deltaTime = time - previousTimeRef.current;
-
-      // Assuming snapshot.context.rigidBody.linvel().z gives the current speed
-      const currentSpeed =
-        Math.abs(actor?.getSnapshot()?.context?.rigidBody?.linvel()?.z).toFixed(
-          0
-        ) || 0;
-
-      // Update the speed state
-      setSpeed(currentSpeed);
-    }
-    previousTimeRef.current = time;
-    requestRef.current = requestAnimationFrame(animate);
-  };
-
-  useEffect(() => {
-    if (!loading && actor) {
-      requestRef.current = requestAnimationFrame(animate);
-      return () => cancelAnimationFrame(requestRef.current);
-    }
-  }, [loading, actor]);
-
-  if (!actor || loading) {
-    return null;
-  }
-
-  return (
-    <FloatingNotification dismiss={false} position="bottom-right" width="75%">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Text>{speed} Km/h</Text>
-      </div>
-    </FloatingNotification>
-  );
-};
 
 // const selectIsActive = (snapshot) => snapshot.matches("active");
 // console.log(actor.ref);

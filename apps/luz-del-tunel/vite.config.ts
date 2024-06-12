@@ -1,3 +1,4 @@
+import million from "million/compiler";
 import { defineConfig } from "vite";
 import electron from "vite-plugin-electron/simple";
 import path from "node:path";
@@ -26,8 +27,9 @@ export default defineConfig({
     },
   },
   plugins: [
+    million.vite(),
     react({
-      jsxRuntime: 'automatic',
+      jsxRuntime: "automatic",
       // jsxRuntime: 'classic'
     }),
     tsConfigPaths(),

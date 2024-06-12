@@ -6,7 +6,6 @@ import {
   ClockPanel,
   EndGamePanel,
   Filter2DOverlay,
-  KMPanel,
   LoadingPanel,
   MoneyLossPanel,
   TitlePanel,
@@ -17,14 +16,13 @@ import { LVL1 } from "../LVL1";
 import { Physics } from "@react-three/rapier";
 import { World3D } from "../world-3d";
 import { CarPlayerActorProvider } from "characters";
+import { KMPanel } from "../gui-panels/km-panel";
 
-{
-  /* <Perf position="top-right" />
+/* <Perf position="top-right" />
 <Physics debug={false} gravity={[0, -30, 0]} colliders={false}>
   <fog attach="fog" args={["#02111b", 5, CAMERA_FAR]} />
   <LVL1 />
 </Physics> */
-}
 const Experience3D = memo(() => <World3D />);
 
 const Experience2D = () => (
@@ -46,9 +44,9 @@ const Experience2D = () => (
 export const CarGameFrontend = () => {
   return (
     <CarPlayerActorProvider>
-      {/* <Filter2DOverlay> */}
-      <Experience3D />
-      {/* </Filter2DOverlay> */}
+      <Filter2DOverlay>
+        <Experience3D />
+      </Filter2DOverlay>
       <Experience2D />
     </CarPlayerActorProvider>
   );
