@@ -2,6 +2,8 @@ import { nanoid } from "nanoid";
 import {
   ACCELERATING_EVENT,
   ACCELERATING_STATE,
+  CRASH_EVENT,
+  CRASH_STATE,
   MOVE_STATE,
   RUNNING_EVENT,
   RUNNING_STATE,
@@ -33,6 +35,9 @@ export const simpleCarMachine = createMachine({
         },
         [ACCELERATING_EVENT]: {
           target: ACCELERATING_STATE,
+        },
+        [CRASH_EVENT]: {
+          target: CRASH_STATE,
         },
         [SET_CONTEXT]: {
           actions: [
@@ -81,6 +86,9 @@ export const simpleCarMachine = createMachine({
         [ACCELERATING_EVENT]: {
           target: ACCELERATING_STATE,
         },
+        [CRASH_EVENT]: {
+          target: CRASH_STATE,
+        },
       },
     },
     [ACCELERATING_STATE]: {
@@ -94,7 +102,13 @@ export const simpleCarMachine = createMachine({
         [ACCELERATING_EVENT]: {
           target: ACCELERATING_STATE,
         },
+        [CRASH_EVENT]: {
+          target: CRASH_STATE,
+        },
       },
+    },
+    [CRASH_STATE]: {
+      after: { 500: RUNNING_STATE },
     },
   },
 });

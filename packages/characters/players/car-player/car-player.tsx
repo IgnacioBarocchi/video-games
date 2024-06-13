@@ -1,3 +1,4 @@
+import * as Comlink from "comlink";
 import {
   MutableRefObject,
   Suspense,
@@ -23,11 +24,16 @@ import { CarModel } from "../models/CarModel";
 import { CarThirdPersonCamera } from "../../classes/CarThirdPersonCamera";
 import { CarRigidBody } from "../../physics/CarRigidBody";
 import { Attachments } from "./attachments";
-import { Rain } from "./enviroment";
 import { Box } from "@react-three/drei";
 import { CarCharacter } from "../../classes/Character/CarCharacter";
-import { SET_CONTEXT, STOP_EVENT } from "../../machines/machine-constants";
+import {
+  CRASH_STATE,
+  SET_CONTEXT,
+  STOP_EVENT,
+} from "../../machines/machine-constants";
 import { CarPlayerContext } from "../../providers/car-player-actor-provider";
+import CharacterWorker from "./car-update-worker?worker";
+import { deepFunctionsToStrings } from "./deep-functions";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -49,11 +55,7 @@ export const CarPlayer = memo(
     cameraPhi = 20,
     cameraTheta = 15,
     orientation = [0, 0, 1],
-    isRaining,
   }: Props) => {
-    // const lastTimeRef = useRef(performance.ncar-plaow());
-    // const frameCountRef = useRef(0);
-
     const playerObjectReferences = useRef({
       rigidbody: useRef<RapierRigidBody>(null),
       modelRef: useRef<Object3D>(null),
@@ -81,6 +83,7 @@ export const CarPlayer = memo(
           phi: cameraPhi,
           theta: cameraTheta,
           normalRadius: 1.5, //2.5,
+          actorRef: playerActor.ref,
         }),
       [camera, cameraPhi, cameraTheta]
     );
@@ -104,21 +107,11 @@ export const CarPlayer = memo(
     });
 
     useEffect(() => {
-      console.log(playerObjectReferences);
-      console.log(playerActor);
       if (!playerObjectReferences?.current?.rigidbody?.current) {
-        console.log("rigidbody", "false");
         return;
       }
-      // if (!playerObjectReferences?.current?.modelRef?.current) {
-      //   console.log("model", "false");
-
-      //   return;
-      // }
 
       if (!playerActor) {
-        console.log("actor", "false");
-
         return;
       }
 
@@ -129,21 +122,9 @@ export const CarPlayer = memo(
       });
       playerActor.start();
       playerActor.send({ type: STOP_EVENT });
-
-      try {
-        const s = playerActor.getSnapshot();
-        console.log(playerActor);
-        console.log(s);
-        console.log(
-          "Z",
-          playerActor.getSnapshot()?.context?.rigidBody?.linvel()?.z
-        );
-      } catch (e) {
-        console.log(e);
-      }
     }, [playerObjectReferences?.current?.modelRef?.current]);
 
-    useFrame((_, delta) => {
+    useFrame((_rootState, delta) => {
       if (!playerObjectReferences?.current?.rigidbody?.current) {
         return;
       }
@@ -156,15 +137,6 @@ export const CarPlayer = memo(
         return;
       }
 
-      // const currentTime = performance.now();
-      // frameCountRef.current++;
-      // if (currentTime - lastTimeRef.current >= 1000) {
-      //   frameCountRef.current = 0;
-      //   lastTimeRef.current = currentTime;
-      // }
-
-      // const fps = frameCountRef.current > 60 ? 120 : 60;
-      // console.log(fps);
       character.update(delta, 60);
 
       cameraOperator.update(playerObjectReferences?.current?.modelRef?.current);
@@ -192,8 +164,41 @@ export const CarPlayer = memo(
             <Attachments ref={audioRef} />
           </Suspense>
         </CarRigidBody>
-        {/* {isRaining && <Rain ref={playerObjectReferences.current.rigidbody} />} */}
       </>
     );
   }
 );
+// const currentTime = performance.now();
+// frameCountRef.current++;
+// if (currentTime - lastTimeRef.current >= 1000) {
+//   frameCountRef.current = 0;
+//   lastTimeRef.current = currentTime;
+// }
+
+// const fps = frameCountRef.current > 60 ? 120 : 60;
+// console.log(fps);
+// const obj = {
+//   character,
+//   cameraOperator,
+//   delta,
+//   playerObjectReferences: playerObjectReferences?.current,
+//   audioRef: audioRef?.current,
+// };
+
+// let objFunctionPaths = deepFunctionsToStrings(obj);
+
+// try {
+//   worker.postMessage({
+//     obj: obj,
+//     objFunctionPaths: objFunctionPaths,
+//   });
+//   // worker.postMessage({
+//   //   character,
+//   //   cameraOperator,
+//   //   delta,
+//   //   playerObjectReferences: playerObjectReferences?.current,
+//   //   audioRef: audioRef?.current,
+//   // });
+// } catch (e) {
+//   console.error(e);
+// }

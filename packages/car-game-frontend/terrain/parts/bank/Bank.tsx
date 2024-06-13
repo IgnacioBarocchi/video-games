@@ -9,9 +9,9 @@ import React, { FC, useCallback } from "react";
 
 import { Arrow3DModel } from "./Arrow3DModel";
 import { Bank3DModel } from "./Bank3DModel";
-import moneyCounterSFX from "../../../assets/audio/money-counter.mp3";
-import { payloadIsThePlayer } from "../../../lib/rigibBodyHelper";
+import moneyCounterSFX from "../../../assets/audio/in-game-sfx/bank/money-counter.mp3";
 import useCarGameStore from "../../../store/store";
+import { createOnceFunction } from "game-lib";
 
 const BANK_WIDTH = 25;
 const BANK_LENGTH = 13;
@@ -97,16 +97,16 @@ const Building = () => {
   );
 };
 
-function createOnceFunction(callback: Function) {
-  let hasBeenCalled = false;
+// function createOnceFunction(callback: Function) {
+//   let hasBeenCalled = false;
 
-  return function (args) {
-    if (!hasBeenCalled) {
-      callback(args);
-      hasBeenCalled = true;
-    }
-  };
-}
+//   return function (args) {
+//     if (!hasBeenCalled) {
+//       callback(args);
+//       hasBeenCalled = true;
+//     }
+//   };
+// }
 
 const Alert = () => {
   const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));

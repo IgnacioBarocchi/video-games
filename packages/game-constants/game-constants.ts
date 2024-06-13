@@ -1,4 +1,4 @@
-export const ROAD_LENGTH = 2000; //2000;
+export const ROAD_LENGTH = 5000; //5000; //2000;
 export const BROWN = "#453b2e";
 export const DARK_GREEN = "#515651";
 export const GREY = "#7e7b79";

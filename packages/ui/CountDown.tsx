@@ -68,7 +68,9 @@ export const CountDown = ({ tickAudio, onEnd }) => {
     }
 
     if (timer <= LAST_SECONDS) {
-      new Audio(tickAudio).play();
+      const tick = new Audio(tickAudio);
+      tick.volume = 0.3;
+      tick.play();
     }
   }, [timer]);
 

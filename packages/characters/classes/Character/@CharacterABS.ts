@@ -238,7 +238,7 @@ export abstract class Character {
     }
   }
 
-  private rotationQuaternion = new Quaternion();
+  private rotationQuaternion = new Quaternion(0, Math.PI / 2, 0, 0);
   private rotationMatrix = new Matrix4();
   private zeroVec = new Vector3(0, 0, 0);
   private upVec = new Vector3(0, 1, 0);

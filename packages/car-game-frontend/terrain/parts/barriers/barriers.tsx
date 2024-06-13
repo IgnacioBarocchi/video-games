@@ -1,19 +1,20 @@
 import * as THREE from "three";
 
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useState } from "react";
 
-import { BARRIER_IMPACT_COST, HIGHWAY_X_POSITIONS } from "game-constants";
-import { GLTF } from "three-stdlib";
-import { Detailed, PositionalAudio, useAnimations } from "@react-three/drei";
+import {
+  BARRIER_IMPACT_COST,
+  ENTITY,
+  HIGHWAY_X_POSITIONS,
+} from "game-constants";
+import { Detailed, PositionalAudio } from "@react-three/drei";
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
-import barrierModelFile from "../../../assets/models/Barrier/Barrier.glb";
 import concreteImpact from "../../../assets/audio/in-game-sfx/concrete-barrier/impact.m4a";
-import { payloadIsThePlayer } from "../../../lib/rigibBodyHelper";
-import { throttle } from "../../../lib/throttle";
+
 import useCarGameStore from "../../../store/store";
-import { useGLTF } from "@react-three/drei";
 import { BarrierStandardRes3DModel } from "./barrier-sr-3D-model";
 import { BarrierLowRes3DModel } from "./barrier-low-res-3D-model";
+import { throttleFunction } from "game-lib";
 
 export const Barrier: FC<{ position: [number, number, number] }> = ({
   position,
@@ -29,8 +30,8 @@ export const Barrier: FC<{ position: [number, number, number] }> = ({
   const [shouldPlayAudio, setShouldPlayAudio] = useState(false);
   const [shouldRender, setShouldRender] = useState(true);
 
-  const handleBarrierImpact = throttle((payload) => {
-    if (!payloadIsThePlayer(payload)) {
+  const handleBarrierImpact = throttleFunction((payload) => {
+    if (!payload?.other?.rigidBodyObject?.name === ENTITY.CAR) {
       return;
     }
 

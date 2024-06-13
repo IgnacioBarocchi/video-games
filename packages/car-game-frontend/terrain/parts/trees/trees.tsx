@@ -1,8 +1,7 @@
 import * as THREE from "three";
 
-import React, { useMemo, useRef } from "react";
+import { useMemo } from "react";
 
-import { EntitiesRegion } from "../../../EntitiesRegion";
 import { GLTF } from "three-stdlib";
 import { SkeletonUtils } from "three-stdlib";
 import { memo } from "react";
@@ -115,17 +114,4 @@ export const Trees = memo(() => {
       ))}
     </group>
   );
-  // }
-  // if (isOldVersion) {
-
-  // return (
-  //   <EntitiesRegion
-  //     name="Trees"
-  //     depth={2000}
-  //     ZOffset={400}
-  //     numberOfEntities={[25, 25]}
-  //     Entity={TreeModel}
-  //     spaceBetween={{ x: [30, 25], y: [2, 0] }}
-  //   />
-  // );
 });

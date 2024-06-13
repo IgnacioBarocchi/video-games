@@ -1,47 +1,35 @@
-import React, { memo, useCallback } from "react";
-import { ZombieNPCV2, NPCComposition, ZombieHordeProps } from "characters";
-import { ZOMBIE_IMPACT_COST } from "game-constants";
+import { NPCComposition } from "characters";
 import useCarGameStore from "../store/store";
+import { createOnceFunction } from "game-lib";
+import { Suspense, lazy, memo, useCallback } from "react";
 
-function createOnceFunction(callback: Function) {
-  let hasBeenCalled = false;
+const ZombieImplementation = lazy(
+  () => import("../zombie-implementation/zombie.tsx")
+);
 
-  return function () {
-    if (!hasBeenCalled) {
-      callback();
-      hasBeenCalled = true;
-    }
-  };
-}
+export const ZombieHorde = memo<{ position: [number, number, number] }>(
+  ({ position }) => {
+    const setTitle = useCarGameStore(
+      useCallback((state) => state.setTitle, [])
+    );
 
-const ZombieImplementation = memo<{
-  position: [number, number, number];
-}>(({ position }) => {
-  const subMoney = useCarGameStore(useCallback((state) => state.subMoney, []));
-  const setCarNotification = useCarGameStore(
-    useCallback((state) => state.setCarNotification, [])
-  );
+    const onEnterCallback = createOnceFunction(() => {
+      setTitle("Entrando en zona de zombies");
+    });
 
-  const collisionCallback = createOnceFunction(() => {
-    setCarNotification({ type: "HIT ZOMBIE", cost: ZOMBIE_IMPACT_COST });
-    subMoney(ZOMBIE_IMPACT_COST);
-  });
-
-  return (
-    <ZombieNPCV2
-      playerContext="CAR"
-      position={position}
-      collisionCallback={collisionCallback}
-    />
-  );
-});
-
-export const ZombieHorde = () => {
-  return (
-    <NPCComposition
-      numberOfZombies={70}
-      Zend={1900}
-      Component={({ position }) => <ZombieImplementation position={position} />}
-    />
-  );
-};
+    return (
+      <Suspense>
+        <NPCComposition
+          numberOfNPCs={75}
+          position={position}
+          gap={25}
+          startCallback={onEnterCallback}
+          triggerGap={51}
+          Component={({ position }) => (
+            <ZombieImplementation position={position} />
+          )}
+        />
+      </Suspense>
+    );
+  }
+);

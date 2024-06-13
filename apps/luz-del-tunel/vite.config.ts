@@ -1,3 +1,4 @@
+import { comlink } from "vite-plugin-comlink";
 import million from "million/compiler";
 import { defineConfig } from "vite";
 import electron from "vite-plugin-electron/simple";
@@ -30,6 +31,7 @@ export default defineConfig({
     million.vite(),
     react({
       jsxRuntime: "automatic",
+      fastRefresh: false,
       // jsxRuntime: 'classic'
     }),
     tsConfigPaths(),
@@ -43,4 +45,10 @@ export default defineConfig({
       renderer: {},
     }),
   ],
+  worker: {
+    plugins: [
+      react(),
+      // comlink()
+    ],
+  },
 });

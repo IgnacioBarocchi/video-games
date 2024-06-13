@@ -1,11 +1,13 @@
+import { FC } from "react";
 import { Panel, CenteredPanel } from "../../elements/Panel";
 import { Text } from "../../elements/Text";
+import { Colors } from "game-constants";
 
-export const LoadingScreen = () => {
+export const LoadingScreen: FC<{ subject: string }> = ({ subject }) => {
   return (
-    <Panel backgroundValueCSSText="black">
+    <Panel backgroundValueCSSText={Colors.richBlack}>
       <CenteredPanel x y>
-        <Text>Cargando</Text>
+        <Text>Cargando: {subject}</Text>
       </CenteredPanel>
     </Panel>
   );

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "CommonJS",
+    "outDir": "../game-lib/dist",
+    "lib": ["ES2020"],
+    "jsx": "react-jsx"
+  },
+  "include": ["../game-lib"],
+  "exclude": ["../game-lib/dist", "../game-lib/node_modules", "../game-lib/**/*.spec.ts"]
+}

@@ -8,6 +8,7 @@ import { GroundModel } from "./GroundModel";
 import useCarGameStore from "../../../store/store";
 import { BarrierLowRes3DModel } from "../barriers/barrier-low-res-3D-model";
 import { SparksAttachment3DModel } from "./SparksAttachment3DModel";
+import { createOnceFunction } from "game-lib";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 10;
@@ -20,16 +21,16 @@ const GRASS_POSITION_X = 18.5;
 const POSITION_Y = 1;
 const SLOPE_POSITION_Y = 0.5;
 
-function createOnceFunction(callback: Function) {
-  let hasBeenCalled = false;
+// function createOnceFunction(callback: Function) {
+//   let hasBeenCalled = false;
 
-  return function () {
-    if (!hasBeenCalled) {
-      callback();
-      hasBeenCalled = true;
-    }
-  };
-}
+//   return function () {
+//     if (!hasBeenCalled) {
+//       callback();
+//       hasBeenCalled = true;
+//     }
+//   };
+// }
 
 const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
   // const visible = useRef(null);
@@ -127,28 +128,28 @@ const TerrainLimitBarriers = () => {
   );
 };
 
-const Alert = () => {
-  const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
+// const Alert = () => {
+//   const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
 
-  const collisionCallback = createOnceFunction(() => {
-    setTitle("Entrando en zona de zombies");
-  });
+//   const collisionCallback = createOnceFunction(() => {
+//     setTitle("Entrando en zona de zombies");
+//   });
 
-  return (
-    <CuboidCollider
-      sensor
-      // todo move to zombie horde
-      name="zombie alert"
-      args={[10, 0, 10]}
-      position={[0, 0, 1100]}
-      onIntersectionEnter={(payload) => {
-        if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
-          collisionCallback();
-        }
-      }}
-    />
-  );
-};
+//   return (
+//     <CuboidCollider
+//       sensor
+//       // todo move to zombie horde
+//       name="zombie alert"
+//       args={[10, 0, 10]}
+//       position={[0, 0, 1100]}
+//       onIntersectionEnter={(payload) => {
+//         if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
+//           collisionCallback();
+//         }
+//       }}
+//     />
+//   );
+// };
 
 export const HighWay = () => {
   const deviation = useRef(0);
@@ -213,7 +214,7 @@ export const HighWay = () => {
           args={[4, 0, ROAD_LENGTH]}
           position={[5.55, 0, 0]}
         />
-        <Alert />
+        {/* <Alert /> */}
         <Colliders side="left" />
         <Colliders side="right" />
         <GroundModel />

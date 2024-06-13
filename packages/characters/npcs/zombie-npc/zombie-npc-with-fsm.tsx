@@ -26,6 +26,7 @@ import {
   RapierRigidBody,
 } from "@react-three/rapier";
 import zombie3DMFile from "../../assets/models/Zombie_Male.glb";
+import zombie3DMFileLR from "../../assets/models/Zombie_Male_Low_Res_Mini.glb";
 
 import { getVector3From } from "../../lib/getVector3From";
 import { goToTarget } from "../../lib/goToTarget";
@@ -51,6 +52,8 @@ import {
 } from "../../machines/machine-constants";
 import { Attachments } from "./attachments";
 import { simpleZombieMachine } from "../../machines/simple-zombie-machine";
+// import { MergedZombie3DModel } from "../models/experimental-zombie-3d-model/merged-zombie-3D-model";
+// import { Zombie3DLowResModel } from "../models/experimental-zombie-3d-model/zombie-3D-model-low-res";
 
 export interface ZombieNPCProps {
   position: Vector3 | [number, number, number];

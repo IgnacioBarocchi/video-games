@@ -40,6 +40,9 @@ importers:
       vite-electron-plugin:
         specifier: ^0.8.3
         version: 0.8.3(acorn@8.11.3)(vite-plugin-electron-renderer@0.14.5)
+      vite-plugin-comlink:
+        specifier: ^5.0.1
+        version: 5.0.1(comlink@4.4.1)(vite@5.2.0)
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.2.2)(vite@5.2.0)
@@ -198,6 +201,9 @@ importers:
       game-constants:
         specifier: workspace:*
         version: link:../game-constants
+      game-lib:
+        specifier: workspace:*
+        version: link:../game-lib
       hub-screen-frontend:
         specifier: workspace:*
         version: link:../hub-screen-frontend
@@ -210,9 +216,6 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
-      physics:
-        specifier: workspace:*
-        version: link:../physics
       postprocessing:
         specifier: ^6.35.3
         version: 6.35.3(three@0.163.0)
@@ -301,9 +304,15 @@ importers:
       '@xstate/react':
         specifier: ^4.1.0
         version: 4.1.0(@types/react@18.2.66)(react@18.2.0)(xstate@5.10.0)
+      comlink:
+        specifier: ^4.4.1
+        version: 4.4.1
       game-constants:
         specifier: workspace:*
         version: link:../game-constants
+      game-lib:
+        specifier: workspace:*
+        version: link:../game-lib
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -376,6 +385,37 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
+  packages/game-lib:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.66
+        version: 18.2.66
+      '@types/react-dom':
+        specifier: ^18.2.22
+        version: 18.2.22
+      '@types/three':
+        specifier: ^0.163.0
+        version: 0.163.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.2.0
+        version: 7.2.0(@typescript-eslint/parser@7.2.0)(eslint@8.57.0)(typescript@5.2.2)
+      '@typescript-eslint/parser':
+        specifier: ^7.2.0
+        version: 7.2.0(eslint@8.57.0)(typescript@5.2.2)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      three:
+        specifier: ^0.163.0
+        version: 0.163.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
   packages/hub-screen-frontend:
     dependencies:
       '@react-three/drei':
@@ -427,18 +467,6 @@ importers:
       typescript:
         specifier: ^5.2.2
         version: 5.4.5
-
-  packages/physics:
-    devDependencies:
-      '@types/three':
-        specifier: ^0.163.0
-        version: 0.163.0
-      three:
-        specifier: ^0.163.0
-        version: 0.163.0
-      typescript:
-        specifier: ^5.2.2
-        version: 5.2.2
 
   packages/shooting-level-frontend:
     dependencies:
@@ -3026,6 +3054,10 @@ packages:
       delayed-stream: 1.0.0
     dev: true
 
+  /comlink@4.4.1:
+    resolution: {integrity: sha512-+1dlx0aY5Jo1vHy/tSsIGpSkN4tS9rZSW8FIhG0JH/crs9wwweswIo/POr451r7bZww3hFbPAKnTpimzL/mm4Q==}
+    dev: false
+
   /commander@5.1.0:
     resolution: {integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==}
     engines: {node: '>= 6'}
@@ -4306,6 +4338,12 @@ packages:
       three: 0.163.0
     dev: false
 
+  /magic-string@0.30.10:
+    resolution: {integrity: sha512-iIRwTIf0QKV3UAnYK4PU8uiEc4SRh5jX0mwpIwETPpHdhVM4f53RSwS/vXvN1JhGX+Cs7B8qIq3d6AH49O5fAQ==}
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.4.15
+    dev: false
+
   /matcher@3.0.0:
     resolution: {integrity: sha512-OkeDaAZ/bQCxeFAozM55PKcKU0yJMPGifLwV4Qgjitu+5MoAfSQN4lsLJeXZ1b8w0x+/Emda6MZgXS1jvsapng==}
     engines: {node: '>=10'}
@@ -5140,6 +5178,11 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /source-map@0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
+    dev: false
+
   /split-string@3.1.0:
     resolution: {integrity: sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==}
     engines: {node: '>=0.10.0'}
@@ -5617,6 +5660,19 @@ packages:
     transitivePeerDependencies:
       - '@swc/core'
       - vite-plugin-electron-renderer
+    dev: false
+
+  /vite-plugin-comlink@5.0.1(comlink@4.4.1)(vite@5.2.0):
+    resolution: {integrity: sha512-4TGw5+bTg5ROd8N2m9O/y0CoS81g8nyce9EI/eV51i54EJ938lFadXEButhaptJs89l5NY9+TkdjI5jXX4cWOw==}
+    peerDependencies:
+      comlink: ^4.3.1
+      vite: '>=2.9.6'
+    dependencies:
+      comlink: 4.4.1
+      json5: 2.2.3
+      magic-string: 0.30.10
+      source-map: 0.7.4
+      vite: 5.2.0
     dev: false
 
   /vite-plugin-electron-renderer@0.14.5:

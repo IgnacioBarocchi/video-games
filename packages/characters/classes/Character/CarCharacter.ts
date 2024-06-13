@@ -1,3 +1,5 @@
+import * as Comlink from "comlink";
+
 import { Camera, Vector3Tuple } from "three";
 import { Character } from "./@CharacterABS";
 import { PlayerObjectReferences } from "../../players/car-player/car-player";
@@ -44,3 +46,5 @@ export class CarCharacter extends Character {
     super(props);
   }
 }
+
+Comlink.expose(CarCharacter);
