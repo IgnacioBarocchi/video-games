@@ -15,8 +15,7 @@ import {
 } from "@react-three/rapier";
 import { Quaternion, Vector3 } from "three";
 import { ENTITY } from "game-constants";
-import { WaterAttachment3DModel } from "../players/car-player/water-attachment-3D-model";
-import { throttleFunction } from "game-lib";
+import { GrassAttachment3DModel } from "../players/car-player/grass-attachment";
 import { CRASH_EVENT } from "../machines/machine-constants";
 import { CarPlayerContext } from "../providers/car-player-actor-provider";
 export interface CarRigidBodyProps {
@@ -55,7 +54,7 @@ const Wheels = () => {
         args={[0.25]}
         position={[0.75, 0.25, 1.5]}
       />
-      <WaterAttachment3DModel
+      <GrassAttachment3DModel
         name="Front Left"
         visible={false}
         ref={wheelsAttachmentReferences.current.frontLeft}
@@ -67,7 +66,7 @@ const Wheels = () => {
         args={[0.25]}
         position={[0.75, 0.25, -1.5]}
       />
-      <WaterAttachment3DModel
+      <GrassAttachment3DModel
         name="Back Left"
         visible={false}
         ref={wheelsAttachmentReferences.current.backLeft}
@@ -80,7 +79,7 @@ const Wheels = () => {
         args={[0.25]}
         position={[-0.75, 0.25, 1.5]}
       />
-      <WaterAttachment3DModel
+      <GrassAttachment3DModel
         name="Front Right"
         visible={false}
         ref={wheelsAttachmentReferences.current.frontRight}
@@ -93,7 +92,7 @@ const Wheels = () => {
         args={[0.25]}
         position={[-0.75, 0.25, -1.5]}
       />
-      <WaterAttachment3DModel
+      <GrassAttachment3DModel
         name="Back Right"
         visible={false}
         ref={wheelsAttachmentReferences.current.backRight}

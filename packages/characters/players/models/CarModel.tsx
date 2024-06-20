@@ -2,7 +2,7 @@ import { forwardRef, memo, useRef } from "react";
 import * as THREE from "three";
 import { Html, useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import carModelFile from "../../assets/models/Car.glb";
+import carModelFile from "../../assets/models/Car.old.glb";
 import { useFrame } from "@react-three/fiber";
 import { PlayerObjectReferences } from "../car-player/car-player";
 

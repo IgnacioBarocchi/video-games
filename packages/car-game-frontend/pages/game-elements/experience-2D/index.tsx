@@ -1,3 +1,4 @@
+import { expose } from "react-worker-components";
 // todo use drei view
 import { Suspense, lazy } from "react";
 import { LoadingPanel } from "./gui-panels/loading-panel";
@@ -10,7 +11,7 @@ const EndGamePanel = lazy(() => import("./gui-panels/end-game-panel"));
 const BackToMenuPanel = lazy(() => import("./gui-panels/back-to-menu-panel"));
 const MoneyLossPanel = lazy(() => import("./gui-panels/money-loss-panel"));
 
-export const ProExperience2D = () => (
+export const Experience2DGUI = () => (
   <div
     style={{
       pointerEvents: "none",
@@ -27,3 +28,7 @@ export const ProExperience2D = () => (
     </Suspense>
   </div>
 );
+
+expose(Experience2DGUI);
+
+export default Experience2DGUI;

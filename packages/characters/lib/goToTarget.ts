@@ -1,3 +1,4 @@
+import * as Comlink from "comlink";
 import { Vector3 } from "three";
 import { RapierRigidBody } from "@react-three/rapier";
 import { lookAtRigidBody } from "./lookAtRigidBody";
@@ -47,3 +48,5 @@ export const goToTarget = (params: {
     });
   }
 };
+
+Comlink.expose({ goToTarget });

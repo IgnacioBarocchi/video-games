@@ -6,7 +6,7 @@ import useCarGameStore from "../../../../store/store";
 import { Text } from "ui/elements/Text";
 
 const CountUpPanel = () => {
-  const money = useCarGameStore((state) => state.money);
+  const balanceDetails = useCarGameStore((state) => state.balanceDetails);
 
   return (
     <FloatingNotification dismiss={false} position="center" width="100%">
@@ -16,7 +16,7 @@ const CountUpPanel = () => {
           margin: "0 auto",
         }}
       >
-        <Winning ARS={money} USD={Number((money / DOLLAR_RATE).toFixed(2))} />
+        <Winning balanceDetails={balanceDetails} />
       </div>
     </FloatingNotification>
   );

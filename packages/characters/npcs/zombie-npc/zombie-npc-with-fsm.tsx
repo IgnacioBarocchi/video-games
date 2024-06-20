@@ -11,7 +11,7 @@ import {
 import { GroupProps, useFrame, useGraph } from "@react-three/fiber";
 import { useGLTF, useAnimations, Box } from "@react-three/drei";
 import { SkeletonUtils } from "three-stdlib";
-import { ActionName, Zombie3DModel } from "../models/zombie-3D-model";
+import { ActionName } from "../models/zombie-3D-model";
 import { complexZombieMachine } from "../../machines/complex-zombie-machine";
 
 import { Context } from "../../providers/player-actor-provider";
@@ -25,8 +25,7 @@ import {
   IntersectionEnterPayload,
   RapierRigidBody,
 } from "@react-three/rapier";
-import zombie3DMFile from "../../assets/models/Zombie_Male.glb";
-import zombie3DMFileLR from "../../assets/models/Zombie_Male_Low_Res_Mini.glb";
+import zombie3DMWSFile from "../../assets/models/Zombie_Male_NPC_WSkin.glb";
 
 import { getVector3From } from "../../lib/getVector3From";
 import { goToTarget } from "../../lib/goToTarget";
@@ -52,8 +51,7 @@ import {
 } from "../../machines/machine-constants";
 import { Attachments } from "./attachments";
 import { simpleZombieMachine } from "../../machines/simple-zombie-machine";
-// import { MergedZombie3DModel } from "../models/experimental-zombie-3d-model/merged-zombie-3D-model";
-// import { Zombie3DLowResModel } from "../models/experimental-zombie-3d-model/zombie-3D-model-low-res";
+import { Zombie3DModelWithSkin } from "../models/zombie-3D-model-with-skin";
 
 export interface ZombieNPCProps {
   position: Vector3 | [number, number, number];
@@ -74,11 +72,15 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
   const playerActor = useContext(Context);
   const playerRigidBodyReference = useRef<RapierRigidBody>(null);
   const group = useRef<GroupProps>();
-  const { scene, materials, animations } = useGLTF(zombie3DMFile) as GLTFResult;
+  const { scene, animations } = useGLTF(zombie3DMWSFile) as GLTFResult;
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes } = useGraph(clone);
+  const { nodes, materials } = useGraph(clone);
   const { actions } = useAnimations<GLTFActions>(animations, group);
   const NPCRigidBodyReference = useRef<RapierRigidBody>(null);
+
+  // useEffect(() => {
+  //   return () => worker.terminate();
+  // }, []);
 
   useEffect(() => {
     let timeoutId = 0;
@@ -210,7 +212,6 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
     if (!meleeRange /* && playerContext === "HUMAN"*/) {
       setMeleeRange(true);
       send({ type: USING_SKILL_1_EVENT });
-      console.log("set to true");
     }
     // TODO: ZOMBIE NEEDS ARM ATTACHMENT TO HIT THE PLAYER
     // playerActor?.send({ type: REACTING_TO_SKILL_1_EVENT });
@@ -257,7 +258,7 @@ export const ZombieNPCV2: FC<ZombieNPCProps> = ({
       isDead={state.matches(DEATH_STATE)}
       Zombie3DModelVariant={() => (
         <Suspense fallback={<Box />}>
-          <Zombie3DModel
+          <Zombie3DModelWithSkin
             ref={group}
             nodes={nodes}
             materials={materials}

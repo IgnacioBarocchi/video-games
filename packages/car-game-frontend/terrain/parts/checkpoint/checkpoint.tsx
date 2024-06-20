@@ -231,14 +231,16 @@ const Model = ({ playOpenGate }) => {
   );
 };
 
-const SPEED_LIMIT = 30;
+const SPEED_LIMIT = 45;
 const ALERT_DISTANCE = 500;
 
 const Alert = () => {
   const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
 
   const intersectionHandler = createOnceFunction(() => {
-    setTitle("Control de velocidad a " + ALERT_DISTANCE + "m");
+    setTitle(
+      `control de velocidad a ${ALERT_DISTANCE}m\nmáxima ${SPEED_LIMIT}km/h`
+    );
 
     const gateAudio = new Audio(openGateSFX);
     gateAudio.volume = 0.3;
@@ -265,13 +267,16 @@ export function Checkpoint() {
     useCallback((state) => state.setCarNotification, [])
   );
   const [playOpenGate, setPlayOpenGate] = useState(false);
-  const collisionCallback = createOnceFunction((payload: CollisionPayload) => {
-    setPlayOpenGate(true);
-    if (Math.abs(payload?.other?.rigidBody?.linvel().z!) > SPEED_LIMIT) {
-      setCarNotification({ type: "SPEED FEE", cost: SPEED_FEE_COST });
-      subMoney(SPEED_FEE_COST);
-    }
-  });
+  const collisionCallback = useCallback(
+    createOnceFunction((payload: CollisionPayload) => {
+      setPlayOpenGate(true);
+      if (Math.abs(payload?.other?.rigidBody?.linvel().z!) > SPEED_LIMIT) {
+        setCarNotification({ type: "SPEED FEE", cost: SPEED_FEE_COST });
+        subMoney({ type: "SPEED FEE", cost: SPEED_FEE_COST });
+      }
+    }),
+    []
+  );
 
   return (
     <RigidBody
@@ -285,7 +290,6 @@ export function Checkpoint() {
         sensor
         onIntersectionEnter={(payload) => {
           if (payload?.other?.rigidBodyObject?.name === ENTITY.CAR) {
-            console.log("TRIGGERED");
             collisionCallback(payload);
           }
         }}

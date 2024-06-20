@@ -5,3 +5,5 @@ export * from "./providers/car-player-actor-provider";
 export * from "./npcs/zombie-npc/zombie-npc-with-fsm";
 // export * from "./compositions/zombie-horde";
 export * from "./compositions/NPCComposition";
+export * from "./compositions/OrderedObstaclesComposition";
+export * from "./compositions/InfiniteNPCComposition";

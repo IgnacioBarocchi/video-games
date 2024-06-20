@@ -1,14 +1,10 @@
 import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import { ENTITY, ROAD_LENGTH } from "game-constants";
-import { FC, useCallback, useRef } from "react";
+import { FC, useRef } from "react";
 import { MathUtils, Vector3 } from "three";
-
-// import { BarrierModel } from "../barriers/barriers";
 import { GroundModel } from "./GroundModel";
-import useCarGameStore from "../../../store/store";
 import { BarrierLowRes3DModel } from "../barriers/barrier-low-res-3D-model";
 import { SparksAttachment3DModel } from "./SparksAttachment3DModel";
-import { createOnceFunction } from "game-lib";
 
 const BARRIER_WIDTH = 0.05;
 const BARRIER_HEIGHT = 10;
@@ -21,20 +17,7 @@ const GRASS_POSITION_X = 18.5;
 const POSITION_Y = 1;
 const SLOPE_POSITION_Y = 0.5;
 
-// function createOnceFunction(callback: Function) {
-//   let hasBeenCalled = false;
-
-//   return function () {
-//     if (!hasBeenCalled) {
-//       callback();
-//       hasBeenCalled = true;
-//     }
-//   };
-// }
-
 const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
-  // const visible = useRef(null);
-  // const z = useRef(0);
   const group = useRef(null);
   return (
     <>
@@ -60,10 +43,6 @@ const Colliders: FC<{ side: "right" | "left" }> = ({ side }) => {
             return;
           }
 
-          //
-          // z.current = payload.other.rigidBody.translation().z;
-
-          // console.log(z.current);
           group.current.position.z =
             payload.other.rigidBody.translation().z - 2;
         }}
@@ -128,29 +107,6 @@ const TerrainLimitBarriers = () => {
   );
 };
 
-// const Alert = () => {
-//   const setTitle = useCarGameStore(useCallback((state) => state.setTitle, []));
-
-//   const collisionCallback = createOnceFunction(() => {
-//     setTitle("Entrando en zona de zombies");
-//   });
-
-//   return (
-//     <CuboidCollider
-//       sensor
-//       // todo move to zombie horde
-//       name="zombie alert"
-//       args={[10, 0, 10]}
-//       position={[0, 0, 1100]}
-//       onIntersectionEnter={(payload) => {
-//         if (payload.other.rigidBodyObject!.name === ENTITY.CAR) {
-//           collisionCallback();
-//         }
-//       }}
-//     />
-//   );
-// };
-
 export const HighWay = () => {
   const deviation = useRef(0);
 
@@ -166,41 +122,6 @@ export const HighWay = () => {
           name="Grass Boulevard"
           args={[1.7, 0, ROAD_LENGTH]}
           position={[0, 0, 0]}
-          // onContactForce={(payload) => {
-          //   if (
-          //     payload.other.rigidBodyObject?.name !== ENTITY.CAR &&
-          //     Math.abs(payload.other.rigidBody.linvel().z) < 35
-          //   ) {
-          //     return;
-          //   }
-
-          //   deviation.current += 0.1;
-
-          //   const clampedValue = (Math.round(deviation.current * 1) % 2) - 1;
-          //   console.log(clampedValue);
-
-          //   const { y, z } = payload.other.rigidBody.linvel();
-          //   payload.other.rigidBody.setLinvel(
-          //     {
-          //       x: clampedValue,
-          //       y,
-          //       z,
-          //     },
-          //     true
-          //   );
-
-          //   // const { x, z, w } = payload.other.rigidBody.rotation();
-          //   // const newY = MathUtils.degToRad(clampedValue);
-          //   // payload.other.rigidBody.setRotation(
-          //   //   {
-          //   //     x,
-          //   //     y: newY,
-          //   //     z,
-          //   //     w,
-          //   //   },
-          //   //   true
-          //   // );
-          // }}
         />
       </RigidBody>
       <RigidBody type="fixed" name={ENTITY.ASPHALT} colliders={false}>
@@ -214,7 +135,6 @@ export const HighWay = () => {
           args={[4, 0, ROAD_LENGTH]}
           position={[5.55, 0, 0]}
         />
-        {/* <Alert /> */}
         <Colliders side="left" />
         <Colliders side="right" />
         <GroundModel />
@@ -223,3 +143,56 @@ export const HighWay = () => {
     </>
   );
 };
+
+// onContactForce={(payload) => {
+//   if (
+//     payload.other.rigidBodyObject?.name !== ENTITY.CAR &&
+//     Math.abs(payload.other.rigidBody.linvel().z) < 35
+//   ) {
+//     return;
+//   }
+
+//   deviation.current += 0.1;
+
+//   const clampedValue = (Math.round(deviation.current * 1) % 2) - 1;
+//   console.log(clampedValue);
+
+//   const { y, z } = payload.other.rigidBody.linvel();
+//   payload.other.rigidBody.setLinvel(
+//     {
+//       x: clampedValue,
+//       y,
+//       z,
+//     },
+//     true
+//   );
+
+//   // const { x, z, w } = payload.other.rigidBody.rotation();
+//   // const newY = MathUtils.degToRad(clampedValue);
+//   // payload.other.rigidBody.setRotation(
+//   //   {
+//   //     x,
+//   //     y: newY,
+//   //     z,
+//   //     w,
+//   //   },
+//   //   true
+//   // );
+// }}
+// function createOnceFunction(callback: Function) {
+//   let hasBeenCalled = false;
+
+//   return function () {
+//     if (!hasBeenCalled) {
+//       callback();
+//       hasBeenCalled = true;
+//     }
+//   };
+// }
+
+//
+// z.current = payload.other.rigidBody.translation().z;
+
+// console.log(z.current);
+// const visible = useRef(null);
+// const z = useRef(0);

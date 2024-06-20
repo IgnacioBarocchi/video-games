@@ -8,9 +8,9 @@ import {
 import { Plane } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { CarPlayerContext } from "characters";
-import MyWorker from "../workers/rain-worker?worker";
+import RainWorker from "../workers/rain-worker?worker";
 
-const rainWorker = new MyWorker();
+const rainWorker = new RainWorker();
 const rainHeight = 4.5;
 const numDrops = 500;
 // const rainDropGeometry = new PlaneGeometry(0.01, 0.1);

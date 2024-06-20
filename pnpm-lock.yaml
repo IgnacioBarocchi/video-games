@@ -198,6 +198,9 @@ importers:
       characters:
         specifier: workspace:*
         version: link:../characters
+      comlink:
+        specifier: ^4.4.1
+        version: 4.4.1
       game-constants:
         specifier: workspace:*
         version: link:../game-constants
@@ -234,6 +237,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-worker-components:
+        specifier: ^0.2.0
+        version: 0.2.0(react@18.2.0)
       shooting-level-frontend:
         specifier: workspace:*
         version: link:../shooting-level-frontend
@@ -4930,6 +4936,14 @@ packages:
       debounce: 1.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-worker-components@0.2.0(react@18.2.0):
+    resolution: {integrity: sha512-6Di/XxQm/cT8p27Kmy3AloH907g1dKcYZiK2X4j8HM2zbakRI2mNe2v+vAp/N4gKAJ/AbM0WjWGjyOKeKiRrDg==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react@18.2.0:

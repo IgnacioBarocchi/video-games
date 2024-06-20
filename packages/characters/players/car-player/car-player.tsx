@@ -34,6 +34,8 @@ import {
 import { CarPlayerContext } from "../../providers/car-player-actor-provider";
 import CharacterWorker from "./car-update-worker?worker";
 import { deepFunctionsToStrings } from "./deep-functions";
+import carWithSkin3DModelFile from "../../assets/models/CarWSkin";
+import { CarModelWSkin } from "../models/CarModelWSkin";
 
 export type Props = {
   position?: Vector3Tuple;
@@ -160,7 +162,8 @@ export const CarPlayer = memo(
           ref={playerObjectReferences.current.rigidbody}
         >
           <Suspense fallback={<Box />}>
-            <CarModel ref={playerObjectReferences} />
+            <CarModelWSkin ref={playerObjectReferences} />
+            {/* <CarModel ref={playerObjectReferences} /> */}
             <Attachments ref={audioRef} />
           </Suspense>
         </CarRigidBody>

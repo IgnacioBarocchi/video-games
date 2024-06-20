@@ -1,14 +1,12 @@
 import { Terrain } from "../terrain";
 import { CarPlayer } from "../player-implementation";
-import { ZombieHorde } from "../zombie-horde/zombie-horde";
+import { ZombieHorde } from "../zombie-horde/infinite-zombie-horde";
 
 const Scenario = () => {
   return (
     <>
       <Terrain />
-      <ZombieHorde position={[0, 0, -1000]} />
-      <ZombieHorde position={[0, 0, -500]} />
-      <ZombieHorde position={[0, 0, 0]} />
+      <ZombieHorde />
     </>
   );
 };
@@ -21,3 +19,5 @@ export const LVL1 = () => {
     </>
   );
 };
+
+export default LVL1;

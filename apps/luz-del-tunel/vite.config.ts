@@ -46,9 +46,6 @@ export default defineConfig({
     }),
   ],
   worker: {
-    plugins: [
-      react(),
-      // comlink()
-    ],
+    plugins: [react(), comlink()],
   },
 });

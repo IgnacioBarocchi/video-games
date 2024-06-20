@@ -71,6 +71,9 @@ const NotificationWrapper = styled.div<{
   animation: ${({ isVisible }) => (isVisible ? fadeIn : fadeOut)} 3s;
   transition: opacity 3s;
   padding: 1em;
+  & * {
+    opacity: 0.8;
+  }
 `;
 
 export const FloatingNotification = ({
