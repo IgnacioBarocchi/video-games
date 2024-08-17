@@ -1,12 +1,11 @@
 import { styled } from "styled-components";
 import { HEADER_HEIGHT } from "../../constants";
-// import { Button } from "ui";
 import { Colors } from "game-constants";
-import { Heading2, Heading3, Label } from "../responsive-text-content";
-import { Button } from "../button";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { devices } from "../responsive-text-content";
+import { Button, Heading, Label } from "ui/utilities";
+import { Link } from "ui";
+import { devices } from "ui/constants/devices";
 
 const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
@@ -30,7 +29,8 @@ const Container = styled.header`
   border: 1px solid rgba(255, 255, 255, 0.18);
 `;
 
-const ContributeLink = styled.div`
+// const ContributeLink = styled(Link)`
+const ContributeLink = styled.a`
   display: flex;
   align-items: center;
   gap: 6px;
@@ -64,9 +64,9 @@ export const Header = () => {
   return (
     <Container>
       {isMobile ? (
-        <Heading3>LA LUZ DEL TÚNEL</Heading3>
+        <Heading index="3">LA LUZ DEL TÚNEL</Heading>
       ) : (
-        <Heading2>LA LUZ DEL TÚNEL</Heading2>
+        <Heading index="2">LA LUZ DEL TÚNEL</Heading>
       )}
       <div style={{ display: "flex", alignItems: "center", gap: "25px" }}>
         <ContributeLink href="https://github.com/IgnacioBarocchi/video-games">

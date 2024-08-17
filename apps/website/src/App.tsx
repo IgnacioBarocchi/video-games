@@ -6,7 +6,6 @@ import { Landing } from "./components/views/landing";
 import { Downloads } from "./components/views/downloads";
 import { Info } from "./components/views/info";
 import { ViewTrailer } from "./components/views/vew-trailer";
-import { CollaborateModal } from "./components/modals/collaborate-modal";
 
 const App = () => {
   return (

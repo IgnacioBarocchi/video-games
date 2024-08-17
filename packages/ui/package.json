@@ -11,17 +11,25 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@preact/signals-react": "^2.0.2",
+    "aos": "3.0.0-beta.6",
+    "game-constants": "workspace*",
+    "million": "^3.1.11",
     "react": "^18.2.0",
-    "styled-components": "^6.1.8",
+    "react-animated-3d-card": "1.0.2",
+    "react-aria-components": "^1.2.1",
     "react-countup": "^6.5.3",
-    "game-constants": "workspace*"
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "react-parallax-scroll": "^0.1.1",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
-    "eslint": "^8.57.0"
+    "eslint": "^8.57.0",
+    "typescript": "^5.2.2"
   }
 }

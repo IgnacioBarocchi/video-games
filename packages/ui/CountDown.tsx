@@ -16,10 +16,13 @@ const finalValues = `
   position: relative;
   top: 20%;
   left: 50%;
-  font-size: 6em;
   color: red;
   transform: translateX(-50%);
-  `;
+
+  & > * {
+    font-size: 75px;
+  }
+`;
 
 const move = keyframes`
   from {

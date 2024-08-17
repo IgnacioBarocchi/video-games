@@ -1,2 +1,3 @@
 export const HEADER_HEIGHT = 72;
 export const FOOTER_HEIGHT = HEADER_HEIGHT * 1.618;
+export const MAIN_FOOTER_HEIGHT = FOOTER_HEIGHT * 1.618;

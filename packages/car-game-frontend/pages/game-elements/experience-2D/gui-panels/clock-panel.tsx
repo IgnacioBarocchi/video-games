@@ -1,6 +1,6 @@
 import tick from "../../../../assets/audio/in-game-sfx/clock-tick/tick.mp3";
 import { useCallback } from "react";
-import { CountDown } from "ui";
+import { Clock } from "ui";
 import useCarGameStore from "../../../../store/store";
 import { block } from "million/react";
 
@@ -17,7 +17,7 @@ export const ClockPanel = block(() => {
   }
 
   return (
-    <CountDown
+    <Clock
       onEnd={() => {
         setGameOver(
           // @ts-ignore

@@ -1,18 +1,13 @@
 import { styled } from "styled-components";
-import { CustomCard } from "../../custom-card";
-import { FlexRow } from "ui";
+import { Card3D, FlexRow, HTTPError, HttpLoading, Link } from "ui";
 import { FaDownload } from "react-icons/fa";
-import { LINUX_LINK, MAC_LINK, WINDOWS_LINK } from "../../../constants";
 import image from "../../../assets/images/BG1.png";
-import { useEffect } from "react";
 import useReleaseData from "../../../hooks/use-release-data";
-import { HTTPError } from "../../error/error";
-import { Loading } from "../../loading/loading";
 import { MacOScene } from "../../scene-3d/mac-scene";
 import { TuxScene } from "../../scene-3d/tux-scene";
 import { WindowsScene } from "../../scene-3d/windows-scene";
 import { Section } from "../../parallax-section";
-import { Paragraph } from "../../responsive-text-content";
+import { Paragraph } from "ui/utilities";
 
 const DownloadLabel = () => {
   return (
@@ -58,7 +53,7 @@ export const Downloads = () => {
   } = useReleaseData();
 
   if (loading) {
-    return <Loading />;
+    return <HttpLoading />;
   }
   if (error) {
     return <HTTPError />;
@@ -73,7 +68,7 @@ export const Downloads = () => {
     >
       <CustomRow heights={{ desktop: "100vh", mobile: "fit-content" }}>
         <a href={linux?.endpoint ?? ""} target="_blank">
-          <CustomCard
+          <Card3D
             releaseMetaData={{ date: linux?.date, releaseID: linux?.version }}
             topText={<DownloadLabel />}
             title="Para Linux"
@@ -81,7 +76,7 @@ export const Downloads = () => {
           />
         </a>
         <a href={windows?.endpoint ?? ""} target="_blank">
-          <CustomCard
+          <Card3D
             releaseMetaData={{
               date: windows?.date,
               releaseID: windows?.version,
@@ -92,7 +87,7 @@ export const Downloads = () => {
           />
         </a>
         <a href={mac?.endpoint ?? ""} target="_blank">
-          <CustomCard
+          <Card3D
             releaseMetaData={{ date: mac?.date, releaseID: mac?.version }}
             topText={<DownloadLabel />}
             title="Para MacOS"

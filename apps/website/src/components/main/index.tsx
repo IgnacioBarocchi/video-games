@@ -32,13 +32,4 @@ export const Main = styled.main`
   & svg {
     fill: ${Colors.white};
   }
-  // & p {
-  //   color: ${Colors.white};
-  // }
-  // & span {
-  //   color: ${Colors.white};
-  // }
-  // & h1 {
-  //   color: ${Colors.white};
-  // }
 `;

@@ -1,38 +1,23 @@
-import { DOLLAR_RATE } from "game-constants";
-import { useState, CSSProperties, useMemo, useEffect } from "react";
-import { FloatingNotification } from "ui";
-import { Winning } from "ui/end-game-screen/screens/winning";
+import { useState, useEffect, useCallback } from "react";
+import { EndGameView } from "ui";
 import useCarGameStore from "../../../../store/store";
-import { Text } from "ui/elements/Text";
-
-const CountUpPanel = () => {
-  const balanceDetails = useCarGameStore((state) => state.balanceDetails);
-
-  return (
-    <FloatingNotification dismiss={false} position="center" width="100%">
-      <div
-        style={{
-          width: "fit-content",
-          margin: "0 auto",
-        }}
-      >
-        <Winning balanceDetails={balanceDetails} />
-      </div>
-    </FloatingNotification>
-  );
-};
+import useGameContext from "../../../../node_modules/game-constants/hooks/use-game-context";
 
 export const EndGamePanel = () => {
+  const { changeGameState } = useGameContext();
   const gameOver = useCarGameStore((state) => state.gameOver);
-  const [displayMoneyCountUp, setDisplayMoneyCountUp] = useState(false);
-  const containerStyle: CSSProperties = useMemo(
-    () => ({
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    }),
-    []
+  const balanceDetails = useCarGameStore((state) => state.balanceDetails);
+  const resetState = useCarGameStore(
+    useCallback((state) => state.resetState, [])
   );
+
+  const onBackToMenu = useCallback(() => {
+    resetState();
+    changeGameState("MAIN MENU");
+  }, []);
+
+  const [displaySummaryReportView, setDisplaySummaryReportView] =
+    useState(false);
 
   useEffect(() => {
     if (!gameOver) {
@@ -42,7 +27,7 @@ export const EndGamePanel = () => {
     let timeoutId;
 
     if (gameOver.reason === "WON") {
-      timeoutId = setTimeout(() => setDisplayMoneyCountUp(true), 1500);
+      timeoutId = setTimeout(() => setDisplaySummaryReportView(true), 1500);
     }
 
     return () => {
@@ -50,51 +35,20 @@ export const EndGamePanel = () => {
     };
   }, [gameOver]);
 
-  if (!displayMoneyCountUp && gameOver) {
-    return (
-      <FloatingNotification dismiss={false} position="center" width="50%">
-        <div style={containerStyle}>
-          <Text>
-            {
-              {
-                "TIME OUT": "Se acabó el tiempo.",
-                WON: "Llegaste al banco.",
-              }[gameOver.reason]
-            }
-          </Text>
-          <Text>
-            {
-              {
-                "TIME OUT": "Misión fracasada.",
-                WON: "Misión completada.",
-              }[gameOver.reason]
-            }
-          </Text>
-          {/* {gameOver.reason === "TIME OUT" && (
-              <div
-                style={{
-                  pointerEvents: "auto",
-                }}
-              >
-                <Button
-                  onClick={() => {
-                    changeGameState("MAIN MENU");
-                  }}
-                >
-                  Empezar de nuevo
-                </Button>
-              </div>
-            )} */}
-        </div>
-      </FloatingNotification>
-    );
-  }
-
-  if (displayMoneyCountUp) {
-    return <CountUpPanel />;
-  }
-
-  return null;
+  return (
+    <EndGameView
+      displayWinningView={
+        !displaySummaryReportView && gameOver?.reason === "WON"
+      }
+      displayTimeoutView={
+        !displaySummaryReportView && gameOver?.reason === "TIME OUT"
+      }
+      displaySummaryReportView={displaySummaryReportView}
+      balanceDetails={balanceDetails}
+      onBackToMenu={onBackToMenu}
+      displayMenu={gameOver?.reason}
+    />
+  );
 };
 
 export default EndGamePanel;

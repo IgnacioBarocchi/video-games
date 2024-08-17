@@ -1,12 +1,16 @@
+import demo from "../../../assets/video/demo.mp4";
+import poster from "../../../assets/images/VIDEO_POSTER.png";
 import { styled } from "styled-components";
 import { FOOTER_HEIGHT } from "../../../constants";
-import { useRef } from "react";
+import { VideoHTMLAttributes, useRef } from "react";
 
 import { Section } from "../../parallax-section";
 import image from "../../../assets/images/BG3.png";
-import { BackgroundVideo, OSButtons, Quotes } from "./elements";
-import { Heading1, Heading2 } from "../../responsive-text-content";
-import { Button } from "../../button";
+import { OSButtons } from "./elements";
+import { BackgroundVideo } from "ui/website/background-video";
+import { Accreditations } from "ui/website/accreditations";
+import { Button, Heading } from "ui/utilities";
+import { CollaborateModal } from "../../modals/collaborate-modal";
 
 const Container = styled.div`
   width: 100vw;
@@ -15,7 +19,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Footer = styled.footer`
+const LandingFooter = styled.footer`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,73 +27,58 @@ const Footer = styled.footer`
   width: 100%;
   height: 100%;
   justify-content: center;
-
-  // // position: absolute;
-  // // bottom: 15%;
-  // // left: 25px;
-
-  // @media (max-width: 576px) {
-  // }
-  // @media (max-width: 992px) {
-  // }
-  // @media (max-width: 1200px) {
-  // }
-  // @media (max-width: 768px) {
-  //   left: 0;
-  //   width: 100%;
-  // }
 `;
 
 const MainTextContainer = styled.div`
-  // position: absolute;
-  // top: 25%;
-  // left: 50%;
-  // transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  // @media (max-width: 576px) {
-  // }
-  // @media (max-width: 992px) {
-  // }
-  // @media (max-width: 1200px) {
-  // }
-  // @media (max-width: 768px) {
-  //   top: 20%;
-  //   width: 100%;
-  // }
 `;
 
 export const Landing = () => {
-  const videoRef = useRef();
+  const videoRef = useRef<VideoHTMLAttributes<unknown>>();
 
   return (
-    <Section image={image} heights={{ desktop: "100vh", mobile: "100vh" }}>
-      <BackgroundVideo ref={videoRef} />
-      <Container>
-        <MainTextContainer>
-          <Heading1
-            style={{ width: "100vw", textAlign: "center", marginTop: "100px" }}
-          >
-            LA LUZ DEL TÚNEL
-          </Heading1>
-          <Heading2 font="Tanker">NO TENÉS FUTURO</Heading2>
-          <Button
-            onClick={() => {
-              document
-                .querySelector("#downloads")
-                ?.scrollIntoView({ behavior: "smooth" });
-            }}
-            label="Descargar"
-            skin="dark"
-          />
-        </MainTextContainer>
-        <Footer>
-          <OSButtons ref={videoRef} />
-          <Quotes />
-        </Footer>
-      </Container>
-    </Section>
+    <>
+      <CollaborateModal />
+      <Section image={image} heights={{ desktop: "100vh", mobile: "100vh" }}>
+        <BackgroundVideo.Player
+          src={demo}
+          type="video/mp4"
+          poster={poster}
+          ref={videoRef}
+        />
+        <Container>
+          <MainTextContainer>
+            <div
+              style={{
+                width: "100vw",
+                textAlign: "center",
+                marginTop: "100px",
+              }}
+            >
+              <Heading index="1">LA LUZ DEL TÚNEL</Heading>
+            </div>
+            <Heading index="2" font="Tanker">
+              NO TENÉS FUTURO
+            </Heading>
+            <Button
+              onClick={() => {
+                document
+                  .querySelector("#downloads")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              label="Descargar"
+              skin="dark"
+            />
+          </MainTextContainer>
+          <LandingFooter>
+            <OSButtons ref={videoRef} />
+            <Accreditations />
+          </LandingFooter>
+        </Container>
+      </Section>
+    </>
   );
 };

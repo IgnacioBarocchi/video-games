@@ -89,10 +89,10 @@ const throttledNotification = throttleFunction((set, value, waiting) => {
   // console.log("call n");
 
   set({ carNotification: value });
-
-  setTimeout(() => {
+  let timeout = 0;
+  timeout = setTimeout(() => {
     set(() => ({ carNotification: null }));
-    waiting = false;
+    // waiting = false;
   }, NOTIFICATION_DURATION);
 });
 

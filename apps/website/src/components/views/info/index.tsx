@@ -1,38 +1,19 @@
 import { BoxScene } from "../../scene-3d/box-scene";
-import { CustomCard } from "../../custom-card";
 import { Footer } from "../../footer";
 import { Section } from "../../parallax-section";
-import { FlexRow } from "ui";
+import { Card3D, FlexRow, Modal } from "ui";
 import { styled } from "styled-components";
 import image from "../../../assets/images/BG2.png";
-import { Modal } from "../../modals/modal";
-import { createPortal } from "react-dom";
 import { useReducer } from "react";
 import { BookScene } from "../../scene-3d/book-scene";
 import { CoinsScene } from "../../scene-3d/coins-scene";
-import { Heading3, Paragraph, devices } from "../../responsive-text-content";
-import { FaGithub, FaInstagram } from "react-icons/fa";
 import { Colors } from "game-constants";
+import { Paragraph } from "ui/utilities/paragraph";
+import { devices } from "ui/constants/devices";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const FooterText = styled.div`
-  font-family: Technor;
-  font-size: 50px;
-  margin-left: 25px;
-  @media (max-width: 576px) {
-  }
-  @media (max-width: 992px) {
-  }
-  @media (max-width: 1200px) {
-  }
-  @media (max-width: 768px) {
-    font-size: 30px;
-    margin-left: 0;
-  }
 `;
 
 const InfoSection = styled(Section)`
@@ -185,34 +166,23 @@ export const Info = () => {
       >
         <CustomRow heights={{ desktop: "100vh", mobile: "fit-content" }}>
           <div onClick={() => dispatch({ type: actionTypes.SHOW_HISTORY })}>
-            <CustomCard title="Historia" Scene={() => <BookScene />} />
+            <Card3D title="Historia" Scene={() => <BookScene />} />
           </div>
           <div onClick={() => dispatch({ type: actionTypes.SHOW_ARCHIVE })}>
-            <CustomCard title="Archivo" Scene={() => <BoxScene />} />
+            <Card3D title="Archivo" Scene={() => <BoxScene />} />
           </div>
           <div onClick={() => dispatch({ type: actionTypes.SHOW_DONATIONS })}>
-            <CustomCard title="Donaciones" Scene={() => <CoinsScene />} />
+            <Card3D title="Donaciones" Scene={() => <CoinsScene />} />
           </div>
         </CustomRow>
       </InfoSection>
-      <Footer>
-        <a href="https://www.instagram.com/ignacio_barocchi/">
-          <FaInstagram size={35} />
-        </a>
-        <a href="https://www.github.com/ignacioBarocchi/">
-          <FaGithub size={35} />
-        </a>
-        <Heading3>Creado por Ignacio Barocchi</Heading3>
-      </Footer>
-      {createPortal(
-        <Modal
-          isOpen={state.modalContent !== null}
-          onClose={() => dispatch({ type: actionTypes.CLOSE_MODAL })}
-        >
-          {state.modalContent}
-        </Modal>,
-        document.body
-      )}
+      <Footer />
+      <Modal
+        isOpen={state.modalContent !== null}
+        onClose={() => dispatch({ type: actionTypes.CLOSE_MODAL })}
+      >
+        {state.modalContent}
+      </Modal>
     </Container>
   );
 };

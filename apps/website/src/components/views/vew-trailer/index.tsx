@@ -5,7 +5,8 @@ import imageZombiePart from "../../../assets/images/ZOMBIE_PART.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-import { Heading2, Paragraph, Span } from "../../responsive-text-content";
+import { Heading, Paragraph, Span } from "ui/utilities";
+import { Card } from "ui";
 
 const AboutTitle = styled.h1`
   font-family: Tanker;
@@ -79,6 +80,20 @@ const ZombieImagePart = styled.div`
   }
 `;
 
+const A = () => {
+  return (
+    <Card.Wrapper>
+      <Card.Header title="YA FUE, NO TENÉS FUTURO" />
+      <Card.Content
+        paragraph="En un mundo devastado por un apocalipsis zombie, tu misión es simple
+          pero desafiante: ¡sobrevivir! Viaja a través de la provincia de Buenos
+          Aires enfrentando peligros en cada esquina. Tu vehículo es tu mayor
+          aliado y deberás cuidarlo como a tu propia vida."
+      />
+      <Card.Footer text="-Chat GPT" />
+    </Card.Wrapper>
+  );
+};
 const Boxes = () => (
   <ContentWrapper>
     {/* <Block style={{ visibility: "hidden" }}>
@@ -88,8 +103,20 @@ const Boxes = () => (
       </VideoWrapper>
     </Block> */}
     <Block>
-      <VideoWrapper data-aos="fade-right">
-        <Heading2 font="Tanker">YA FUE, NO TENÉS FUTURO</Heading2>
+      <Card.Wrapper>
+        <Card.Header title="YA FUE, NO TENÉS FUTURO" />
+        <Card.Content
+          paragraph="En un mundo devastado por un apocalipsis zombie, tu misión es simple
+          pero desafiante: ¡sobrevivir! Viaja a través de la provincia de Buenos
+          Aires enfrentando peligros en cada esquina. Tu vehículo es tu mayor
+          aliado y deberás cuidarlo como a tu propia vida."
+        />
+        <Card.Footer text="-Chat GPT" />
+      </Card.Wrapper>
+      {/* <VideoWrapper>
+        <Heading index="2" font="Tanker">
+          YA FUE, NO TENÉS FUTURO
+        </Heading>
         <Paragraph>
           En un mundo devastado por un apocalipsis zombie, tu misión es simple
           pero desafiante: ¡sobrevivir! Viaja a través de la provincia de Buenos
@@ -97,7 +124,7 @@ const Boxes = () => (
           aliado y deberás cuidarlo como a tu propia vida.
         </Paragraph>
         <Span>-Chat GPT</Span>
-      </VideoWrapper>
+      </VideoWrapper> */}
     </Block>
   </ContentWrapper>
 );

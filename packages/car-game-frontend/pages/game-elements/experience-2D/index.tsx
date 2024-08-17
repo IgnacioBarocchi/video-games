@@ -8,7 +8,6 @@ const TitlePanel = lazy(() => import("./gui-panels/title-panel"));
 const KMPanel = lazy(() => import("./gui-panels/km-panel"));
 const ClockPanel = lazy(() => import("./gui-panels/clock-panel"));
 const EndGamePanel = lazy(() => import("./gui-panels/end-game-panel"));
-const BackToMenuPanel = lazy(() => import("./gui-panels/back-to-menu-panel"));
 const MoneyLossPanel = lazy(() => import("./gui-panels/money-loss-panel"));
 
 export const Experience2DGUI = () => (
@@ -22,7 +21,6 @@ export const Experience2DGUI = () => (
       <MoneyLossPanel />
       <ClockPanel />
       <EndGamePanel />
-      <BackToMenuPanel />
       <TitlePanel />
       <KMPanel />
     </Suspense>

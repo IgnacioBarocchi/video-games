@@ -1,24 +1,21 @@
-import { FloatingNotification } from "ui";
-import { Text } from "ui/elements/Text";
-
+import { MoneyAlert } from "ui/game-gui";
 import useCarGameStore from "../../../../store/store";
 
 export const MoneyLossPanel = () => {
-  const { carNotification } = useCarGameStore();
+  const { carNotification, money, gameOver } = useCarGameStore((state) => ({
+    carNotification: state.carNotification,
+    money: state.money,
+    gameOver: state.gameOver,
+  }));
 
   return (
-    <FloatingNotification
-      dismiss={false}
-      position="bottom-left"
-      width={"600px"}
-    >
-      <Text>
-        {carNotification?.cost &&
-          `${
-            carNotification?.count > 1 ? "[" + carNotification?.count + "]" : ""
-          }` + `- ${carNotification.cost} ARS`}{" "}
-      </Text>
-    </FloatingNotification>
+    <MoneyAlert
+      visible={!gameOver?.reason}
+      total={money}
+      loss={carNotification?.cost}
+      reason={carNotification?.type}
+      combo={carNotification?.count > 1 ? carNotification.count : null}
+    />
   );
 };
 
